@@ -151,9 +151,10 @@ BasicGame.Boot.prototype =
             for (var key in spriteResources){
                 var localKey = key;
                 var sprite = menuItems.create(50-10,120+50*i,localKey+'_1');
-
+                var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
                 var scaleFactor = maxDimension/50;
+
                 sprite.scale.set(1/scaleFactor);
                 //sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
                 sprite.inputEnabled = true;
@@ -162,10 +163,10 @@ BasicGame.Boot.prototype =
 
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
-                sprite.events.onInputDown.add(function(_localKey, _sprite){
-                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(_localKey+'_1',0,0,5);
-                    createdComponent.tint = _sprite.tint;
-                    }.bind(null, localKey, sprite), this);
+                sprite.events.onInputDown.add(function(sp){
+                    _this.createNewSprite(sp.key,0,0,5);
+                    createdComponent.tint = sprite.tint;
+                    }, this);
                 i++;
             }
 
