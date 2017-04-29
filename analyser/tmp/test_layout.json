@@ -1,1 +1,1 @@
-{"title":"","rooms":[],"size":{"x":0,"y":0}}
+[{"name":"bed","limits":{"x":8,"y":3,"z":4}},{"name":"cupboard","limits":{"x":2,"y":2,"z":4}},{"name":"composter","limits":{"x":4,"y":4,"z":4}},{"name":"fridge","limits":{"x":2,"y":2,"z":4}},{"name":"growbox","limits":{"x":4,"y":4,"z":2}},{"name":"microscope","limits":{"x":1,"y":1,"z":1}},{"name":"sink","limits":{"x":1,"y":1,"z":1}},{"name":"toilet","limits":{"x":3,"y":3,"z":4}}]

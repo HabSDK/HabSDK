@@ -5,9 +5,11 @@ eval(fs.readFileSync('layout_analyser.js')+'');
 eval(fs.readFileSync('data_tests.js')+'');
 eval(fs.readFileSync('object_library.js')+'');
 
-var layout = create_test_layout();
-var result = analyse(layout);
-console.log("\Metrics\n===============");
-Object.keys(result.metrics).forEach(o => console.log(o+" : "+result.metrics[o]));
-console.log("\nRules\n===============");
-Object.keys(result.rules).forEach(o => console.log(o+" : "+result.rules[o]));
+//var layout = create_test_layout();
+//
+//Object.keys(layout.room_types).forEach(room_type => console.log(room_type+" : "+layout.room_types[room_type]))
+//
+//var result = analyse(layout);
+
+var obj_types = new HabObjectTypes()
+fs.writeFile("./tmp/test_layout.json", JSON.stringify(obj_types))
