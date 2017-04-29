@@ -32,6 +32,13 @@ function LayoutResult() {
     this.overall_result = 0
     this.metrics = {}
     this.rules = {}
+
+    this.log = () => {
+        console.log("\Metrics\n===============");
+        Object.keys(result.metrics).forEach(o => console.log(o+" : "+result.metrics[o]));
+        console.log("\nRules\n===============");
+        Object.keys(result.rules).forEach(o => console.log(o+" : "+result.rules[o]));
+    }
 }
 
 function check_overlapping(layout) { 
