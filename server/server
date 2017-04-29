@@ -13,12 +13,15 @@ var wss = new WebSocketServer({ port: WS_PORT });
 
 var leaderboard = load_leaderboard();
 function load_leaderboard() {
-  return JSON.parse(fs.readFileSync("leaders.json"));
+  return JSON.parse(fs.readFileSync('leaders.json'));
 }
 
-function add_leaderboard(user, score, timestamp) {
-  leaderboard.push({"user":user, "score":score, "timestamp":timestamp});
-  fs.writeFile('leaders.json', JSON.stringify(leaderboard), 'utf8', () => {});
+var add_leaderboard = function(analysis) {
+  var promise = new Promise((pass, fail) => {
+    leaderboard.push({"user":analysis.user, "score":analysis.result.overall_result, "timestamp":analysis.timestamp});
+    fs.writeFile('leaders.json', JSON.stringify(leaderboard), 'utf8', pass.bind(null,analysis));
+  });
+  return promise;
 }
 
 var save_map = function(data_obj) {
@@ -68,8 +71,8 @@ wss.on('connection', (ws) => {
       case 'post:user_map':
         save_map(message.data)
         .then(() => analyse_map(message.data))
+        .then((analysis) => add_leaderboard(analysis))
         .then((analysis) => {
-          add_leaderboard(analysis.user, analysis.result.overall_score, analysis.timestamp);
           ws_push(ws, 'map_result', {'result':analysis.result,'timestamp':analysis.timestamp});
         })
         .catch((err) => {
