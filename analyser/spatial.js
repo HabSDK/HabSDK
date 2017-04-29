@@ -11,6 +11,16 @@ function Limits3D(min_point, max_point) {
         if (min_point.z < other_limits.max_point.z) return false;
         return true;
     }
+
+    this.get_centre_point = () => {
+        var x = (this.max_point.x + this.min_point.x) / 2.0;
+        var y = (this.max_point.y + this.min_point.y) / 2.0;
+        var z = (this.max_point.z + this.min_point.z) / 2.0;
+        var p = new Point3D(x, y, z);
+        return p;
+    }
+
+    this.toString = () => this.min_point+" to "+this.max_point;
 }
 
 function Limits2D(min_point, max_point) {
@@ -86,4 +96,15 @@ function Point3D(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
+
+    this.add = (other) => {
+        return new Point3D(this.x+other.x, this.y+other.y, this.z+other.z)
+    }
+
+    this.distance_to = (other) => {
+        var dis = Math.sqrt((this.x + other.x)*(this.x + other.x)+(this.y + other.y)*(this.y + other.y)+(this.z + other.z)*(this.z + other.z))
+        return dis;
+    }
+
+    this.toString = () => "("+this.x+","+this.y+","+this.z+")";
 }

@@ -4,30 +4,14 @@ var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources;
+var isoGroup, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
 BasicGame.Boot.prototype =
     {
         preload: function () {
-            spriteResources = [];
-            object_types = [] // load this from server?
-            // $.ajax({
-            // url: "resources/object_types.json",
-            // dataType: "json",
-            // success: function(response) {
-            //     $.each(response, function(index, object_type) {
-            //         for (dir in [0, 1, 2, 3]) {
-            //             var name = object_type.name + '_' + dir;
-            //             game.load.image(name, './resources/sprites/' + name + '.png');
-            //
-            //             spriteResources = [name];//spriteResources.concat([name]);
-            //         }
-            //     })}
-            // });
-            for (var i = 0; i<16; i++){
-                game.load.image('tile'+i,'./resources/sprites/cube.png');
-                spriteResources = spriteResources.concat(['tile'+i]);
-            }
+
+            this.getResources();
+
             game.load.image('tile', './resources/sprites/cube.png');
 
             game.time.advancedTiming = true;
@@ -48,6 +32,7 @@ BasicGame.Boot.prototype =
             isoGroup = game.add.group();
 
             // Let's make a load of tiles on a grid.
+
             this.spawnTiles();
             this.createMenu();
             this.handleKeyPress();
@@ -56,8 +41,24 @@ BasicGame.Boot.prototype =
             cursorPos = new Phaser.Plugin.Isometric.Point3();
 
             game.stage.backgroundColor = "#4488AA";
+        },
 
-            //game.input.keyboard.addCallbacks(this, null, null, keyPress);
+        getResources: function(){
+            spriteResources = new Object();
+            $.ajax({
+                url: "resources/object_types.json",
+                dataType: "json",
+                success: function(response) {
+                    $.each(response, function(index, object_type) {
+                        spriteResources[object_type.name]=[];
+                        for (var i = 1; i <=4; i++) {
+                            var name = object_type.name + '_' + i;
+                            game.load.image(name, './resources/sprites/' + name + '.png');
+
+                            spriteResources[object_type.name]=spriteResources[object_type.name ].concat([name])
+                        }
+                    })}
+            });
         },
         update: function () {
             // Update the cursor position.
@@ -84,17 +85,20 @@ BasicGame.Boot.prototype =
                 }
                 if (tile.selected){
                     //tile.tint = 0x86bfda;
-                    tile.alpha = 1;
+                    tile.alpha = 0.4;
                 } else {
                     //tile.tint = 0xffffff;
-                    tile.alpha = 0.4;
+                    tile.alpha = 1;
                 }
             });
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
-            game.debug.geom(menu,'rgba(100, 100, 100, 0.3)');
+            for (var itm in  menuItems){
+                game.debug.body(itm);
+            }
+
         },
         spawnTiles: function () {
 
@@ -112,7 +116,6 @@ BasicGame.Boot.prototype =
             tile.inputEnabled = true;
             tile.alpha = 0.4;
             tile.events.onInputDown.add(function(s){
-                console.log('clicked');
                 selectedCube = s;
             });
             selectedCube = tile;
@@ -120,40 +123,52 @@ BasicGame.Boot.prototype =
         },
         createButton: function(x,y,width,height,colour,event){
             var graphics = game.add.graphics(0, 0);
-            graphics.beginFill(colour);
+            graphics.beginFill(colour,1.0);
             graphics.drawRect(x,y,width,height);
             graphics.inputEnabled = true;
             graphics.input.useHandCursor = true;
             graphics.events.onInputUp.add(event, this);
+            return graphics;
+        },
+        createBackground: function(x,y,width,height,colour){
+            var graphics = game.add.graphics(0, 0);
+            graphics.beginFill(colour,1.0);
+            graphics.drawRect(x,y,width,height);
+            return graphics;
         },
         createMenu: function(){
-            menu = new Phaser.Rectangle(1024-100, 0, 100, 600); //new Phaser.Rectangle(50,768,1024-50,0);
-
-            //upButton.events.onInputDown.add(function(){menuItems.x++});
             //  The platforms group contains the ground and the 2 ledges we can jump on
-            var menuItems = game.add.group();
-            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(){menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20)});
-            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(){menuItems.y=Math.min(0,menuItems.y+20)});
+            menuItems = game.add.group();
+            var background = this.createBackground(1024-100, 0, 100, 600,'0xffffff');
+            background.alpha = 0.3;
+            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(){});//menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20)});
+            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(){});//menuItems.y=Math.min(0,menuItems.y+20)});
             //
             var cubeSprite = menuItems.create(50-10,70,'tile');
             cubeSprite.inputEnabled = true;
             cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
-            spriteResources.forEach(function(element) {
-                var sprite = menuItems.create(50-10,120+50*i,element);
+            for (var key in spriteResources){
+                var sprite = menuItems.create(50-10,120+50*i,key+'_1');
+
+                var maxDimension = Math.max(sprite.height,sprite.width);
+                var scaleFactor = maxDimension/50;
+                sprite.scale.x /= scaleFactor;
+                sprite.scale.y /= scaleFactor;
+
+                sprite.updateTransform();
+                //sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
                 sprite.inputEnabled = true;
-                sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
+                sprite.input.pixelPerfectClick = true;
+
                 sprite.events.onInputDown.add(function(){
-                    console.log("clicked");
-                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(element,0,0,5);
+                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(key+'_1',0,0,5);
                     createdComponent.tint = sprite.tint;
                     }, this);
                 i++;
-            });
+            }
 
             //  Allow dragging - the 'true' parameter will make the sprite snap to the center
-            //sprite.input.enableDrag(true);
-            //menuItems.addChild(menu);
             menuItems.x = 1024-100;
         },
 

@@ -3,7 +3,8 @@ function analyse(layout) {
         new Rule("Objects cannot overlap", check_overlapping)
     ];
     this.metrics = [
-        create_proximity_rule(["chair"])
+        create_proximity_rule(["chair"], true),
+        create_proximity_rule(["bed"], false)
     ];
     var result = new LayoutResult();
     this.metrics.forEach(metric => {
@@ -42,7 +43,8 @@ function LayoutResult() {
 }
 
 function check_overlapping(layout) { 
-    for (room_type in layout.room_types) {
+    Object.keys(layout.room_types).forEach(room_type_name => {
+        var room_type = layout.room_types[room_type_name];
         for (i =0;i<room_type.objects.length;i++){
             for (j=i+i;j<room_type.objects.length;j++) {
                 var obj_a = room_type.objects[i]; 
@@ -51,16 +53,17 @@ function check_overlapping(layout) {
                 if (result) return false
             }
         }
-    }
+    });
     return true;
 }
 
 function check_objects_in_room(layout) {
-    for (room_type in layout.room_types) {
+    Object.keys(layout.room_types).forEach(room_type_name => {
+        var room_type = layout.room_types[room_type_name];
         var room_polygon = room_type.get_polygon()
         for (object in room_type.objects) {
             var result = room_polygon.contains_limits(object.get_limits())
             if (result) return false
         }
-    }
+    });
 }
