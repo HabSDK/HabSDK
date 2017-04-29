@@ -9,7 +9,7 @@ var isoGroup, cursorPos, cursor;
 BasicGame.Boot.prototype =
     {
         preload: function () {
-            game.load.image('tile', './resources/sprites/cube.png');
+            game.load.image('tile', './resources/sprites/rocket_tiny.png');
 
             game.time.advancedTiming = true;
 
@@ -46,13 +46,13 @@ BasicGame.Boot.prototype =
                 if (!tile.selected && inBounds) {
                     tile.selected = true;
                     tile.tint = 0x86bfda;
-                    game.add.tween(tile).to({ isoZ: 4 }, 200, Phaser.Easing.Quadratic.InOut, true);
+                    game.add.tween(tile).to({ isoZ: 400 }, 150, Phaser.Easing.Quadratic.InOut, true);
                 }
                 // If not, revert back to how it was.
                 else if (tile.selected && !inBounds) {
                     tile.selected = false;
                     tile.tint = 0xffffff;
-                    game.add.tween(tile).to({ isoZ: 0 }, 200, Phaser.Easing.Quadratic.InOut, true);
+                    game.add.tween(tile).to({ isoZ: 0 }, 600, Phaser.Easing.Quadratic.InOut, true);
                 }
             });
         },
