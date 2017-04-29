@@ -66,7 +66,7 @@ BasicGame.Boot.prototype =
                 if (!tile.selected && inBounds) {
                     tile.selected = true;
                     tile.tint = 0x86bfda;
-                    game.add.tween(tile).to({ isoZ: 400 }, 150, Phaser.Easing.Quadratic.InOut, true);
+                    game.add.tween(tile).to({ isoZ: 2 }, 150, Phaser.Easing.Quadratic.InOut, true);
                 }
                 // If not, revert back to how it was.
                 else if (tile.selected && !inBounds) {
@@ -82,13 +82,18 @@ BasicGame.Boot.prototype =
             game.debug.geom(menu,'rgba(100, 100, 100, 0.3)');
         },
         spawnTiles: function () {
-            var tile;
+
             for (var xx = 0; xx < 512; xx += 20) {
                 for (var yy = 0; yy < 512; yy += 20) {
                     // Create a tile using the new game.add.isoSprite factory method at the specified position.
                     // The last parameter is the group you want to add it to (just like game.add.sprite)
-                    tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
+                    var tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
                     tile.anchor.set(0.5, 0);
+                    tile.inputEnabled = true;
+                    tile.events.onInputDown.add(function(s){
+                        console.log('clicked');
+                        selectedCube = s;
+                    });
                     selectedCube = tile;
                 }
             }
