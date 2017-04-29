@@ -61,18 +61,25 @@ BasicGame.Boot.prototype =
 
             // Loop through all tiles and test to see if the 3D position from above intersects with the automatically generated IsoSprite tile bounds.
             isoGroup.forEach(function (tile) {
-                var inBounds = tile.isoBounds.containsXY(cursorPos.x, cursorPos.y);
+                //var inBounds = tile.isoBounds.containsXY(cursorPos.x, cursorPos.y);
+                var inBounds = (tile == selectedCube);
                 // If it does, do a little animation and tint change.
                 if (!tile.selected && inBounds) {
                     tile.selected = true;
-                    tile.tint = 0x86bfda;
                     game.add.tween(tile).to({ isoZ: 2 }, 150, Phaser.Easing.Quadratic.InOut, true);
                 }
+
                 // If not, revert back to how it was.
                 else if (tile.selected && !inBounds) {
                     tile.selected = false;
-                    tile.tint = 0xffffff;
                     game.add.tween(tile).to({ isoZ: 0 }, 600, Phaser.Easing.Quadratic.InOut, true);
+                }
+                if (tile.selected){
+                    tile.tint = 0x86bfda;
+                    tile.alpha = 1;
+                } else {
+                    tile.tint = 0xffffff;
+                    tile.alpha = 0.4;
                 }
             });
         },
@@ -90,6 +97,7 @@ BasicGame.Boot.prototype =
                     var tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
                     tile.anchor.set(0.5, 0);
                     tile.inputEnabled = true;
+                    tile.alpha = 0.4;
                     tile.events.onInputDown.add(function(s){
                         console.log('clicked');
                         selectedCube = s;
