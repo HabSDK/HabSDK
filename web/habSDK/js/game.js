@@ -4,7 +4,7 @@ var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, cursorPos, cursor;
+var isoGroup, cursorPos, cursor, menu,selectedCube;
 
 BasicGame.Boot.prototype =
     {
@@ -22,7 +22,7 @@ BasicGame.Boot.prototype =
                 })}
             });
 
-            game.load.image('tile', './resources/sprites/rocket_tiny.png');
+            game.load.image('tile', './resources/sprites/cube.png');
 
             game.time.advancedTiming = true;
 
@@ -43,11 +43,15 @@ BasicGame.Boot.prototype =
 
             // Let's make a load of tiles on a grid.
             this.spawnTiles();
+            this.createMenu();
+            this.handleKeyPress();
 
             // Provide a 3D position for the cursor
             cursorPos = new Phaser.Plugin.Isometric.Point3();
 
             game.stage.backgroundColor = "#4488AA";
+
+            //game.input.keyboard.addCallbacks(this, null, null, keyPress);
         },
         update: function () {
             // Update the cursor position.
@@ -62,7 +66,7 @@ BasicGame.Boot.prototype =
                 if (!tile.selected && inBounds) {
                     tile.selected = true;
                     tile.tint = 0x86bfda;
-                    game.add.tween(tile).to({ isoZ: 400 }, 150, Phaser.Easing.Quadratic.InOut, true);
+                    game.add.tween(tile).to({ isoZ: 2 }, 150, Phaser.Easing.Quadratic.InOut, true);
                 }
                 // If not, revert back to how it was.
                 else if (tile.selected && !inBounds) {
@@ -75,17 +79,72 @@ BasicGame.Boot.prototype =
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
+            game.debug.geom(menu,'rgba(100, 100, 100, 0.3)');
         },
         spawnTiles: function () {
-            var tile;
+
             for (var xx = 0; xx < 512; xx += 20) {
                 for (var yy = 0; yy < 512; yy += 20) {
                     // Create a tile using the new game.add.isoSprite factory method at the specified position.
                     // The last parameter is the group you want to add it to (just like game.add.sprite)
-                    tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
+                    var tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
                     tile.anchor.set(0.5, 0);
+                    tile.inputEnabled = true;
+                    tile.events.onInputDown.add(function(s){
+                        console.log('clicked');
+                        selectedCube = s;
+                    });
+                    selectedCube = tile;
                 }
             }
+        },
+        createMenu: function(){
+            menu = new Phaser.Rectangle(1024-100, 0, 100, 768); //new Phaser.Rectangle(50,768,1024-50,0);
+            //  The platforms group contains the ground and the 2 ledges we can jump on
+            menuItems = game.add.group();
+
+            var sprite = menuItems.create(50-10,0,'tile');
+            sprite.inputEnabled = true;
+            sprite.events.onInputDown.add(function(){this.createNewSpriteCopy('tile');}, this);
+            //  Allow dragging - the 'true' parameter will make the sprite snap to the center
+            //sprite.input.enableDrag(true);
+            //menuItems.addChild(menu);
+            menuItems.x = 1024-100;
+        },
+
+        createNewSpriteCopy: function(origin){
+            console.log("Created");
+            var tile = game.add.isoSprite(0, 0, 5, origin, 0, isoGroup);
+            tile.anchor.set(0.5, 0);
+            selectedCube = tile;
+
+        },
+        handleKeyPress: function (){
+            var up = function moveUp () {
+                selectedCube.isoY -=20;
+                selectedCube.isoX -=20;
+            }
+            var left = function moveLeft () {
+                selectedCube.isoX -= 20;
+                selectedCube.isoY +=20;
+            }
+            var right = function moveRight () {
+                selectedCube.isoX += 20;
+                selectedCube.isoY -=20;
+            }
+            var down = function moveDown () {
+                selectedCube.isoX +=20;
+                selectedCube.isoY +=20;
+            }
+            var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+            upKey.onDown.add(up, this);
+            var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+            downKey.onDown.add(down, this);
+            var leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+            leftKey.onDown.add(left, this);
+            var rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+            rightKey.onDown.add(right, this);
+
         }
     };
 

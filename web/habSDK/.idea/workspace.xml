@@ -35,21 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
+            <state relative-caret-position="37">
               <caret line="19" column="1" lean-forward="false" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="phaser-plugin-isometric.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/phaser-plugin-isometric.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -58,18 +48,18 @@
       <file leaf-file-name="phaser.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/phaser.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="47">
+              <caret line="25662" column="0" lean-forward="false" selection-start-line="25662" selection-start-column="0" selection-end-line="25662" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="51" lean-forward="false" selection-start-line="0" selection-start-column="51" selection-end-line="0" selection-end-column="51" />
+            <state relative-caret-position="61">
+              <caret line="69" column="17" lean-forward="true" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -95,15 +85,16 @@
     <findStrings>
       <find>Move</find>
       <find>backgr</find>
+      <find>var game \= new Phaser\.Game\(1024\, 768\, Phaser\.CANVAS\, \'test\'\, null\, true\, false\)\;\n\nvar BasicGame \= function \(game\) \{ \}\;\n\nBasicGame\.Boot \= function \(game\) \{ \}\;\n\nvar isoGroup\, cursorPos\, cursor\, menu\,selectedCube\;\n\nBasicGame\.Boot\.prototype \=\n    \{\n        preload\: function \(\) \{\n            game\.load\.image\(\'tile\'\, \'\.\/resources\/sprites\/cube\.png\'\)\;\n\n            game\.time\.advancedTiming \= true\;\n\n            \/\/ Add and enable the plug\-in\.\n            game\.plugins\.add\(new Phaser\.Plugin\.Isometric\(game\)\)\;\n\n            \/\/ This is used to set a game canvas\-based offset for the 0\, 0\, 0 isometric coordinate \- by default\n            \/\/ this point would be at screen coordinates 0\, 0 \(top left\) which is usually undesirable\.\n            game\.iso\.anchor\.setTo\(0\.5\, 0\.2\)\;\n\n\n\n        \}\,\n        create\: function \(\) \{\n\n            \/\/ Create a group for our tiles\.\n            isoGroup \= game\.add\.group\(\)\;\n\n            \/\/ Let\'s make a load of tiles on a grid\.\n            this\.spawnTiles\(\)\;\n            this\.createMenu\(\)\;\n\n            \/\/ Provide a 3D position for the cursor\n            cursorPos \= new Phaser\.Plugin\.Isometric\.Point3\(\)\;\n\n            game\.stage\.backgroundColor \= \&quot;\#4488AA\&quot;\;\n\n            game\.input\.keyboard\.addCallbacks\(this\, null\, null\, keyPress\)\;\n        \}\,\n        update\: function \(\) \{\n            \/\/ Update the cursor position\.\n            \/\/ It\'s important to understand that screen\-to\-isometric projection means you have to specify a z position manually\, as this cannot be easily\n            \/\/ determined from the 2D pointer position without extra trickery\. By default\, the z position is 0 if not set\.\n            game\.iso\.unproject\(game\.input\.activePointer\.position\, cursorPos\)\;\n\n            \/\/ Loop through all tiles and test to see if the 3D position from above intersects with the automatically generated IsoSprite tile bounds\.\n            isoGroup\.forEach\(function \(tile\) \{\n                var inBounds \= tile\.isoBounds\.containsXY\(cursorPos\.x\, cursorPos\.y\)\;\n                \/\/ If it does\, do a little animation and tint change\.\n                if \(\!tile\.selected \&amp;\&amp; inBounds\) \{\n                    tile\.selected \= true\;\n                    tile\.tint \= 0x86bfda\;\n                    game\.add\.tween\(tile\)\.to\(\{ isoZ\: 4 \}\, 200\, Phaser\.Easing\.Quadratic\.InOut\, true\)\;\n                \}\n                \/\/ If not\, revert back to how it was\.\n                else if \(tile\.selected \&amp;\&amp; \!inBounds\) \{\n                    tile\.selected \= false\;\n                    tile\.tint \= 0xffffff\;\n                    game\.add\.tween\(tile\)\.to\(\{ isoZ\: 0 \}\, 200\, Phaser\.Easing\.Quadratic\.InOut\, true\)\;\n                \}\n            \}\)\;\n        \}\,\n        render\: function \(\) \{\n            \/\/game\.debug\.text\(\&quot;Move your mouse around\!\&quot;\, 2\, 36\, \&quot;\#ffffff\&quot;\)\;\n            game\.debug\.text\(game\.time\.fps \|\| \'\-\-\'\, 2\, 14\, \&quot;\#a7aebe\&quot;\)\;\n            game\.debug\.geom\(menu\,\'rgba\(100\, 100\, 100\, 0\.3\)\'\)\;\n        \}\,\n        spawnTiles\: function \(\) \{\n            var tile\;\n            for \(var xx \= 0\; xx \&lt; 512\; xx \+\= 20\) \{\n                for \(var yy \= 0\; yy \&lt; 512\; yy \+\= 20\) \{\n                    \/\/ Create a tile using the new game\.add\.isoSprite factory method at the specified position\.\n                    \/\/ The last parameter is the group you want to add it to \(just like game\.add\.sprite\)\n                    tile \= game\.add\.isoSprite\(xx\, yy\, 0\, \'tile\'\, 0\, isoGroup\)\;\n                    tile\.anchor\.set\(0\.5\, 0\)\;\n                    selectedCube \= tile\;\n                \}\n            \}\n        \}\,\n        createMenu\: function\(\)\{\n            menu \= new Phaser\.Rectangle\(1024\-100\, 0\, 100\, 768\)\; \/\/new Phaser\.Rectangle\(50\,768\,1024\-50\,0\)\;\n            \/\/  The platforms group contains the ground and the 2 ledges we can jump on\n            menuItems \= game\.add\.group\(\)\;\n\n            var sprite \= menuItems\.create\(50\-10\,0\,\'tile\'\)\;\n\n            sprite\.events\.onInputDown\.add\(function\(\)\{this\.createNewSpriteCopy\(sprite\)\;\}\, this\)\;\n            \/\/  Allow dragging \- the \'true\' parameter will make the sprite snap to the center\n            \/\/sprite\.input\.enableDrag\(true\)\;\n            \/\/menuItems\.addChild\(menu\)\;\n            menuItems\.x \= 1024\-100\;\n        \}\,\n\n        createNewSpriteCopy\: function\(origin\)\{\n            console\.log\(\&quot;Created\&quot;\)\;\n            var tile \= game\.add\.isoSprite\(0\, 0\, 10\, origin\, 0\, isoGroup\)\;\n            tile\.anchor\.set\(0\.5\, 0\)\;\n            selectedCube \= tile\;\n\n        \}\,\n        handleKeyPress\: function keyPress\(char\) \{\n\n    \/\/  Clear the BMD\n    bmd\.cls\(\)\;\n\n    \/\/  Set the x value we\'ll start drawing the text from\n    var x \= 64\;\n\n    \/\/  Loop through each letter of the word being entered and check them against the key that was pressed\n    for \(var i \= 0\; i \&lt; word\.length\; i\+\+\)\n    \{\n        var letter \= word\.charAt\(i\)\;\n\n        \/\/  If they pressed one of the letters in the word\, flag it as correct\n        if \(char \=\=\= letter\)\n        \{\n            correct\[letter\] \= true\;\n        \}\n\n        \/\/  Now draw the word\, letter by letter\, changing colour as required\n        if \(correct\[letter\]\)\n        \{\n            bmd\.context\.fillStyle \= \'\#00ff00\'\;\n        \}\n        else\n        \{\n            bmd\.context\.fillStyle \= \'\#ffffff\'\;\n        \}\n\n        bmd\.context\.fillText\(letter\, x\, 64\)\;\n\n        x \+\= bmd\.context\.measureText\(letter\)\.width\;\n    \}\n        \}\n    \}\;\n\ngame\.state\.add\(\'Boot\'\, BasicGame\.Boot\)\;\ngame\.state\.start\(\'Boot\'\)\;\n</find>
       <find>color</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/js/game.js" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/css/main.css" />
+        <option value="$PROJECT_DIR$/js/game.js" />
       </list>
     </option>
   </component>
@@ -145,6 +136,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="habSDK" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="habSDK" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="habSDK" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -346,12 +351,12 @@
       <option name="presentableId" value="Default" />
       <updated>1493461917928</updated>
       <workItem from="1493461921209" duration="1367000" />
-      <workItem from="1493466406637" duration="806000" />
+      <workItem from="1493466406637" duration="7988000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2173000" />
+    <option name="totallyTimeSpent" value="9355000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="43" width="1256" height="737" extended-state="0" />
@@ -360,6 +365,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -371,7 +377,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -382,7 +387,17 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/game.js</url>
+          <line>94</line>
+          <properties />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="4" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
@@ -439,31 +454,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/phaser-plugin-isometric.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/sprites/cube.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/phaser.js">
+    <entry file="file://$PROJECT_DIR$/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="37">
+          <caret line="19" column="1" lean-forward="false" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/game.js">
+    <entry file="file://$PROJECT_DIR$/js/phaser-plugin-isometric.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="51" lean-forward="false" selection-start-line="0" selection-start-column="51" selection-end-line="0" selection-end-column="51" />
+        <state relative-caret-position="125">
+          <caret line="2652" column="12" lean-forward="false" selection-start-line="2652" selection-start-column="12" selection-end-line="2652" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/phaser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="47">
+          <caret line="25662" column="0" lean-forward="false" selection-start-line="25662" selection-start-column="0" selection-end-line="25662" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -476,10 +491,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/main.css">
+    <entry file="file://$PROJECT_DIR$/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="19" column="1" lean-forward="false" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
+        <state relative-caret-position="61">
+          <caret line="69" column="17" lean-forward="true" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
           <folding />
         </state>
       </provider>

@@ -3,16 +3,34 @@ var fs = require('fs');
 eval(fs.readFileSync('spatial.js')+''); // Only used for testing
 eval(fs.readFileSync('data.js')+''); // Only used for testing
 
-function save() {
+function create_test_layout() {
     var layout = new HabLayout();
 
     var room = new HabRoomType();
     room.layout = [
         new Point(0,0),
-        new Point(1,0),
-        new Point(1,1),
-        new Point(0,1),
+        new Point(10,0),
+        new Point(10,10),
+        new Point(0,10),
     ]
+
+    var types = new HabObjectTypes();
+
+    var object_a = new HabObject();
+    object_a.object_type_name = types.chair.name;
+    object_a.position = new Point3D(0, 0, 0);
+    room.objects.push(object_a);
+
+    var object_b = new HabObject();
+    object_b.object_type_name = types.chair.name;
+    object_b.position = new Point3D(1, 1, 0);
+    room.objects.push(object_b);
+
+    return layout;
+}
+
+function save() {
+    var layout = this.create_test_layout();
     fs.writeFile("./tmp/test_layout.json", JSON.stringify(layout)) 
 }
 
@@ -41,7 +59,7 @@ function random_int(min, max) {
     return Math.floor((Math.random() * max) + min);
 }
 
-generate_fake_objects()
+save();
 
 
 
