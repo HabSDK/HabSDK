@@ -10,45 +10,52 @@
 	<hr>
 	<table id="mainTable">
 		<tr>
-			<th>Time Stamp</th>
-			<th>User Name</th>
+			<th>User</th>
 			<th>Score</th>
+			<th>Timestamp</th>
 		</tr>
 	</table>
-	<button id="Update">Update</button>
 </body>
 
-<script src="jquery-3.2.1.min.js"></script>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/habsdk-socket.js"></script>
 <script>
-	var freshRows = [{"user":"test01","score":78,"timestamp":"017-04-29T19:44:32.380Z"},
-		{"user":"testrr","score":23,"timestamp":"2017-04-29T20:00:55.999Z"},
-		{"user":"test33","score":13,"timestamp":"2017-04-29T20:00:56.980Z"},
-		{"user":"test44","score":102,"timestamp":"2017-04-29T20:00:57.774Z"}];
-    function appendRow(row) {
-	    var mainTable = document.getElementById("mainTable");
-	    var newRow = mainTable.insertRow(-1);
-	    newRow.insertCell(0).innerHTML = Object.values(row)[2];
-	    newRow.insertCell(1).innerHTML = Object.values(row)[0];
-	    newRow.insertCell(2).innerHTML = Object.values(row)[1];
-	}
-	try {
-		freshRows.sort(function(a,b) {
-    		return b.score - a.score;
-    	});
-	}
-	catch(err) {
-		alert(err);
-	}
-	$("#Update").click(function() {
-		try {
-			freshRows.forEach(function(row) {
-				appendRow(row);
-			});
-		}
-		catch(err) {
-			alert(err);
-		}
-	});
-</script>
+habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
+refresh_leaderboard();
+
+function refresh_leaderboard() {
+  habsdk_socket.request_leaderboard(function(data_rows) {
+    console.log(data_rows);
+  
+    try {
+      data_rows.sort(function(a,b) {
+        return b.score - a.score;
+      });
+    }
+    catch(err) {
+      console.log(err);
+    }
+    
+    try {
+      data_rows.forEach(function(row) {
+        appendRow(row);
+      });
+    }
+    catch(err) {
+      console.log(err);
+    }
+    
+    setTimeout(refresh_leaderboard, 30*1000);
+  });
+}
+
+function appendRow(row) {
+    var mainTable = document.getElementById("mainTable");
+    var newRow = mainTable.insertRow(-1);
+    newRow.insertCell(0).innerHTML = row.user;
+    newRow.insertCell(1).innerHTML = row.score;
+    newRow.insertCell(2).innerHTML = (new Date(row.timestamp)).toLocaleTimeString();
+}
+</script>
 </html>
