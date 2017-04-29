@@ -1,10 +1,10 @@
 function HabLayout() {
     this.title = "";
     this.rooms = [];
+    this.room_types = {};
     this.size = new Point(0,0);
 }
 function HabRoom() {
-    this.room_type = null;
     this.room_type_name = "";
     this.position = new Point(0,0);
 }
@@ -12,11 +12,17 @@ function HabRoomType() {
     this.name = "";
     this.objects = []; 
     this.floor_plan = [];
+    this.get_polygon = () => {
+        var polygon = new Polygon();
+        polygon.points = this.floor_plan;
+        return polygon;
+    }
 }
 function HabObject() {
     this.object_type_name = ""
     this.position = new Point(0,0,0);
     this.rotation = 0;
+
     this.get_limits = () => {    
         var size = null
         if (rotation == 0 || rotation == 2) size = new Point2D(this.object_type.limits.max_point.x, this.object_type.limits.max_point.y)

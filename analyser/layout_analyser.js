@@ -1,27 +1,20 @@
-function Analyser() {
-
+function Analyse(layout) {
     this.rules = [
         new Rule("Objects cannot overlap", check_overlapping)
     ];
     this.metrics = [
         
     ];
-    this.analyse_metric() = (layout) => {
-        var results = {}
-        for (metric in this.metrics){
-            var result = metric.evaluator(layout);
-            results[metric.name] = result;
-        }        
-        return results;
-    }
-    this.analyse_valid() = (layout) => {
-        var results = {}
-        for (rule in this.rules){
-            var result = rule.evaluator(layout);
-            results[rule.name] = result;
-        }        
-        return results;
-    }
+    var result = new LayoutResult();
+    for (metric in this.metrics) {
+        var result = metric.evaluator(layout);
+        result.metrics[metric.name] = result;
+    }        
+    for (rule in this.rules) {
+        var result = rule.evaluator(layout);
+        result.rules[rule.name] = result;
+    }    
+    return result;    
 }
 
 // Layouts are graded based upon the metrics.
@@ -37,16 +30,42 @@ function Rule(name, evaluator) {
     this.evaluator = evaluator;
 }
 
+function LayoutResult() {
+    this.overall_result = 0
+    this.metrics = {}
+    this.rules = {}
+}
+
+function maximise_( ){
+    // sum the proximities between 
+
+    var a = []
+    var b = []
+
+
+}
+
+
 function check_overlapping(layout) { 
-    for (room in layout.rooms) {
-        for (i =0;i<room.objects.length;i++){
-            for (j=i+i;j<room.objects.length;j++) {
-                var obj_a = room.objects[i]; 
-                var obj_b = room.objects[j];
-                var does_intersect = obj_a.get_limits().check_overlapping(obj_b.get_limits())
-                if (does_intersect) return false
+    for (room_type in layout.room_types) {
+        for (i =0;i<room_type.objects.length;i++){
+            for (j=i+i;j<room_type.objects.length;j++) {
+                var obj_a = room_type.objects[i]; 
+                var obj_b = room_type.objects[j];
+                var result = obj_a.get_limits().intersect(obj_b.get_limits())
+                if (result) return false
             }
         }
     }
     return true;
+}
+
+function check_objects_in_room(layout) {
+    for (room_type in layout.room_types) {
+        var room_polygon = room_type.get_polygon()
+        for (object in room_type.objects) {
+            var result = room_polygon.contains_limits(object.get_limits())
+            if (result) return false
+        }
+    }
 }
