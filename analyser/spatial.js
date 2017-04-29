@@ -1,10 +1,8 @@
-
-
 function Limits3D(min_point, max_point) {
     this.min_point = min_point;
     this.max_point = max_point;
 
-    this.check_intersect = (other_limits) => {
+    this.intersect = (other_limits) => {
         if (max_point.x < other_limits.min_point.x) return false;
         if (min_point.x > other_limits.max_point.x) return false;
         if (max_point.y < other_limits.min_point.y) return false;
@@ -19,7 +17,16 @@ function Limits2D(min_point, max_point) {
     this.min_point = min_point;
     this.max_point = max_point; 
     
-    this.check_intersect() = (other_limits) => { 
+    this.get_corner_points = () => {
+        return [
+            this.min_point,
+            new Point2D(this.min_point.x, this.max_point.y),
+            this.max_point,
+            new Point2D(this.max_point.x, this.min_point.y),
+        ]
+    } 
+
+    this.intersect() = (other_limits) => { 
         if (max_point.x < other_limits.min_point.x) return false;
         if (min_point.x > other_limits.max_point.x) return false;
         if (max_point.y < other_limits.min_point.y) return false;
@@ -28,12 +35,54 @@ function Limits2D(min_point, max_point) {
     }
 }
 
-function Point(x, y) {
-    this.x = x;
-    this.y = y;
+function Polygon() {
+    this.points = []
+
+    this.contains_point = (point) => {
+        var angle = 0
+        var p1 = null;
+        var p2 = null;
+        for (var i=0;i<this.points.length;i++) {
+           p1 = this.points[i].subtract(point);
+           p2 = this.points[(i+1)%this.points.length].subtract(point);
+           angle += p1.get_angle(p2);
+        }
+        if (Math.abs(angle) < Math.pi) return false;
+        else return true; 
+    }
+
+    this.contains_limits = (limits) => {
+        var points = limits.get_corner_points()
+        for (point in points) {
+            if (!this.contains_point(point)) return false;
+        }
+        return true;
+    }
 }
 
-function Point(x, y, z) {
+function Point2D(x, y) {
+    this.x = x;
+    this.y = y;
+
+    this.add = (other) => {
+        return new Point2D(this.x + other.x, this.y + other.y)
+    }
+    this.subtract = (other) => {
+        return new Point2D(this.x - other.x, this.y - other.y)
+    }
+    this.get_angle = (other) => {
+        var theta1 = Math.atan2(this.y,this.x);
+        var theta2 = Math.atan2(other.y,other.x);
+        var dtheta = theta2 - theta1;
+        while (dtheta > Math.pi)
+           dtheta -= 2 * Math.pi;
+        while (dtheta < -Math.pi)
+           dtheta += 2 * Math.pi;
+        return dtheta;
+    }
+}
+
+function Point3D(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
