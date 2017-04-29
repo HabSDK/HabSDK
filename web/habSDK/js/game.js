@@ -83,7 +83,7 @@ BasicGame.Boot.prototype =
                     var targetHeight = tile.isoZ-2;
                     game.add.tween(tile).to({ isoZ: targetHeight }, 600, Phaser.Easing.Quadratic.InOut, true);
                 }
-                if (tile.selected){
+                if (tile == selectedCube){
                     //tile.tint = 0x86bfda;
                     tile.alpha = 0.4;
                 } else {
@@ -95,9 +95,9 @@ BasicGame.Boot.prototype =
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
-            for (var itm in  menuItems){
-                game.debug.body(itm);
-            }
+            menuItems.children.forEach(function(item){
+                game.debug.body(item);
+            });
 
         },
         spawnTiles: function () {
@@ -116,7 +116,7 @@ BasicGame.Boot.prototype =
             tile.inputEnabled = true;
             tile.alpha = 0.4;
             tile.events.onInputDown.add(function(s){
-                selectedCube = s;
+                selectedCube = tile;
             });
             selectedCube = tile;
             return tile;
@@ -149,20 +149,21 @@ BasicGame.Boot.prototype =
             cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
-                var sprite = menuItems.create(50-10,120+50*i,key+'_1');
+                var localKey = key;
+                var sprite = menuItems.create(50-10,120+50*i,localKey+'_1');
 
                 var maxDimension = Math.max(sprite.height,sprite.width);
                 var scaleFactor = maxDimension/50;
-                sprite.scale.x /= scaleFactor;
-                sprite.scale.y /= scaleFactor;
-
-                sprite.updateTransform();
+                sprite.scale.set(1/scaleFactor);
                 //sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
                 sprite.inputEnabled = true;
-                sprite.input.pixelPerfectClick = true;
+//  Check the pixel data of the sprite
+                sprite.input.pixelPerfectOver = true;
 
+                //  Enable the hand cursor
+                sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(){
-                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(key+'_1',0,0,5);
+                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(localKey+'_1',0,0,5);
                     createdComponent.tint = sprite.tint;
                     }, this);
                 i++;
