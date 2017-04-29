@@ -9,6 +9,13 @@ var isoGroup, cursorPos, cursor;
 BasicGame.Boot.prototype =
     {
         preload: function () {
+
+            object_types = [] // load this from server?
+            for (object_type in object_types) {
+                for (dir in [0, 1, 2, 3]){
+                    game.load.image('tile', './resources/sprites/'+object_type.name + '_'+dir+'.png');    
+                }
+            }
             game.load.image('tile', './resources/sprites/rocket_tiny.png');
 
             game.time.advancedTiming = true;
