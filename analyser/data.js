@@ -4,7 +4,8 @@ function HabLayout() {
     this.size = new Point(0,0);
 }
 function HabRoom() {
-    this.room = null;
+    this.room_type = null;
+    this.room_type_name = "";
     this.position = new Point(0,0);
 }
 function HabRoomType() {
@@ -13,13 +14,18 @@ function HabRoomType() {
     this.floor_plan = [];
 }
 function HabObject() {
-    this.object = "";
+    this.object_type_name = ""
     this.position = new Point(0,0,0);
     this.rotation = 0;
+    this.get_limits = () => {    
+        var size = null
+        if (rotation == 0 || rotation == 2) size = new Point2D(this.object_type.limits.max_point.x, this.object_type.limits.max_point.y)
+        else size = new Point2D(this.object_type.limits.max_point.x, this.object_type.limits.max_point.y)
+        return new Limits3D(position, position + new Point3D(size.x, size.y, this.object_type.max_point.z))
+    } 
 }
-function HabObjectType(name, collision_limits, operation_limits, collision_limits_offset) {
+function HabObjectType(name, limits, user_limits) {
     this.name = name;
-    this.collision_limits = collision_limits;
-    this.operation_limits = operation_limits;
-    this.collision_limits_offset = collision_limits_offset;
+    this.limits = limits;
+    this.user_limits = user_limits;
 }
