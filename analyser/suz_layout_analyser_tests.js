@@ -18,5 +18,7 @@ result.log()
 
 console.log("suz tests")
 
+eval(fs.readFileSync('voxel_map.js')+'');
+
 //var obj_types = new HabObjectTypes()
 //fs.writeFile("./tmp/test_layout.json", JSON.stringify(layout))
