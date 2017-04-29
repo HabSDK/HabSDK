@@ -36,8 +36,8 @@ function refresh_leaderboard() {
     }
     
     try {
-      var totalRows = mainTable.rows.length;
-        for (var i = 1; i < totalRows; i++) {
+      var previousTotalRows = mainTable.rows.length;
+        for (var i = 1; i < previousTotalRows; i++) {
           mainTable.deleteRow(-1);
       }
       data_rows.forEach(function(row) {
