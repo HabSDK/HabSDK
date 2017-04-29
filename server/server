@@ -5,6 +5,7 @@ const WS_PORT = 3000;
 
 const fs = require('fs');
 const WebSocket = require('uws');
+const Analyser = require('./analyser.js');
 
 var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({ port: WS_PORT });
@@ -35,8 +36,14 @@ function analyse_map(data_obj) {
     analysis.user = data_obj.user;
     analysis.timestamp = data_obj.timestamp;
     analysis.map_data = data_obj.map_data;
-
-    analysis.score = 42; // TODO: Analyse Map here
+    
+    try {
+      var result = Analyser.analyse(analysis.map_data)
+    }
+    catch(err) {
+      fail('Map Analyser failed: '+err);
+    }
+    analysis.score = result.overall_score;
 
     pass(analysis);
   });
@@ -60,6 +67,9 @@ wss.on('connection', (ws) => {
         .then((analysis) => {
           add_leaderboard(analysis.user, analysis.score, analysis.timestamp);
           ws_push(ws, 'map_result', {'score':analysis.score,'timestamp':analysis.timestamp});
+        })
+        .catch((err) => {
+          console.log("Error parsing user map: "+err);
         });
         break;
       case 'get:admin':
