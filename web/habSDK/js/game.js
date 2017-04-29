@@ -1,10 +1,10 @@
-var game = new Phaser.Game(1024, 768, Phaser.CANVAS, 'test', null, true, false);
+var game = new Phaser.Game(1024, 600, Phaser.CANVAS, 'test', null, true, false);
 
 var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, cursorPos, cursor, menu,selectedCube,spriteResources;
+var isoGroup, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources;
 
 BasicGame.Boot.prototype =
     {
@@ -90,6 +90,8 @@ BasicGame.Boot.prototype =
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
             game.debug.geom(menu,'rgba(100, 100, 100, 0.3)');
+            game.debug.geom(upButton,'rgba(100, 100, 100, 1)');
+            game.debug.geom(downButton,'rgba(100, 100, 100, 1)');
         },
         spawnTiles: function () {
 
@@ -113,16 +115,21 @@ BasicGame.Boot.prototype =
             selectedCube = tile;
         },
         createMenu: function(){
-            menu = new Phaser.Rectangle(1024-100, 0, 100, 768); //new Phaser.Rectangle(50,768,1024-50,0);
+            menu = new Phaser.Rectangle(1024-100, 0, 100, 600); //new Phaser.Rectangle(50,768,1024-50,0);
+            upButton = new Phaser.Rectangle(1024-100, 600-50, 100, 50); //new Phaser.Rectangle(50,768,1024-50,0);
+            downButton = new Phaser.Rectangle(1024-100, 0, 100, 50); //new Phaser.Rectangle(50,768,1024-50,0);
+            upButton.inputEnabled = true;
+            //upButton.events.onInputDown.add(function(){menuItems.x++});
             //  The platforms group contains the ground and the 2 ledges we can jump on
             var menuItems = game.add.group();
+
             //
-            var cubeSprite = menuItems.create(50-10,0,'tile');
+            var cubeSprite = menuItems.create(50-10,70,'tile');
             cubeSprite.inputEnabled = true;
             cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             spriteResources.forEach(function(element) {
-                var sprite = menuItems.create(50-10,50+50*i,element);
+                var sprite = menuItems.create(50-10,120+50*i,element);
                 sprite.inputEnabled = true;
                 sprite.events.onInputDown.add(function(){
                     console.log("clicked");
