@@ -19,22 +19,32 @@ function add_leaderboard(user, score, timestamp) {
   fs.writeFile('leaders.json', JSON.stringify(leaderboard), 'utf8', () => {});
 }
 
-function save_map(data_obj) {
-  var user = sanitize(data_obj.user);
-  var timestamp = sanitize(data_obj.timestamp);
-  filename = 'user_maps/'+user+'_'+timestamp+'.json';
-  fs.writeFile(filename, JSON.stringify(data_obj.map_data), 'utf8', () => {});
-
+var save_map = function(data_obj) {
+  var promise = new Promise((pass, fail) => {
+    var user = sanitize(data_obj.user);
+    var timestamp = sanitize(data_obj.timestamp);
+    filename = 'user_maps/'+user+'_'+timestamp+'.json';
+    fs.writeFile(filename, JSON.stringify(data_obj.map_data), 'utf8', pass);
+  });
+  return promise;
 }
 
-function analyse_map(data_obj, cb) {
-  var user = data_obj.user;
-  var timestamp = data_obj.timestamp;
-  var map_data = data_obj.map_data;
+function analyse_map(data_obj) {
+  var promise = new Promise((pass, fail) => {
+    var analysis = {};
+    analysis.user = data_obj.user;
+    analysis.timestamp = data_obj.timestamp;
+    analysis.map_data = data_obj.map_data;
 
-  var score = 42; // TODO: Analyse Map here
+    analysis.score = 42; // TODO: Analyse Map here
 
-  cb(user, score, timestamp);
+    pass(analysis);
+  });
+  return promise;
+}
+
+function ws_push(ws, uri, data) {
+  ws.send(JSON.stringify({'uri':uri,'data':data}));
 }
 
 wss.on('connection', (ws) => {
@@ -42,15 +52,24 @@ wss.on('connection', (ws) => {
     var message = JSON.parse(data);
     switch(message.uri) {
       case 'get:leaders_data':
-        ws.send(JSON.stringify({'uri':'leaders_data','data':leaderboard}));
+        ws_push(ws, 'leaders_data', leaderboard);
         break;
       case 'post:user_map':
-        save_map(message.data);
-        analyse_map(message.data, (user,score,timestamp) => {
-          add_leaderboard(user, score, timestamp);
-          ws.send(JSON.stringify({'uri':'map_result','data':{'score':score,'timestamp':timestamp}}));
+        save_map(message.data)
+        .then(() => analyse_map(message.data))
+        .then((analysis) => {
+          add_leaderboard(analysis.user, analysis.score, analysis.timestamp);
+          ws_push(ws, 'map_result', {'score':analysis.score,'timestamp':analysis.timestamp});
         });
         break;
+      case 'get:admin':
+        var user_count = 0;
+        wss.clients.forEach(function each(client) {
+        if (client !== wss && client.readyState === WebSocket.OPEN) {
+          user_count++;
+        }
+        ws_push(ws,'admin', {'user_count': user_count});
+    });
     }
   });
 });
@@ -66,17 +85,13 @@ process.on('SIGHUP', () => {
 var illegalRe = /[\/\?<>\\:\*\|":]/g;
 var controlRe = /[\x00-\x1f\x80-\x9f]/g;
 var reservedRe = /^\.+$/;
-var windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
-var windowsTrailingRe = /[\. ]+$/;
-
 function sanitize(input) {
   var replacement = '';
   var sanitized = input
     .replace(illegalRe, replacement)
     .replace(controlRe, replacement)
     .replace(reservedRe, replacement)
-    .replace(windowsReservedRe, replacement)
-    .replace(windowsTrailingRe, replacement);
-  //return truncate(sanitized, 255);
   return sanitized;
 }
+
+console.log("HabSDK Server running"); 

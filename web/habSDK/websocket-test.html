@@ -11,12 +11,23 @@
 var ws_url = "wss://habsdk.philcrump.co.uk/api/";
 var ws_sock = null;
 var ws_reconnect = null;
+var ws_connected = false;
 
 function get_leaderboard() {
+  if(!ws_connected)
+  {
+    setTimeout(get_leaderboard,100);
+    return;
+  }
   ws_sock.send(JSON.stringify({'uri':'get:leaders_data'}))
 }
 
 function submit_map(map) {
+  if(!ws_connected)
+  {
+    setTimeout(submit_map.bind(null,map),100);
+    return;
+  }
   var postObject = {};
   postObject.uri = 'post:user_map';
   postObject.data = {};
@@ -51,18 +62,20 @@ function ws_connect()
       {
         window.clearInterval(ws_reconnect);
         ws_reconnect = null;
+        ws_connected = true;
         //console.log("Websocket Connection Opened");
       };
 
       ws_sock.onmessage = function got_packet(msg)
       {
         console.log("Websocket Data Received: "+msg.data);
-        console.log("Websocket Message Received: "+JSON.parse(msg.data));
+        console.log(JSON.parse(msg.data));
         //updateStations(msg.data);
       };
 
       ws_sock.onclose = function()
       {
+        ws_connected = false;
         ws_sock.close();
         ws_sock = null;
 
