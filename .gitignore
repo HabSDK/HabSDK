@@ -1,4 +1,5 @@
 *.swp
+*~
 
 web/habSDK/.idea/workspace.xml
 
