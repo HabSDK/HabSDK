@@ -1,12 +1,19 @@
 function analyse(layout) {
     this.rules = [
-        new Rule("Objects cannot overlap", check_overlapping)
+        new Rule("Objects cannot overlap", check_overlapping),
+        new Rule("Objects must be fully within a room", check_objects_in_room),
+        create_have_required_amount_of(["bed"], false, 6),
+        create_have_required_amount_of(["treadmill"], true, 2),
     ];
     this.metrics = [
         create_proximity_rule(["fridge", "toilet"], true),
+        create_proximity_rule(["microscope", "fridge"], true),
         create_proximity_rule(["bed"], false),
         create_have_amount_of(["microscope"], 10, false),
         create_have_amount_of(["cooker"], 5, true),
+        create_sum_property("sanity", true),
+        create_sum_property("hipster-ness", false),
+        create_sum_property("moisture", false),
     ];
     var result = new LayoutResult();
     this.metrics.forEach(metric => {
@@ -42,30 +49,4 @@ function LayoutResult() {
         console.log("\nRules\n===============");
         Object.keys(result.rules).forEach(o => console.log(o+" : "+result.rules[o]));
     }
-}
-
-function check_overlapping(layout) { 
-    Object.keys(layout.room_types).forEach(room_type_name => {
-        var room_type = layout.room_types[room_type_name];
-        for (i =0;i<room_type.objects.length;i++){
-            for (j=i+i;j<room_type.objects.length;j++) {
-                var obj_a = room_type.objects[i]; 
-                var obj_b = room_type.objects[j];
-                var result = obj_a.get_limits().intersect(obj_b.get_limits())
-                if (result) return false
-            }
-        }
-    });
-    return true;
-}
-
-function check_objects_in_room(layout) {
-    Object.keys(layout.room_types).forEach(room_type_name => {
-        var room_type = layout.room_types[room_type_name];
-        var room_polygon = room_type.get_polygon()
-        for (object in room_type.objects) {
-            var result = room_polygon.contains_limits(object.get_limits())
-            if (result) return false
-        }
-    });
 }

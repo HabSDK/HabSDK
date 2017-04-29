@@ -28,14 +28,14 @@ function HabObject() {
 
     this.get_limits = () => {    
         var size = null
-        var object_type = object_types.filter(o => o.name == this.object_type_name)[0]
+        var object_type = this.get_object_type();
         if (this.rotation == 0 || this.rotation == 2) size = new Point2D(object_type.limits.x, object_type.limits.y)
         else size = new Point2D(object_type.limits.x, object_type.limits.y)
         var limits = new Limits3D(this.position, this.position.add(new Point3D(size.x, size.y, object_type.limits.z)))
         return limits;
     } 
+    this.get_object_type = () => object_types.find(o => o.name == this.object_type_name);
 }
-function HabObjectType(name, limits) { return new HabObjectType(name, limits, {}); }
 function HabObjectType(name, limits, properties) {
     this.name = name;
     this.limits = limits;

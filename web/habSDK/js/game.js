@@ -73,15 +73,15 @@ BasicGame.Boot.prototype =
                 // If it does, do a little animation and tint change.
                 if (!tile.selected && inBounds) {
                     tile.selected = true;
-                    var targetHeight = tile.isoZ+2;
-                    game.add.tween(tile).to({ isoZ: targetHeight }, 150, Phaser.Easing.Quadratic.InOut, true);
+                    //var targetHeight = tile.isoZ+2;
+                    //game.add.tween(tile).to({ isoZ: targetHeight }, 150, Phaser.Easing.Quadratic.InOut, true);
                 }
 
                 // If not, revert back to how it was.
                 else if (tile.selected && !inBounds) {
                     tile.selected = false;
-                    var targetHeight = tile.isoZ-2;
-                    game.add.tween(tile).to({ isoZ: targetHeight }, 600, Phaser.Easing.Quadratic.InOut, true);
+                    //var targetHeight = tile.isoZ-2;
+                    //game.add.tween(tile).to({ isoZ: targetHeight }, 600, Phaser.Easing.Quadratic.InOut, true);
                 }
                 if (tile == selectedCube){
                     //tile.tint = 0x86bfda;
@@ -195,6 +195,12 @@ BasicGame.Boot.prototype =
             var down = function moveDown () {
                 selectedCube.isoZ -=20;
             }
+            var rotate = function rot () {
+                var num = selectedCube.key.charAt(selectedCube.key.length-1);
+                var oldCube = selectedCube;
+                this.createNewSprite(selectedCube.key.replace(num,parseInt(num)%4+1),selectedCube.isoX,selectedCube.isoY,selectedCube.isoZ);
+                oldCube.destroy();
+            }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);
             var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -215,6 +221,8 @@ BasicGame.Boot.prototype =
             qKey.onDown.add(up, this);
             var eKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
             eKey.onDown.add(down, this);
+            var rKey = game.input.keyboard.addKey(Phaser.Keyboard.R);
+            rKey.onDown.add(rotate, this);
 
         }
     };
