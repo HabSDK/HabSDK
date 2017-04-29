@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source_dir="$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
+cd "$source_dir"
+
+service="habsdk-server"
+
+application="node"
+if ! foobar_loc="$(type -p "$application")" || [ -z "$foobar_loc" ]; then
+  echo "Error: nodejs not installed.";
+  exit 1;
+fi
+
+npm install
+
+skel="${service}.service.skel"
+temp="${service}.service"
+sudo sed "s#{{directory}}#${source_dir}#g" < $skel > $temp
+sudo mv $temp /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable "$service"
+sudo systemctl start "$service"
+
+echo "Install Complete"
