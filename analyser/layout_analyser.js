@@ -4,7 +4,9 @@ function analyse(layout) {
     ];
     this.metrics = [
         create_proximity_rule(["fridge", "toilet"], true),
-        create_proximity_rule(["bed"], false)
+        create_proximity_rule(["bed"], false),
+        create_have_amount_of(["microscope"], 10, false),
+        create_have_amount_of(["cooker"], 5, true),
     ];
     var result = new LayoutResult();
     this.metrics.forEach(metric => {

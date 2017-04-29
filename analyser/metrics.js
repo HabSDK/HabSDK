@@ -23,10 +23,9 @@ function create_proximity_rule(object_type_list, maximise) {
 }
 
 function create_have_amount_of(object_type_list, weight, maximise) {
-    var eval = (layout) => layout.get_objects_of_type(object_type_list).sum() * weight;
-    var item_string =  " seperatation between";
-    if (maximise) item_string = "Maximise" + item_string;
-    else item_string = "Minimise" + item_string;
+    var eval = (layout) => layout.get_objects_of_type(object_type_list).reduce((a, b) => a + b, 0) * weight;
+    if (maximise) item_string = "Have more";
+    else item_string = "Have less";
     item_string += get_group_text(object_type_list);
     return new Metric(item_string, eval);
 }
