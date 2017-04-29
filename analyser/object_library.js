@@ -7,6 +7,9 @@ function HabObjectTypes() {
         new HabObjectType("growbox", new Point3D(4, 4, 2)),
         new HabObjectType("microscope", new Point3D(1, 1, 1)),
         new HabObjectType("sink", new Point3D(1, 1, 1)),
-        new HabObjectType("toilet", new Point3D(3, 3, 4)),
+        new HabObjectType("toilet", new Point3D(3, 3, 4), {
+            "sanity":5,
+            "happiness":10
+        }),
     ]
 }

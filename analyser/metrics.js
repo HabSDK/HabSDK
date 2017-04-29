@@ -1,9 +1,7 @@
 function create_proximity_rule(object_type_list, maximise) {
     var eval = (layout) => {
         var score = 0;
-        //var objects = layout.get_objects()
         var objects = layout.get_objects_of_type(object_type_list)
-        console.log(objects.length)
         for (i =0;i<objects.length;i++){
             for (j=i+i;j<objects.length;j++) {
                 var obj_a = objects[i]; 
@@ -23,7 +21,11 @@ function create_proximity_rule(object_type_list, maximise) {
 }
 
 function create_have_amount_of(object_type_list, weight, maximise) {
-    var eval = (layout) => layout.get_objects_of_type(object_type_list).reduce((a, b) => a + b, 0) * weight;
+    var eval = (layout) => {
+        var value = layout.get_objects_of_type(object_type_list).length * weight;
+        if (maximise) return value;
+        else return -value;
+    };
     if (maximise) item_string = "Have more";
     else item_string = "Have less";
     item_string += get_group_text(object_type_list);
