@@ -24,10 +24,10 @@ class HabSDKSocket {
   request_leaderboard(cb) {
     if(!this.connected)
     {
-      setTimeout(get_leaderboard,100);
+      setTimeout(this.request_leaderboard.bind(this,cb),100);
       return;
     }
-    this.rx_callbacks.leaderboard = cb;
+    this.rx_callbacks['leaderboard'] = cb;
     this.push('get:leaderboard',null);
   }
  
@@ -38,10 +38,10 @@ class HabSDKSocket {
   submit_map(user, map, cb) {
     if(!this.connected)
     {
-      setTimeout(this.submit_map.bind(null,user,map),100);
+      setTimeout(this.submit_map.bind(this,user,map,cb),100);
       return;
     }
-    this.rx_callbacks.map_result = cb;
+    this.rx_callbacks['map_result'] = cb;
     this.push('post:user_map',{'user':user, 'map_data':map, 'timestamp':(new Date()).toISOString()});
   }
 
@@ -77,7 +77,7 @@ class HabSDKSocket {
         this.sock.onmessage = function(msg)
         {
           var message = JSON.parse(msg.data);
-          console.log(message);
+          //console.log(message);
           if(typeof this.rx_callbacks[message.uri] != "undefined")
           {
             this.rx_callbacks[message.uri](message.data);
