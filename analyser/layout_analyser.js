@@ -1,19 +1,17 @@
-function Analyse(layout) {
+function analyse(layout) {
     this.rules = [
         new Rule("Objects cannot overlap", check_overlapping)
     ];
     this.metrics = [
-        
+        create_proximity_rule(["chair"])
     ];
     var result = new LayoutResult();
-    for (metric in this.metrics) {
-        var result = metric.evaluator(layout);
-        result.metrics[metric.name] = result;
-    }        
-    for (rule in this.rules) {
-        var result = rule.evaluator(layout);
-        result.rules[rule.name] = result;
-    }    
+    this.metrics.forEach(metric => {
+        result.metrics[metric.name] = metric.evaluator(layout);
+    });       
+    this.rules.forEach(rule => {
+        result.rules[rule.name] = rule.evaluator(layout);
+    });    
     return result;    
 }
 
@@ -35,16 +33,6 @@ function LayoutResult() {
     this.metrics = {}
     this.rules = {}
 }
-
-function maximise_( ){
-    // sum the proximities between 
-
-    var a = []
-    var b = []
-
-
-}
-
 
 function check_overlapping(layout) { 
     for (room_type in layout.room_types) {
