@@ -21,9 +21,8 @@
 <script src="js/habsdk-socket.js"></script>
 <script>
 habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
-
+var mainTable = document.getElementById("mainTable");
 refresh_leaderboard();
-
 function refresh_leaderboard() {
   habsdk_socket.request_leaderboard(function(data_rows) {
     console.log(data_rows);
@@ -38,6 +37,10 @@ function refresh_leaderboard() {
     }
     
     try {
+      var totalRows = mainTable.rows.length;
+        for (var i = 0; i < totalRows; i++) {
+          mainTable.deleteRow(0);
+      }
       data_rows.forEach(function(row) {
         appendRow(row);
       });
@@ -49,9 +52,7 @@ function refresh_leaderboard() {
     setTimeout(refresh_leaderboard, 30*1000);
   });
 }
-
 function appendRow(row) {
-    var mainTable = document.getElementById("mainTable");
     var newRow = mainTable.insertRow(-1);
     newRow.insertCell(0).innerHTML = row.user;
     newRow.insertCell(1).innerHTML = row.score;
