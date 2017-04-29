@@ -35,8 +35,10 @@ function HabObject() {
         return limits;
     } 
 }
-function HabObjectType(name, limits) {
+function HabObjectType(name, limits) { return new HabObjectType(name, limits, {}); }
+function HabObjectType(name, limits, properties) {
     this.name = name;
     this.limits = limits;
+    this.properties = properties;
 }
 var object_types = HabObjectTypes()
