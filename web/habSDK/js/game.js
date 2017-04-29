@@ -178,16 +178,14 @@ BasicGame.Boot.prototype =
         handleKeyPress: function (){
             var back = function moveBack () {
                 selectedCube.isoY -=20;
-                selectedCube.isoX -=20;
             }
             var left = function moveLeft () {
                 selectedCube.isoX -= 20;
             }
             var right = function moveRight () {
-                selectedCube.isoY -= 20;
+                selectedCube.isoX += 20;
             }
             var forward = function moveForward () {
-                selectedCube.isoX +=20;
                 selectedCube.isoY +=20;
             }
             var up = function moveUp () {
