@@ -5,7 +5,7 @@ function HabLayout() {
     this.size = new Point2D(0,0);
 
     this.get_objects = () => [].concat.apply([], this.rooms.map(o => this.room_types[o.room_type_name].objects));
-    this.get_objects_of_type = (object_type_list) => this.get_objects().filter(o => object_type_list.some(ot => ot.name == o.object_type_name)); 
+    this.get_objects_of_type = (object_type_list) => this.get_objects().filter(o => object_type_list.some(ot => ot == o.object_type_name)); 
 }
 function HabRoom() {
     this.room_type_name = "";

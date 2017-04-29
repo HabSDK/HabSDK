@@ -3,7 +3,7 @@ function analyse(layout) {
         new Rule("Objects cannot overlap", check_overlapping)
     ];
     this.metrics = [
-        create_proximity_rule(["chair"], true),
+        create_proximity_rule(["fridge", "toilet"], true),
         create_proximity_rule(["bed"], false)
     ];
     var result = new LayoutResult();
