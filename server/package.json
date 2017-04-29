@@ -1,0 +1,18 @@
+{
+  "name": "habsdk-api",
+  "description": "Server daemon for HabSDK",
+  "homepage": "https://github.com/HabSDK/HabSDK/",
+  "author": {
+    "name": "Phil Crump",
+    "email": "phil@philcrump.co.uk",
+    "url": "https://philcrump.co.uk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HabSDK/HabSDK/"
+  },
+  "bugs": "https://github.com/HabSDK/HabSDK/issues",
+  "dependencies": {
+    "uws": "^0.14.5"
+  }
+}

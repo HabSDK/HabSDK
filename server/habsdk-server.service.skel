@@ -1,0 +1,14 @@
+[Unit]
+Description=HabSDK Server
+After=syslog.target
+
+[Service]
+Type=simple
+User=root
+ExecStart={{directory}}/server
+ExecReload=/usr/bin/env kill -HUP $MAINPID
+WorkingDirectory={{directory}}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
