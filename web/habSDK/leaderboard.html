@@ -1,24 +1,41 @@
 <!DOCTYPE html>
 <html lang="en-GB">
+
 <head>
 <title> HabSDK Leaderboard </title>
+<script src="jquery-3.2.1.min.js"></script>
+<script>
+	var sampleData = [{"user":"test01","score":78,"timestamp":"2017-04-29T19:44:32.380Z"},
+		{"user":"testrr","score":23,"timestamp":"2017-04-29T20:00:55.999Z"},
+		{"user":"test33","score":13,"timestamp":"2017-04-29T20:00:56.980Z"},
+		{"user":"test44","score":2,"timestamp":"2017-04-29T20:00:57.774Z"}];
+</script>
+<script> function appendRow(row) {
+	try {
+	    var mainTable = document.getElementById("mainTable");
+	    var newRow = mainTable.insertRow(-1);
+	    newRow.insertCell(0).innerHTML = Object.values(row)[2];
+	    newRow.insertCell(1).innerHTML = Object.values(row)[0];
+	    newRow.insertCell(2).innerHTML = Object.values(row)[1];
+	}
+	catch(err) {
+		alert("ERROR" + "\n" + err);
+	}
+}
+</script>
 </head>
+
 <body>
 	<h1> LEADERBOARD </h1>
 	<hr>
-	<table>
+	<table id="mainTable">
 		<tr>
-			<th>ID</th>
-			<th>Team Name</th>
+			<th>Time Stamp</th>
+			<th>User Name</th>
 			<th>Score</th>
 		</tr>
-		<tr>
-			<td>NULL</td>
-			<td>NULL</td>
-			<td>NULL</td>
 	</table>
-<script src="jquery-3.2.1.min.js"></script>
-<!-- <script>
-	alert("Welcome to the NASA Space Apps Hursley 2017 HabSDK page")
-</script> -->
+	<button onclick="sampleData.forEach(function(row) {appendRow(row)})">Update</button>
 </body>
+
+</html>
