@@ -3,11 +3,80 @@
 const WS_HOST = '127.0.0.1';
 const WS_PORT = 3000;
 
+const fs = require('fs');
 const WebSocket = require('uws');
 
 var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({ port: WS_PORT });
 
-process.on('SIGHUP', () => {
-  console.log('Received SIGHUP. Reloading x, y z..');
+var leaderboard = load_leaderboard();
+function load_leaderboard() {
+  return JSON.parse(fs.readFileSync("leaders.json"));
+}
+
+function add_leaderboard(user, score, timestamp) {
+  leaderboard.push({"user":user, "score":score, "timestamp":timestamp});
+  fs.writeFile('leaders.json', JSON.stringify(leaderboard), 'utf8', () => {});
+}
+
+function save_map(data_obj) {
+  var user = sanitize(data_obj.user);
+  var timestamp = sanitize(data_obj.timestamp);
+  filename = 'user_maps/'+user+'_'+timestamp+'.json';
+  fs.writeFile(filename, JSON.stringify(data_obj.map_data), 'utf8', () => {});
+
+}
+
+function analyse_map(data_obj, cb) {
+  var user = data_obj.user;
+  var timestamp = data_obj.timestamp;
+  var map_data = data_obj.map_data;
+
+  var score = 42; // TODO: Analyse Map here
+
+  cb(user, score, timestamp);
+}
+
+wss.on('connection', (ws) => {
+  ws.on('message', (data) => {
+    var message = JSON.parse(data);
+    switch(message.uri) {
+      case 'get:leaders_data':
+        ws.send(JSON.stringify({'uri':'leaders_data','data':leaderboard}));
+        break;
+      case 'post:user_map':
+        save_map(message.data);
+        analyse_map(message.data, (user,score,timestamp) => {
+          add_leaderboard(user, score, timestamp);
+          ws.send(JSON.stringify({'uri':'map_result','data':{'score':score,'timestamp':timestamp}}));
+        });
+        break;
+    }
+  });
 });
+
+
+process.on('SIGHUP', () => {
+  console.log('Received SIGHUP.');
+
+  console.log('Reloading leaderboard..');
+  leaderboard = load_leaderboard();
+});
+
+var illegalRe = /[\/\?<>\\:\*\|":]/g;
+var controlRe = /[\x00-\x1f\x80-\x9f]/g;
+var reservedRe = /^\.+$/;
+var windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
+var windowsTrailingRe = /[\. ]+$/;
+
+function sanitize(input) {
+  var replacement = '';
+  var sanitized = input
+    .replace(illegalRe, replacement)
+    .replace(controlRe, replacement)
+    .replace(reservedRe, replacement)
+    .replace(windowsReservedRe, replacement)
+    .replace(windowsTrailingRe, replacement);
+  //return truncate(sanitized, 255);
+  return sanitized;
+}

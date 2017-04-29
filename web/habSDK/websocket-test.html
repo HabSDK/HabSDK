@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+</body>
+<script>
+var ws_url = "wss://habsdk.philcrump.co.uk/api/";
+var ws_sock = null;
+var ws_reconnect = null;
+
+function get_leaderboard() {
+  ws_sock.send(JSON.stringify({'uri':'get:leaders_data'}))
+}
+
+function submit_map(map) {
+  var postObject = {};
+  postObject.uri = 'post:user_map';
+  postObject.data = {};
+  postObject.data.user = "test00";
+  postObject.data.timestamp = (new Date()).toISOString();
+  postObject.data.map_data = {};
+  ws_sock.send(JSON.stringify(postObject));
+}
+
+ws_connect();
+function ws_connect()
+{
+  if("WebSocket" in window)
+  {
+    if(ws_sock != null)
+    {
+      return;
+    }
+
+    if (typeof MozWebSocket != "undefined")
+    {
+      ws_sock = new MozWebSocket(ws_url);
+    }
+    else
+    {
+      ws_sock = new WebSocket(ws_url);
+    }
+
+    try
+    {
+      ws_sock.onopen = function()
+      {
+        window.clearInterval(ws_reconnect);
+        ws_reconnect = null;
+        //console.log("Websocket Connection Opened");
+      };
+
+      ws_sock.onmessage = function got_packet(msg)
+      {
+        console.log("Websocket Data Received: "+msg.data);
+        console.log("Websocket Message Received: "+JSON.parse(msg.data));
+        //updateStations(msg.data);
+      };
+
+      ws_sock.onclose = function()
+      {
+        ws_sock.close();
+        ws_sock = null;
+
+        if(!ws_reconnect)
+        {
+          ws_reconnect = setInterval(function()
+          {
+            ws_connect();
+          },500);
+        }
+      };
+    }
+    catch(exception)
+    {
+      console.log("Websocket Error" + exception);  
+    }
+  }
+  else
+  {
+    console.log("Websockets not supported in your browser!");
+  }
+}
+</script>
+</html>

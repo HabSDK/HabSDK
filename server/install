@@ -13,6 +13,16 @@ fi
 
 npm install
 
+if [ ! -f "leaders.json" ]; then
+  echo "Creating leaders.json.."
+  echo "[]" > leaders.json;
+fi
+
+if [ ! -d "user_maps" ]; then
+  echo "Creating user_maps/ directory..";
+  mkdir user_maps/;
+fi
+
 skel="${service}.service.skel"
 temp="${service}.service"
 sudo sed "s#{{directory}}#${source_dir}#g" < $skel > $temp
