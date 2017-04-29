@@ -4,12 +4,12 @@ var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, cursorPos, cursor, menu,selectedCube;
+var isoGroup, cursorPos, cursor, menu,selectedCube,spriteResources;
 
 BasicGame.Boot.prototype =
     {
         preload: function () {
-
+            spriteResources = [];
             object_types = [] // load this from server?
             $.ajax({
             url: "resources/object_types.json",
@@ -17,7 +17,10 @@ BasicGame.Boot.prototype =
             success: function(response) {
                 $.each(response, function(index, object_type) {
                     for (dir in [0, 1, 2, 3]) {
-                        game.load.image(object_type.name + '_' + dir, './resources/sprites/' + object_type.name + '_' + dir + '.png');
+                        var name = object_type.name + '_' + dir;
+                        game.load.image(name, './resources/sprites/' + name + '.png');
+
+                        spriteResources = [name];//spriteResources.concat([name]);
                     }
                 })}
             });
@@ -92,14 +95,14 @@ BasicGame.Boot.prototype =
 
             for (var xx = 0; xx < 512; xx += 20) {
                 for (var yy = 0; yy < 512; yy += 20) {
-                    this.createNewSprite(xx,yy,0);
+                    this.createNewSprite('tile',xx,yy,0);
                 }
             }
         },
-        createNewSprite: function(x,y,z){
+        createNewSprite: function(type,x,y,z){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
-            var tile = game.add.isoSprite(x, y, z, 'tile', 0, isoGroup);
+            var tile = game.add.isoSprite(x, y, z, type, 0, isoGroup);
             tile.anchor.set(0.5, 0);
             tile.inputEnabled = true;
             tile.alpha = 0.4;
@@ -113,10 +116,21 @@ BasicGame.Boot.prototype =
             menu = new Phaser.Rectangle(1024-100, 0, 100, 768); //new Phaser.Rectangle(50,768,1024-50,0);
             //  The platforms group contains the ground and the 2 ledges we can jump on
             var menuItems = game.add.group();
+            //
+            var cubeSprite = menuItems.create(50-10,0,'tile');
+            cubeSprite.inputEnabled = true;
+            cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
+            var i = 0;
+            spriteResources.forEach(function(element) {
+                var sprite = menuItems.create(50-10,50+50*i,element);
+                sprite.inputEnabled = true;
+                sprite.events.onInputDown.add(function(){
+                    console.log("clicked");
+                    BasicGame.Boot.prototype.createNewSprite(element,0,0,5);
+                    }, this);
+                i++;
+            });
 
-            var sprite = menuItems.create(50-10,0,'tile');
-            sprite.inputEnabled = true;
-            sprite.events.onInputDown.add(function(){this.createNewSprite(0,0,5);}, this);
             //  Allow dragging - the 'true' parameter will make the sprite snap to the center
             //sprite.input.enableDrag(true);
             //menuItems.addChild(menu);
