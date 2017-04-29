@@ -2,11 +2,11 @@ function HabLayout() {
     this.title = "";
     this.rooms = [];
     this.room_types = {};
-    this.size = new Point(0,0);
+    this.size = new Point2D(0,0);
 }
 function HabRoom() {
     this.room_type_name = "";
-    this.position = new Point(0,0);
+    this.position = new Point2D(0,0);
 }
 function HabRoomType() {
     this.name = "";
@@ -20,7 +20,7 @@ function HabRoomType() {
 }
 function HabObject() {
     this.object_type_name = ""
-    this.position = new Point(0,0,0);
+    this.position = new Point3D(0,0,0);
     this.rotation = 0;
 
     this.get_limits = () => {    
