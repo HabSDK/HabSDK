@@ -11,20 +11,23 @@ BasicGame.Boot.prototype =
         preload: function () {
             spriteResources = [];
             object_types = [] // load this from server?
-            $.ajax({
-            url: "resources/object_types.json",
-            dataType: "json",
-            success: function(response) {
-                $.each(response, function(index, object_type) {
-                    for (dir in [0, 1, 2, 3]) {
-                        var name = object_type.name + '_' + dir;
-                        game.load.image(name, './resources/sprites/' + name + '.png');
-
-                        spriteResources = [name];//spriteResources.concat([name]);
-                    }
-                })}
-            });
-
+            // $.ajax({
+            // url: "resources/object_types.json",
+            // dataType: "json",
+            // success: function(response) {
+            //     $.each(response, function(index, object_type) {
+            //         for (dir in [0, 1, 2, 3]) {
+            //             var name = object_type.name + '_' + dir;
+            //             game.load.image(name, './resources/sprites/' + name + '.png');
+            //
+            //             spriteResources = [name];//spriteResources.concat([name]);
+            //         }
+            //     })}
+            // });
+            for (var i = 0; i<16; i++){
+                game.load.image('tile'+i,'./resources/sprites/cube.png');
+                spriteResources = spriteResources.concat(['tile'+i]);
+            }
             game.load.image('tile', './resources/sprites/cube.png');
 
             game.time.advancedTiming = true;
@@ -69,19 +72,21 @@ BasicGame.Boot.prototype =
                 // If it does, do a little animation and tint change.
                 if (!tile.selected && inBounds) {
                     tile.selected = true;
-                    game.add.tween(tile).to({ isoZ: 2 }, 150, Phaser.Easing.Quadratic.InOut, true);
+                    var targetHeight = tile.isoZ+2;
+                    game.add.tween(tile).to({ isoZ: targetHeight }, 150, Phaser.Easing.Quadratic.InOut, true);
                 }
 
                 // If not, revert back to how it was.
                 else if (tile.selected && !inBounds) {
                     tile.selected = false;
-                    game.add.tween(tile).to({ isoZ: 0 }, 600, Phaser.Easing.Quadratic.InOut, true);
+                    var targetHeight = tile.isoZ-2;
+                    game.add.tween(tile).to({ isoZ: targetHeight }, 600, Phaser.Easing.Quadratic.InOut, true);
                 }
                 if (tile.selected){
-                    tile.tint = 0x86bfda;
+                    //tile.tint = 0x86bfda;
                     tile.alpha = 1;
                 } else {
-                    tile.tint = 0xffffff;
+                    //tile.tint = 0xffffff;
                     tile.alpha = 0.4;
                 }
             });
@@ -90,8 +95,6 @@ BasicGame.Boot.prototype =
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
             game.debug.geom(menu,'rgba(100, 100, 100, 0.3)');
-            game.debug.geom(upButton,'rgba(100, 100, 100, 1)');
-            game.debug.geom(downButton,'rgba(100, 100, 100, 1)');
         },
         spawnTiles: function () {
 
@@ -113,16 +116,24 @@ BasicGame.Boot.prototype =
                 selectedCube = s;
             });
             selectedCube = tile;
+            return tile;
+        },
+        createButton: function(x,y,width,height,colour,event){
+            var graphics = game.add.graphics(0, 0);
+            graphics.beginFill(colour);
+            graphics.drawRect(x,y,width,height);
+            graphics.inputEnabled = true;
+            graphics.input.useHandCursor = true;
+            graphics.events.onInputUp.add(event, this);
         },
         createMenu: function(){
             menu = new Phaser.Rectangle(1024-100, 0, 100, 600); //new Phaser.Rectangle(50,768,1024-50,0);
-            upButton = new Phaser.Rectangle(1024-100, 600-50, 100, 50); //new Phaser.Rectangle(50,768,1024-50,0);
-            downButton = new Phaser.Rectangle(1024-100, 0, 100, 50); //new Phaser.Rectangle(50,768,1024-50,0);
-            upButton.inputEnabled = true;
+
             //upButton.events.onInputDown.add(function(){menuItems.x++});
             //  The platforms group contains the ground and the 2 ledges we can jump on
             var menuItems = game.add.group();
-
+            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(){menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20)});
+            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(){menuItems.y=Math.min(0,menuItems.y+20)});
             //
             var cubeSprite = menuItems.create(50-10,70,'tile');
             cubeSprite.inputEnabled = true;
@@ -131,9 +142,11 @@ BasicGame.Boot.prototype =
             spriteResources.forEach(function(element) {
                 var sprite = menuItems.create(50-10,120+50*i,element);
                 sprite.inputEnabled = true;
+                sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
                 sprite.events.onInputDown.add(function(){
                     console.log("clicked");
-                    BasicGame.Boot.prototype.createNewSprite(element,0,0,5);
+                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(element,0,0,5);
+                    createdComponent.tint = sprite.tint;
                     }, this);
                 i++;
             });
@@ -146,30 +159,46 @@ BasicGame.Boot.prototype =
 
 
         handleKeyPress: function (){
-            var up = function moveUp () {
+            var back = function moveBack () {
                 selectedCube.isoY -=20;
                 selectedCube.isoX -=20;
             }
             var left = function moveLeft () {
                 selectedCube.isoX -= 20;
-                selectedCube.isoY +=20;
             }
             var right = function moveRight () {
-                selectedCube.isoX += 20;
-                selectedCube.isoY -=20;
+                selectedCube.isoY -= 20;
             }
-            var down = function moveDown () {
+            var forward = function moveForward () {
                 selectedCube.isoX +=20;
                 selectedCube.isoY +=20;
             }
+            var up = function moveUp () {
+                selectedCube.isoZ +=20;
+            }
+            var down = function moveDown () {
+                selectedCube.isoZ -=20;
+            }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-            upKey.onDown.add(up, this);
+            upKey.onDown.add(back, this);
             var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-            downKey.onDown.add(down, this);
+            downKey.onDown.add(forward, this);
             var leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
             leftKey.onDown.add(left, this);
             var rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
             rightKey.onDown.add(right, this);
+            var wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+            wKey.onDown.add(back, this);
+            var sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+            sKey.onDown.add(forward, this);
+            var aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+            aKey.onDown.add(left, this);
+            var dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+            dKey.onDown.add(right, this);
+            var qKey = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+            qKey.onDown.add(up, this);
+            var eKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
+            eKey.onDown.add(down, this);
 
         }
     };
