@@ -70,13 +70,22 @@ wss.on('connection', (ws) => {
         break;
       case 'post:user_map':
         save_map(message.data)
+        .catch((err) => {
+          console.log("Error saving user map: "+err);
+          return -1;
+        })
         .then(() => analyse_map(message.data))
+        .catch((err) => {
+          console.log("Error scoring user map: "+err);
+          return -1;
+        })
         .then((analysis) => add_leaderboard(analysis))
+        .catch((err) => {
+          console.log("Error adding score to leaderboard: "+err);
+          return -1;
+        })
         .then((analysis) => {
           ws_push(ws, 'map_result', {'result':analysis.result,'timestamp':analysis.timestamp});
-        })
-        .catch((err) => {
-          console.log("Error parsing user map: "+err);
         });
         break;
       case 'get:admin':

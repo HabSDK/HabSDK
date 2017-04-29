@@ -36,7 +36,7 @@ function Limits2D(min_point, max_point) {
         ]
     } 
 
-    this.intersect() = (other_limits) => { 
+    this.intersect = (other_limits) => { 
         if (max_point.x < other_limits.min_point.x) return false;
         if (min_point.x > other_limits.max_point.x) return false;
         if (max_point.y < other_limits.min_point.y) return false;
