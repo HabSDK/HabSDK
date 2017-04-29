@@ -22,7 +22,7 @@ BasicGame.Boot.prototype =
                 })}
             });
 
-            game.load.image('tile', './resources/sprites/rocket_tiny.png');
+            game.load.image('tile', './resources/sprites/cube.png');
 
             game.time.advancedTiming = true;
 
@@ -99,8 +99,8 @@ BasicGame.Boot.prototype =
             menuItems = game.add.group();
 
             var sprite = menuItems.create(50-10,0,'tile');
-
-            //sprite.events.onInputDown.add(function(){this.createNewSpriteCopy(sprite);}, this);
+            sprite.inputEnabled = true;
+            sprite.events.onInputDown.add(function(){this.createNewSpriteCopy('tile');}, this);
             //  Allow dragging - the 'true' parameter will make the sprite snap to the center
             //sprite.input.enableDrag(true);
             //menuItems.addChild(menu);
@@ -109,7 +109,7 @@ BasicGame.Boot.prototype =
 
         createNewSpriteCopy: function(origin){
             console.log("Created");
-            var tile = game.add.isoSprite(0, 0, 10, origin, 0, isoGroup);
+            var tile = game.add.isoSprite(0, 0, 5, origin, 0, isoGroup);
             tile.anchor.set(0.5, 0);
             selectedCube = tile;
 
