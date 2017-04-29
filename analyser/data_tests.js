@@ -25,7 +25,7 @@ function create_test_layout() {
 function create_test_room(room_types) {
     var room = new HabRoom();
     room.room_type_name = room_types[random_int(0,room_types.length-1)]
-    console.log("made room with reference to: "+room.room_type_name)
+    if (room.room_type_name == null) console.log("ERRORR");
     return room;
 }
 
@@ -48,7 +48,7 @@ function create_test_room_type() {
 function create_test_object() {
     var object = new HabObject();
     object.object_type_name = object_types[random_int(0, object_types.length-1)].name
-    object.position = new Point3D(0, 0, 0);
+    object.position = new Point3D(random_int(0, 30), random_int(0, 30), random_int(0, 30));
     return object;
 }
 
@@ -79,7 +79,7 @@ function generate_fake_objects(){
 }
 
 function random_int(min, max) {
-    return Math.floor((Math.random() * max) + min);
+    return Math.floor((Math.random() * (max - min)) + min);
 }
 
 room_names = [

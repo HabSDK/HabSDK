@@ -1,7 +1,9 @@
 function create_proximity_rule(object_type_list, maximise) {
     var eval = (layout) => {
         var score = 0;
-        var objects = layout.get_objects_of_type(object_type_list)
+        var objects = layout.get_objects()
+        //var objects = layout.get_objects_of_type(object_type_list)
+        console.log(objects.length)
         for (i =0;i<objects.length;i++){
             for (j=i+i;j<objects.length;j++) {
                 var obj_a = objects[i]; 
