@@ -162,10 +162,10 @@ BasicGame.Boot.prototype =
 
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
-                sprite.events.onInputDown.add(function(){
-                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(localKey+'_1',0,0,5);
-                    createdComponent.tint = sprite.tint;
-                    }, this);
+                sprite.events.onInputDown.add(function(_localKey, _sprite){
+                    var createdComponent = BasicGame.Boot.prototype.createNewSprite(_localKey+'_1',0,0,5);
+                    createdComponent.tint = _sprite.tint;
+                    }.bind(null, localKey, sprite), this);
                 i++;
             }
 
