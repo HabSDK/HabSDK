@@ -3,6 +3,9 @@ function HabLayout() {
     this.rooms = [];
     this.room_types = {};
     this.size = new Point2D(0,0);
+
+    this.get_objects = () => [].concat.apply([], this.rooms.map(o => this.room_types[o.room_type_name].objects));
+    this.get_objects_of_type = (object_type_list) => this.get_objects().filter(o => object_type_list.some(ot => ot.name == o.object_type_name)); 
 }
 function HabRoom() {
     this.room_type_name = "";
@@ -25,13 +28,15 @@ function HabObject() {
 
     this.get_limits = () => {    
         var size = null
-        if (rotation == 0 || rotation == 2) size = new Point2D(this.object_type.limits.max_point.x, this.object_type.limits.max_point.y)
-        else size = new Point2D(this.object_type.limits.max_point.x, this.object_type.limits.max_point.y)
-        return new Limits3D(position, position + new Point3D(size.x, size.y, this.object_type.max_point.z))
+        var object_type = object_types.filter(o => o.name == this.object_type_name)[0]
+        if (this.rotation == 0 || this.rotation == 2) size = new Point2D(object_type.limits.x, object_type.limits.y)
+        else size = new Point2D(object_type.limits.x, object_type.limits.y)
+        var limits = new Limits3D(this.position, this.position.add(new Point3D(size.x, size.y, object_type.limits.z)))
+        return limits;
     } 
 }
-function HabObjectType(name, limits, user_limits) {
+function HabObjectType(name, limits) {
     this.name = name;
     this.limits = limits;
-    this.user_limits = user_limits;
 }
+var object_types = HabObjectTypes()

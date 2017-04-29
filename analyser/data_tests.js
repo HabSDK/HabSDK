@@ -4,19 +4,20 @@ eval(fs.readFileSync('data.js')+'');
 eval(fs.readFileSync('object_library.js')+'');
 
 var max_number_of_objects_per_room = 20;
-var max_number_of_room_types = 5;
-var max_number_of_rooms = 5;
-var object_types = new HabObjectTypes();
+var max_number_of_room_types = 20;
+var max_number_of_rooms = 10;
+var object_types = HabObjectTypes();
 
 function create_test_layout() {
     var layout = new HabLayout();
     var number_of_room_types = random_int(1, max_number_of_room_types);
     for (i=1;i<number_of_room_types;i++) {
-        layout.room_types.push(create_test_room_type())
+        var room_type = create_test_room_type();
+        layout.room_types[room_type.name] = room_type;
     }
     var number_of_rooms = random_int(1, max_number_of_rooms);
     for (i=0;i<number_of_rooms;i++) {
-        layout.rooms.push(create_test_room(layout.room_types))
+        layout.rooms.push(create_test_room(Object.keys(layout.room_types)))
     }
     return layout;
 }
@@ -24,12 +25,13 @@ function create_test_layout() {
 function create_test_room(room_types) {
     var room = new HabRoom();
     room.room_type_name = room_types[random_int(0,room_types.length-1)]
+    console.log("made room with reference to: "+room.room_type_name)
     return room;
 }
 
 function create_test_room_type() {
         var room_type = new HabRoomType();
-        room_type.name = room_names[random_int(0, room_names.length-1)]
+        room_type.name = room_names[random_int(0, room_names.length-1)]+" "+random_int(0, 1000000)
         room_type.layout = [
             new Point2D(0,0),
             new Point2D(10,0),
