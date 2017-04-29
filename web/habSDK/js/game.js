@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 400, Phaser.AUTO, 'test', null, true, false);
+var game = new Phaser.Game(1024, 768, Phaser.CANVAS, 'test', null, true, false);
 
 var BasicGame = function (game) { };
 
@@ -21,6 +21,7 @@ BasicGame.Boot.prototype =
             game.iso.anchor.setTo(0.5, 0.2);
 
 
+
         },
         create: function () {
 
@@ -32,6 +33,8 @@ BasicGame.Boot.prototype =
 
             // Provide a 3D position for the cursor
             cursorPos = new Phaser.Plugin.Isometric.Point3();
+
+            game.stage.backgroundColor = "#4488AA";
         },
         update: function () {
             // Update the cursor position.
@@ -57,13 +60,13 @@ BasicGame.Boot.prototype =
             });
         },
         render: function () {
-            game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
+            //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
         },
         spawnTiles: function () {
             var tile;
-            for (var xx = 0; xx < 256; xx += 38) {
-                for (var yy = 0; yy < 256; yy += 38) {
+            for (var xx = 0; xx < 512; xx += 20) {
+                for (var yy = 0; yy < 512; yy += 20) {
                     // Create a tile using the new game.add.isoSprite factory method at the specified position.
                     // The last parameter is the group you want to add it to (just like game.add.sprite)
                     tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
