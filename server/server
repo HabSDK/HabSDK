@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+
+const WS_HOST = '127.0.0.1';
+const WS_PORT = 3000;
+
+const fs = require('fs');
+const WebSocket = require('uws');
+const Analyser = require('./analyser.js');
+const AnalyserTests = require('./analyser-tests.js');
+
+var WebSocketServer = WebSocket.Server;
+var wss = new WebSocketServer({ port: WS_PORT });
+
+var leaderboard = load_leaderboard();
+function load_leaderboard() {
+  return JSON.parse(fs.readFileSync('leaders.json'));
+}
+
+var add_leaderboard = function(analysis) {
+  var promise = new Promise((pass, fail) => {
+    leaderboard.push({"user":analysis.user, "score":analysis.result.overall_result, "timestamp":analysis.timestamp});
+    fs.writeFile('leaders.json', JSON.stringify(leaderboard), 'utf8', pass.bind(null,analysis));
+  });
+  return promise;
+}
+
+var save_map = function(data_obj) {
+  var promise = new Promise((pass, fail) => {
+    var user = sanitize(data_obj.user);
+    var timestamp = sanitize(data_obj.timestamp);
+    filename = 'user_maps/'+user+'_'+timestamp+'.json';
+    fs.writeFile(filename, JSON.stringify(data_obj.map_data), 'utf8', pass);
+  });
+  return promise;
+}
+
+function analyse_map(data_obj) {
+  var promise = new Promise((pass, fail) => {
+    var analysis = {};
+    analysis.user = data_obj.user;
+    analysis.timestamp = data_obj.timestamp;
+    analysis.map_data = data_obj.map_data;
+
+    // DEBUG
+    analysis.map_data = AnalyserTests.create_test_layout();
+    
+    try {
+      var result = Analyser.analyse(analysis.map_data)
+    }
+    catch(err) {
+      fail('Map Analyser failed: '+err);
+    }
+    analysis.result = result;
+
+    pass(analysis);
+  });
+  return promise;
+}
+
+function ws_push(ws, uri, data) {
+  ws.send(JSON.stringify({'uri':uri,'data':data}));
+}
+
+wss.on('connection', (ws) => {
+  ws.on('message', (data) => {
+    var message = JSON.parse(data);
+    switch(message.uri) {
+      case 'get:leaders_data':
+        ws_push(ws, 'leaders_data', leaderboard);
+        break;
+      case 'post:user_map':
+        save_map(message.data)
+        .then(() => analyse_map(message.data))
+        .then((analysis) => add_leaderboard(analysis))
+        .then((analysis) => {
+          ws_push(ws, 'map_result', {'result':analysis.result,'timestamp':analysis.timestamp});
+        })
+        .catch((err) => {
+          console.log("Error parsing user map: "+err);
+        });
+        break;
+      case 'get:admin':
+        var user_count = 0;
+        wss.clients.forEach(function each(client) {
+        if (client !== wss && client.readyState === WebSocket.OPEN) {
+          user_count++;
+        }
+        ws_push(ws,'admin', {'user_count': user_count});
+    });
+    }
+  });
+});
+
+
+process.on('SIGHUP', () => {
+  console.log('Received SIGHUP.');
+
+  console.log('Reloading leaderboard..');
+  leaderboard = load_leaderboard();
+});
+
+var illegalRe = /[\/\?<>\\:\*\|":]/g;
+var controlRe = /[\x00-\x1f\x80-\x9f]/g;
+var reservedRe = /^\.+$/;
+function sanitize(input) {
+  var replacement = '';
+  var sanitized = input
+    .replace(illegalRe, replacement)
+    .replace(controlRe, replacement)
+    .replace(reservedRe, replacement)
+  return sanitized;
+}
+
+console.log("HabSDK Server running"); 
