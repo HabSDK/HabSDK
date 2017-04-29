@@ -1,33 +1,27 @@
 function HabLayout() {
-    this.title = ""
-    this.rooms = []
-    
-
-
-
+    this.title = "";
+    this.rooms = [];
+    this.size = new Point(0,0);
 }
-
-
 function HabRoom() {
-    this.room = null
-    this.position = new Point(0,0) 
+    this.room = null;
+    this.position = new Point(0,0);
 }
 function HabRoomType() {
-    this.name = ""
-    this.objects = [] 
-    this.floor_plan = [] // list of points defining floor plan
+    this.name = "";
+    this.objects = []; 
+    this.floor_plan = [];
 }
 function HabObject() {
-    this.object = null
-    this.position = new Point(0,0,0)
-    this.rotation = 0 
+    this.object = null;
+    this.position = new Point(0,0,0);
+    this.rotation = 0;
 }
-function HabObjectType() {
-    this.name = ""
-    this.collision_limits = new Point(0, 0, 0);
-    this.operation_limits = new Point(0, 0, 0);
-    this.collision_limits_offset = new Point(0, 0, 0);
-    this.sprite = "";
+function HabObjectType(name, collision_limits, operation_limits, collision_limits_offset) {
+    this.name = name;
+    this.collision_limits = collision_limits;
+    this.operation_limits = operation_limits;
+    this.collision_limits_offset = collision_limits_offset;
 }
 function Point(x, y) {
     this.x = x;
