@@ -38,7 +38,7 @@ function refresh_leaderboard() {
     
     try {
       var totalRows = mainTable.rows.length;
-        for (var i = 0; i < totalRows; i++) {
+        for (var i = 0; i < totalRows - 1; i++) {
           mainTable.deleteRow(0);
       }
       data_rows.forEach(function(row) {
