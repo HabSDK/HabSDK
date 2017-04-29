@@ -58,8 +58,8 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="121" column="14" lean-forward="false" selection-start-line="121" selection-start-column="14" selection-end-line="121" selection-end-column="14" />
+            <state relative-caret-position="106">
+              <caret line="135" column="112" lean-forward="false" selection-start-line="135" selection-start-column="112" selection-end-line="135" selection-end-column="112" />
               <folding />
             </state>
           </provider>
@@ -129,8 +129,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="10" />
-    <option name="y" value="43" />
+    <option name="x" value="13" />
+    <option name="y" value="63" />
     <option name="width" value="1256" />
     <option name="height" value="737" />
   </component>
@@ -375,15 +375,15 @@
       <option name="presentableId" value="Default" />
       <updated>1493461917928</updated>
       <workItem from="1493461921209" duration="1367000" />
-      <workItem from="1493466406637" duration="13652000" />
+      <workItem from="1493466406637" duration="16878000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15019000" />
+    <option name="totallyTimeSpent" value="18245000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="10" y="43" width="1256" height="737" extended-state="0" />
+    <frame x="13" y="63" width="1256" height="737" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -415,12 +415,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/game.js</url>
-          <line>135</line>
+          <line>147</line>
           <properties />
           <option name="timeStamp" value="11" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/game.js</url>
+          <line>126</line>
+          <properties />
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="12" />
+      <option name="time" value="13" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -525,8 +531,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="121" column="14" lean-forward="false" selection-start-line="121" selection-start-column="14" selection-end-line="121" selection-end-column="14" />
+        <state relative-caret-position="106">
+          <caret line="135" column="112" lean-forward="false" selection-start-line="135" selection-start-column="112" selection-end-line="135" selection-end-column="112" />
           <folding />
         </state>
       </provider>
