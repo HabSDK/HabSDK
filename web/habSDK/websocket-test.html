@@ -7,96 +7,12 @@
 </head>
 <body>
 </body>
+<script src="js/habsdk-socket.js"></script>
 <script>
-var ws_url = "wss://habsdk.co/api/";
-var ws_sock = null;
-var ws_reconnect = null;
-var ws_connected = false;
+var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
-function get_leaderboard() {
-  if(!ws_connected)
-  {
-    setTimeout(get_leaderboard,100);
-    return;
-  }
-  ws_sock.send(JSON.stringify({'uri':'get:leaders_data'}))
-}
+habsdk_socket.request_leaderboard(function(data) { console.log(data); });
 
-function submit_map(map) {
-  if(!ws_connected)
-  {
-    setTimeout(submit_map.bind(null,map),100);
-    return;
-  }
-  var postObject = {};
-  postObject.uri = 'post:user_map';
-  postObject.data = {};
-  postObject.data.user = "test00";
-  postObject.data.timestamp = (new Date()).toISOString();
-  postObject.data.map_data = {};
-  ws_sock.send(JSON.stringify(postObject));
-}
-
-ws_connect();
-function ws_connect()
-{
-  if("WebSocket" in window)
-  {
-    if(ws_sock != null)
-    {
-      return;
-    }
-
-    if (typeof MozWebSocket != "undefined")
-    {
-      ws_sock = new MozWebSocket(ws_url);
-    }
-    else
-    {
-      ws_sock = new WebSocket(ws_url);
-    }
-
-    try
-    {
-      ws_sock.onopen = function()
-      {
-        window.clearInterval(ws_reconnect);
-        ws_reconnect = null;
-        ws_connected = true;
-        //console.log("Websocket Connection Opened");
-      };
-
-      ws_sock.onmessage = function got_packet(msg)
-      {
-        console.log("Websocket Data Received: "+msg.data);
-        console.log(JSON.parse(msg.data));
-        //updateStations(msg.data);
-      };
-
-      ws_sock.onclose = function()
-      {
-        ws_connected = false;
-        ws_sock.close();
-        ws_sock = null;
-
-        if(!ws_reconnect)
-        {
-          ws_reconnect = setInterval(function()
-          {
-            ws_connect();
-          },500);
-        }
-      };
-    }
-    catch(exception)
-    {
-      console.log("Websocket Error" + exception);  
-    }
-  }
-  else
-  {
-    console.log("Websockets not supported in your browser!");
-  }
-}
+habsdk_socket.submit_map("test-user",{},function(data) { console.log(data); });
 </script>
 </html>

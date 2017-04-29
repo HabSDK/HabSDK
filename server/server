@@ -65,8 +65,8 @@ wss.on('connection', (ws) => {
   ws.on('message', (data) => {
     var message = JSON.parse(data);
     switch(message.uri) {
-      case 'get:leaders_data':
-        ws_push(ws, 'leaders_data', leaderboard);
+      case 'get:leaderboard':
+        ws_push(ws, 'leaderboard', leaderboard);
         break;
       case 'post:user_map':
         save_map(message.data)
