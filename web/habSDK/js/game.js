@@ -114,7 +114,7 @@ BasicGame.Boot.prototype =
             var tile = game.add.isoSprite(x, y, z, type, 0, isoGroup);
             tile.anchor.set(0.5, 0);
             tile.inputEnabled = true;
-            tile.alpha = 0.4;
+            tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
                 selectedCube = tile;
             });
@@ -198,8 +198,9 @@ BasicGame.Boot.prototype =
             }
             var rotate = function rot () {
                 var num = selectedCube.key.charAt(selectedCube.key.length-1);
+                var baseString = selectedCube.key.slice(0, selectedCube.key.length-1);
                 var oldCube = selectedCube;
-                this.createNewSprite(selectedCube.key.replace(num,parseInt(num)%4+1),selectedCube.isoX,selectedCube.isoY,selectedCube.isoZ);
+                this.createNewSprite(baseString+(parseInt(num)%4+1),selectedCube.isoX,selectedCube.isoY,selectedCube.isoZ);
                 oldCube.destroy();
             }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
