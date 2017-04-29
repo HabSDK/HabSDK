@@ -25,7 +25,6 @@ function create_test_layout() {
 function create_test_room(room_types) {
     var room = new HabRoom();
     room.room_type_name = room_types[random_int(0,room_types.length-1)]
-    if (room.room_type_name == null) console.log("ERRORR");
     return room;
 }
 
@@ -79,7 +78,9 @@ function generate_fake_objects(){
 }
 
 function random_int(min, max) {
-    return Math.floor((Math.random() * (max - min)) + min);
+    if (max < min) max = min
+    var value = Math.floor((Math.random() * (max - min)) + min);
+    return value;
 }
 
 room_names = [
