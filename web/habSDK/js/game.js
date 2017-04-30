@@ -95,15 +95,12 @@ BasicGame.Boot.prototype =
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
-            menuItems.children.forEach(function(item){
-                game.debug.body(item);
-            });
 
         },
         spawnTiles: function () {
 
-            for (var xx = 0; xx < 512; xx += 20) {
-                for (var yy = 0; yy < 512; yy += 20) {
+            for (var xx = 0; xx < 30*40; xx += 30) {
+                for (var yy = 0; yy < 30*40; yy += 30) {
                     this.createNewSprite('tile',xx,yy,0);
                 }
             }
@@ -138,22 +135,22 @@ BasicGame.Boot.prototype =
         },
         createMenu: function(){
             //  The platforms group contains the ground and the 2 ledges we can jump on
-            menuItems = game.add.group();
+            menuItems = []
             var background = this.createBackground(1024-100, 0, 100, 600,'0xffffff');
             background.alpha = 0.3;
-            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(){});//menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20)});
-            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(){});//menuItems.y=Math.min(0,menuItems.y+20)});
+
             //
-            var cubeSprite = menuItems.create(50-10,70,'tile');
-            cubeSprite.inputEnabled = true;
-            cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
+            // var cubeSprite = menuItems.create(50-10,70,'tile');
+            // cubeSprite.inputEnabled = true;
+            // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
                 var localKey = key;
-                var sprite = menuItems.create(50-10,120+50*i,localKey+'_1');
+                var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
+                menuItems.push(sprite);
                 var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
-                var scaleFactor = maxDimension/50;
+                var scaleFactor = maxDimension/100;
 
                 sprite.scale.set(1/scaleFactor);
                 //sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
@@ -171,30 +168,38 @@ BasicGame.Boot.prototype =
             }
 
             //  Allow dragging - the 'true' parameter will make the sprite snap to the center
-            menuItems.x = 1024-100;
+            menuItems.forEach(function(item){item.x = 1024-85});
+            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(sprite){
+                //menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20);
+                menuItems.forEach(function(item){item.y-=20});
+            });
+            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
+                //menuItems.y=Math.min(0,menuItems.y+20);
+                menuItems.forEach(function(item){item.y+=20});
+            });
         },
 
 
         handleKeyPress: function (){
             var back = function moveBack () {
-                selectedCube.isoY -=20;
-                selectedCube.isoX -=20;
+                selectedCube.isoY -=30;
+                selectedCube.isoX -=30;
             }
             var left = function moveLeft () {
-                selectedCube.isoX -= 20;
+                selectedCube.isoX -= 30;
             }
             var right = function moveRight () {
-                selectedCube.isoY -= 20;
+                selectedCube.isoY -= 30;
             }
             var forward = function moveForward () {
-                selectedCube.isoX +=20;
-                selectedCube.isoY +=20;
+                selectedCube.isoX +=30;
+                selectedCube.isoY +=30;
             }
             var up = function moveUp () {
-                selectedCube.isoZ +=20;
+                selectedCube.isoZ +=30;
             }
             var down = function moveDown () {
-                selectedCube.isoZ -=20;
+                selectedCube.isoZ -=30;
             }
             var rotate = function rot () {
                 var num = selectedCube.key.charAt(selectedCube.key.length-1);
