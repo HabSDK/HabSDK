@@ -111,6 +111,19 @@
 	}
 },
 {
+	"name": "fire-extinguisher",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 3
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 2,
+		"flammability": -50
+	}
+},
+{
 	"name": "kettle",
 	"limits": {
 		"x": 1,
@@ -295,6 +308,19 @@
 	}
 },
 {
+	"name": "treadmill",
+	"limits": {
+		"x": 5,
+		"y": 3,
+		"z": 3
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 8,
+		"happiness": -4
+	}
+},
+{
 	"name": "tv",
 	"limits": {
 		"x": 1,
@@ -308,8 +334,17 @@
 		"science": -40
 	}
 },
-
-
+{
+	"name": "door",
+	"limits": {
+		"x": 3,
+		"y": 1,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+	}
+},
 {
 	"name": "wall-1",
 	"limits": {
@@ -366,7 +401,7 @@
 	"sprite_offset":{ "x": 0,"y": 0 },
 	"properties": {
 		"mass": 10,
-		"sanity": 5,
+		"sanity": -5,
 		"happiness": 10,
 		"hygine": -10
 	}
