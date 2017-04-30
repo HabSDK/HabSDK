@@ -311,31 +311,37 @@ BasicGame.Boot.prototype =
 
         handleKeyPress: function (){
             var back = function moveBack () {
-                var object = visualToModelMap[selectedCube];
-                object.position.x -= 1;
-                this.update_object(object);
-            }
-            var left = function moveLeft () {
-                var object = visualToModelMap[selectedCube];
-                object.position.y += 1;
-                this.update_object(object);
-            }
-            var right = function moveRight () {
-                var object = visualToModelMap[selectedCube];
-                object.position.y -= 1;
-                this.update_object(object);
-            }
-            var forward = function moveForward () {
-                var object = visualToModelMap[selectedCube];
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube]; 
                 object.position.x += 1;
                 this.update_object(object);
             }
+            var left = function moveLeft () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube]; 
+                object.position.y -= 1;
+                this.update_object(object);
+            }
+            var right = function moveRight () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube]; 
+                object.position.y += 1;
+                this.update_object(object);
+            }
+            var forward = function moveForward () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube]; 
+                object.position.x -= 1;
+                this.update_object(object);
+            }
             var up = function moveUp () {
-                var object = visualToModelMap[selectedCube];
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube]; 
                 object.position.z += 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.z -= 1;
                 this.update_object(object);
