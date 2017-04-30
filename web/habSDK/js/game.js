@@ -21,8 +21,8 @@ function saveModel() {
   });
 }
 
-var modelToVisualMap = {};
-var visualToModelMap = {};
+var visuals = [];
+var models = [];
 
 BasicGame.Boot.prototype =
     {
@@ -46,6 +46,13 @@ BasicGame.Boot.prototype =
             isoGroup = game.add.group();
 
             // Let's make a load of tiles on a grid.
+
+            //var args = location.search.split('&');
+            //args.map(a => {
+            //    var aa = a.split('=');
+            //    return  
+                
+
             this.loadModel(null);
             this.spawnTiles();
             this.createMenu();
@@ -114,7 +121,7 @@ BasicGame.Boot.prototype =
             _this = this;
 
             isoFloor.forEach(function (tile) {
-                var cube = visualToModelMap[selectedCube];
+                var cube = models[visuals.indexOf(selectedCube)];
                 if (cube != undefined) {
                     var lim = cube.get_limits();
                     //lim.min_point.x;
@@ -162,7 +169,7 @@ BasicGame.Boot.prototype =
             var colour = "#a7aebe";
 
             game.debug.text(game.time.fps || '--', 2, 14, colour);
-            var object = visualToModelMap[selectedCube];
+            var object = models[selectedCube];
             if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
             else
             {
@@ -201,26 +208,28 @@ BasicGame.Boot.prototype =
             var sprite_id = object.object_type_name+"_"+(object.rotation+1);
             var visual_position = this.transform_model_to_visual(object.position);
             var new_visual = this.createNewSprite(sprite_id,visual_position, this.get_object_offset(object));
-            modelToVisualMap[object] = new_visual;
-            visualToModelMap[new_visual] = object;
+            visuals.push(new_visual);
+            models.push(object);
         },
         delete_existing_object: function(object) {
             console.log("Deleting existing object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
-            var visual = modelToVisualMap[object];
-            delete visualToModelMap[visual];
-            delete modelToVisualMap[object];
+            var visual = visuals[models.indexOf(object)];
+            models.splice(models.indexOf(visual), 1);
+            visuals.splice(visuals.indexOf(object), 1);
             visual.destroy();
         },
         update_object: function(object) {
             console.log("Updating object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
-            var visual = modelToVisualMap[object];
-            delete visualToModelMap[visual];
+            var visual = visuals[models.indexOf(object)];
             visual.destroy();
             var sprite_id = object.object_type_name+"_"+(object.rotation+1);
             var visual_position = this.transform_model_to_visual(object.position);
             var new_visual = this.createNewSprite(sprite_id, visual_position, this.get_object_offset(object));
-            modelToVisualMap[object] = new_visual;
-            visualToModelMap[new_visual] = object;
+
+            models.splice(models.indexOf(visual), 1);
+            visuals.splice(visuals.indexOf(object), 1);
+            visuals.push(new_visual);
+            models.push(object);
         },
         get_object_offset: function(object){
             var offset = object.get_object_type().sprite_offset;
@@ -309,7 +318,7 @@ BasicGame.Boot.prototype =
                 sprite.events.onInputDown.add(function(sp){
                      var pnt = new Point3D(20,20,0);
                     if (selectedCube != null){
-                        var object = visualToModelMap[selectedCube]; 
+                        var object = models[visuals.indexOf(selectedCube)]; 
                         pnt = object.position;
                     }
                     var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), pnt, 0);
@@ -351,55 +360,70 @@ BasicGame.Boot.prototype =
         handleKeyPress: function (){
             var back = function moveBack () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 object.position.x += 1;
                 this.update_object(object);
             }
             var left = function moveLeft () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 object.position.y -= 1;
                 this.update_object(object);
             }
             var right = function moveRight () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 object.position.y += 1;
                 this.update_object(object);
             }
             var forward = function moveForward () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 object.position.x -= 1;
                 this.update_object(object);
             }
             var up = function moveUp () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 object.position.z += 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 object.position.z -= 1;
                 this.update_object(object);
             }
             var copyIt = function copyObj () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 this.add_new_object(object.object_type_name, object.position, object.rotation);
             }
             var deleteIt = function deleteObj () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 this.delete_existing_object(object);
             }
             var rotate = function rot () {
-                var object = visualToModelMap[selectedCube];
+                var object = models[visuals.indexOf(selectedCube)];
                 object.rotation += 1;
                 if (object.rotation > 3) object.rotation = 0;
                 this.update_object(object);
+            }
+            var saveIt = function save () {
+                var map_data = new HabLayout();
+                var room_type = new HabRoomType();
+                room_type.name = "root";
+                var poly = new Polygon();
+                poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
+                room_type.floor_plan = poly;
+                models.forEach(visual => room_type.objects.push(models[visual]));
+                map_data.room_types[room_type.name] = (room_type);
+                var room = new HabRoom();
+                room.position = new Point2D(0,0,0);
+                room.room_type_name = room_type.name;
+                map_data.rooms.push(room); 
+
             }
             var deselectIt = function deselect () {
                 selectedCube = null;
@@ -411,7 +435,7 @@ BasicGame.Boot.prototype =
             var poly = new Polygon();
             poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
             room_type.floor_plan = poly;
-            Object.keys(visualToModelMap).forEach(visual => room_type.objects.push(visualToModelMap[visual]));
+            models.forEach(visual => room_type.objects.push(models[visual]));
             map_data.room_types[room_type.name] = (room_type);
             var room = new HabRoom();
             room.position = new Point2D(0,0,0);
