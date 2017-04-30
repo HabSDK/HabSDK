@@ -392,6 +392,17 @@
 	}
 },
 {
+	"name": "person",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+	}
+},
+{
 	"name": "toilet",
 	"limits": {
 		"x": 3,
