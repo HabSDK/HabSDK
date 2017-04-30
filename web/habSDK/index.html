@@ -221,10 +221,20 @@
 
             function openMetricsDetails(results) {
               $("#metrics-overlay").show();
+              $("#metrics-detailed-results").empty();
+              var i=0;
               for (var property in results.result.metrics) {
                 if (results.result.metrics.hasOwnProperty(property)) {
-                  $("#metrics-detailed-results").append($("<p></p>").text(property+": "+results.result.metrics[property]));
+                  if(results.result.metrics[property] > 0)
+                  {
+                    $("#metrics-detailed-results").append($("<p></p>").html(property+": <b>"+results.result.metrics[property]+"</b>"));
+                    i++;
+                  }
                 }
+              }
+              if(i==0)
+              {
+                $("#metrics-detailed-results").append($("<p></p>").text("No recommendations.. is your map empty?"));
               }
             }
             function closeMetricsDetails() {
