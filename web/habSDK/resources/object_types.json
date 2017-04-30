@@ -1,1 +1,310 @@
-[{"name":"bed","limits":{"x":8,"y":3,"z":4},"properties":{"mass":10}},{"name":"block1x1","limits":{"x":1,"y":1,"z":1},"properties":{}},{"name":"block2x1","limits":{"x":1,"y":1,"z":1},"properties":{}},{"name":"block2x2","limits":{"x":1,"y":1,"z":1},"properties":{}},{"name":"block4x2","limits":{"x":1,"y":1,"z":1},"properties":{}},{"name":"block4x4","limits":{"x":1,"y":1,"z":1},"properties":{}},{"name":"block8x4","limits":{"x":1,"y":1,"z":1},"properties":{}},{"name":"bluemixserver","limits":{"x":4,"y":4,"z":6},"properties":{"mass":10}},{"name":"cooker","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"kettle","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"shower","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"sofa","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"spectography","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"table-low","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"centrifuge","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"cupboard","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"composter","limits":{"x":4,"y":4,"z":4},"properties":{"mass":10}},{"name":"fridge","limits":{"x":2,"y":2,"z":4},"properties":{"mass":10}},{"name":"growbox","limits":{"x":4,"y":4,"z":2},"properties":{"mass":10}},{"name":"incinerator","limits":{"x":3,"y":1,"z":3},"properties":{"mass":10}},{"name":"medical","limits":{"x":2,"y":2,"z":6},"properties":{"mass":10}},{"name":"microscope","limits":{"x":1,"y":1,"z":1},"properties":{"mass":10}},{"name":"sink","limits":{"x":1,"y":1,"z":1},"properties":{"mass":10}},{"name":"tv","limits":{"x":1,"y":1,"z":1},"properties":{"mass":10}},{"name":"worktop","limits":{"x":1,"y":1,"z":1},"properties":{"mass":10}},{"name":"toilet","limits":{"x":3,"y":3,"z":4},"properties":{"sanity":5,"happiness":10}}]
+[{
+	"name": "bed",
+	"limits": {
+		"x": 8,
+		"y": 3,
+		"z": 4
+	},
+	"properties": {
+		"mass": 65,
+		"comfort": 15
+	}
+},
+{
+	"name": "block1x1",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"properties": {
+		
+	}
+},
+{
+	"name": "block2x1",
+	"limits": {
+		"x": 2,
+		"y": 1,
+		"z": 1
+	},
+	"properties": {
+		
+	}
+},
+{
+	"name": "block2x2",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 1
+	},
+	"properties": {
+		
+	}
+},
+{
+	"name": "block4x2",
+	"limits": {
+		"x": 4,
+		"y": 2,
+		"z": 2
+	},
+	"properties": {
+		
+	}
+},
+{
+	"name": "block4x4",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 4
+	},
+	"properties": {
+		
+	}
+},
+{
+	"name": "block8x4",
+	"limits": {
+		"x": 8,
+		"y": 4,
+		"z": 4
+	},
+	"properties": {
+		
+	}
+},
+{
+	"name": "bluemixserver",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 6
+	},
+	"properties": {
+		"mass": 80,
+		"flammability": 60,
+		"science": 10
+	}
+},
+{
+	"name": "cooker",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 2
+	},
+	"properties": {
+		"mass": 8,
+		"flammability": 30
+	}
+},
+{
+	"name": "kettle",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"properties": {
+		"mass": 1,
+		"comfort": 5
+	}
+},
+{
+	"name": "shower",
+	"limits": {
+		"x": 5,
+		"y": 5,
+		"z": 8
+	},
+	"properties": {
+		"mass": 40,
+		"hygine": 10
+	}
+},
+{
+	"name": "sofa",
+	"limits": {
+		"x": 8,
+		"y": 3,
+		"z": 4
+	},
+	"properties": {
+		"mass": 35,
+		"comfort": 50,
+		"flammability": 30
+	}
+},
+{
+	"name": "spectography",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 2
+	},
+	"properties": {
+		"mass": 15,
+		"science": 40
+	}
+},
+{
+	"name": "table-low",
+	"limits": {
+		"x": 3,
+		"y": 2,
+		"z": 4
+	},
+	"properties": {
+		"mass": 8
+	}
+},
+{
+	"name": "centrifuge",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 4
+	},
+	"properties": {
+		"mass": 18,
+		"science": 30
+	}
+},
+{
+	"name": "cupboard",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 4
+	},
+	"properties": {
+		"mass": 10
+	}
+},
+{
+	"name": "composter",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 6
+	},
+	"properties": {
+		"mass": 140,
+		"hygine": -5
+	}
+},
+{
+	"name": "fridge",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 4
+	},
+	"properties": {
+		"mass": 20
+	}
+},
+{
+	"name": "growbox",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 2
+	},
+	"properties": {
+		"mass": 20,
+		"science": 5
+	}
+},
+{
+	"name": "incinerator",
+	"limits": {
+		"x": 3,
+		"y": 1,
+		"z": 3
+	},
+	"properties": {
+		"mass": 28,
+		"hygine": -5,
+		"flammability": 20
+	}
+},
+{
+	"name": "medical",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 6
+	},
+	"properties": {
+		"mass": 15,
+		"hygine": 60,
+		"happiness": -2
+	}
+},
+{
+	"name": "microscope",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"properties": {
+		"mass": 2,
+		"science": 20
+	}
+},
+{
+	"name": "sink",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"properties": {
+		"mass": 5,
+		"hygine": 20,
+		"flammability": -20
+	}
+},
+{
+	"name": "tv",
+	"limits": {
+		"x": 2,
+		"y": 1,
+		"z": 2
+	},
+	"properties": {
+		"mass": 6,
+		"happiness": 20,
+		"science": -40
+	}
+},
+{
+	"name": "worktop",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 4
+	},
+	"properties": {
+		"mass": 6
+	}
+},
+{
+	"name": "toilet",
+	"limits": {
+		"x": 3,
+		"y": 3,
+		"z": 4
+	},
+	"properties": {
+		"mass": 10,
+		"sanity": 5,
+		"happiness": 10,
+		"hygine": -10
+	}
+}]
