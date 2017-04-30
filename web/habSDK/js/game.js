@@ -116,13 +116,18 @@ BasicGame.Boot.prototype =
                     var lim = cube.get_limits();
                     //lim.min_point.x;
                     //console.log(_this.transform_model_to_visual(obj.x) , tile.isoX)
-                    if (_this.transform_model_to_visual(lim.min_point).x <= tile.isoX &&
-                        _this.transform_model_to_visual(lim.max_point).x > tile.isoX &&
-                        _this.transform_model_to_visual(lim.min_point).y <= tile.isoY &&
-                        _this.transform_model_to_visual(lim.max_point).y > tile.isoY) {
+                    if (_this.transform_model_to_visual(lim.min_point).x > tile.isoX &&
+                        _this.transform_model_to_visual(lim.max_point).x <= tile.isoX &&
+                        _this.transform_model_to_visual(lim.min_point).y > tile.isoY &&
+                        _this.transform_model_to_visual(lim.max_point).y <= tile.isoY) {
                         tile.selected = true;
                         tile.tint = 0x86bfda;
                     }
+                    else{
+                        tile.selected = false;
+                        tile.tint = 0xffffff;
+                    }
+
                 }
             });
             if (selectedCube!=null) {
@@ -280,7 +285,10 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), new Point3D(40,40,0));
+                     var pnt = new Point3D(20,20,3);
+                    if (selectedCube != null)
+                        pnt = visualToModelMap[selectedCube].position;
+                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), pnt);
                     }, this);
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
                 sprite.tooltip = tooltip;
