@@ -94,7 +94,7 @@ BasicGame.Boot.prototype =
                     //var targetHeight = tile.isoZ-2;
                     //game.add.tween(tile).to({ isoZ: targetHeight }, 600, Phaser.Easing.Quadratic.InOut, true);
                 }
-                if (tile == selectedCube){
+                if (tile == selectedCube) {
                     //tile.tint = 0x86bfda;
                     tile.alpha = 0.4;
                 } else {
@@ -103,10 +103,27 @@ BasicGame.Boot.prototype =
                 }
             });
             game.iso.topologicalSort(isoGroup);
-            toolTips.forEach(function(tip){
-                tip.x = tip.sprite.x-200;
+            toolTips.forEach(function (tip) {
+                tip.x = tip.sprite.x - 200;
                 tip.y = tip.sprite.y;
-            })
+            });
+            _this = this;
+
+            isoFloor.forEach(function (tile) {
+                var cube = visualToModelMap[selectedCube];
+                if (cube != undefined) {
+                    var lim = cube.get_limits();
+                    //lim.min_point.x;
+                    //console.log(_this.transform_model_to_visual(obj.x) , tile.isoX)
+                    if (_this.transform_model_to_visual(lim.min_point).x <= tile.isoX &&
+                        _this.transform_model_to_visual(lim.max_point).x > tile.isoX &&
+                        _this.transform_model_to_visual(lim.min_point).y <= tile.isoY &&
+                        _this.transform_model_to_visual(lim.max_point).y > tile.isoY) {
+                        tile.selected = true;
+                        tile.tint = 0x86bfda;
+                    }
+                }
+            });
             //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
         },
         render: function () {
@@ -116,7 +133,7 @@ BasicGame.Boot.prototype =
             game.debug.text(game.time.fps || '--', 2, 14, colour);
             var object = visualToModelMap[selectedCube];
             if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
-            else 
+            else
             {
                 game.debug.text(object.object_type_name, 2, 40, colour)
                 game.debug.text("Position: "+object.position, 2, 60, colour);
@@ -286,32 +303,32 @@ BasicGame.Boot.prototype =
 
         handleKeyPress: function (){
             var back = function moveBack () {
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.x -= 1;
                 this.update_object(object);
             }
             var left = function moveLeft () {
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.y += 1;
                 this.update_object(object);
             }
             var right = function moveRight () {
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.y -= 1;
                 this.update_object(object);
             }
             var forward = function moveForward () {
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.x += 1;
                 this.update_object(object);
             }
             var up = function moveUp () {
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.z += 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.z -= 1;
                 this.update_object(object);
             }
