@@ -11,8 +11,12 @@ function saveModel() {
             
   isoGroup.children.forEach(function(sprite) {
     console.log(sprite);
+    var sprite_type = sprite.key.split("_")[0];
+    console.log(sprite_type);
     console.log(sprite.key);
     console.log(sprite.position);
+    console.log(sprite.rotation);
+
   });
 }
 
