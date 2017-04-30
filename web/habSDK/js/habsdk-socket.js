@@ -19,6 +19,12 @@ class HabSDKSocket {
     this.sock.send(JSON.stringify({'uri':uri,'data':data}));
   }
 
+  // Set callback for server-commanded reload
+  // cb(data) - callback for server-commanded reload
+  on_reloadCommand(cb) {
+    this.rx_callbacks['command_reload'] = cb;
+  }
+
   // Submit request for leaderboard
   // cb(data) - callback for leaderboard response data
   request_leaderboard(cb) {
