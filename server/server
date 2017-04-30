@@ -110,6 +110,15 @@ wss.on('connection', (ws) => {
         break;
 
       case 'post:user_map':
+        analyse_map(message.data)
+        .catch((err) => {
+          console.log("Error scoring user map: "+err);
+        })
+        .then((analysis) => {
+          ws_push(ws, 'map_result', {'result':analysis.result,'timestamp':analysis.timestamp});
+        });
+        break;
+      case 'post:user_score':
         save_map(message.data)
         .catch((err) => {
           console.log("Error saving user map: "+err);
