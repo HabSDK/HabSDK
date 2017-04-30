@@ -29,8 +29,8 @@ BasicGame.Boot.prototype =
             isoGroup = game.add.group();
             // Let's make a load of tiles on a grid.
 
-            //this.spawnTiles();
-            this.loadModel(create_test_layout());
+            this.spawnTiles();
+            //this.loadModel(create_test_layout());
             this.createMenu();
             this.handleKeyPress();
             // Provide a 3D position for the cursor
@@ -144,6 +144,12 @@ BasicGame.Boot.prototype =
             graphics.beginFill(colour,1.0);
             graphics.drawRect(x,y,width,height);
             return graphics;
+        },
+        createSelectedItem: () => {
+            selected_item_infomation = game.add.graphics(20, 20);
+            selected_item_infomation.beginFill(0xffffff,1.0);
+            selected_item_infomation.drawRect(20,20,100,100);
+            return graphics
         },
         createMenu: function(){
             //  The platforms group contains the ground and the 2 ledges we can jump on
