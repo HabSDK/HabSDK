@@ -45,8 +45,8 @@ function LayoutResult() {
 
     this.log = () => {
         console.log("\Metrics\n===============");
-        Object.keys(result.metrics).forEach(o => console.log(o+" : "+result.metrics[o]));
+        Object.keys(this.metrics).forEach(o => console.log(o+" : "+this.metrics[o]));
         console.log("\nRules\n===============");
-        Object.keys(result.rules).forEach(o => console.log(o+" : "+result.rules[o]));
+        Object.keys(this.rules).forEach(o => console.log(o+" : "+this.rules[o]));
     }
 }
