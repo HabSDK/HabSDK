@@ -234,7 +234,7 @@
               }
               if(i==0)
               {
-                $("#metrics-detailed-results").append($("<p></p>").text("No recommendations.. is your map empty?"));
+                $("#metrics-detailed-results").append($("<p></p>").text("No metrics met.. try adding more items."));
               }
             }
             function closeMetricsDetails() {
@@ -280,8 +280,11 @@
                   newRow.id = "leaderboard-table-"+index;
                   newRow.insertCell(0).innerHTML = row.user;
                   newRow.insertCell(1).innerHTML = row.score;
-                  newRow.insertCell(2).innerHTML = (new Date(row.timestamp)).toLocaleTimeString();
+                  newRow.insertCell(2).innerHTML = formatTimestamp((new Date(row.timestamp)));
               }
-        
+              
+              function formatTimestamp(myDate) {
+                return myDate.getDate() + "/" + (myDate.getMonth() + 1) + "/" + myDate.getFullYear() + " " + myDate.getHours() + ":" + myDate.getMinutes();
+              }
         </script>
 </html>
