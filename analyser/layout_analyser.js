@@ -6,21 +6,31 @@ function analyse(layout) {
         create_have_required_amount_of(["treadmill"], true, 2),
     ];
     this.metrics = [
+        create_proximity_rule(["bluemixserver", "fire-extinguisher"], false),
+        create_proximity_rule(["medical", "treadmill"], true),
         create_proximity_rule(["fridge", "toilet"], true),
-        create_proximity_rule(["microscope", "fridge"], true),
+        create_proximity_rule(["cooker", "fridge"], false),
         create_proximity_rule(["bed"], false),
         create_have_amount_of(["microscope"], 10, false),
         create_have_amount_of(["cooker"], 5, true),
+        create_sum_property("science", true),
         create_sum_property("sanity", true),
+        create_sum_property("hygine", true),
+        create_sum_property("flammability", false),
         create_sum_property("hipster-ness", false),
+        create_sum_property("happiness", true),
         create_sum_property("moisture", false),
     ];
     var result = new LayoutResult();
     this.metrics.forEach(metric => {
-        result.metrics[metric.name] = metric.evaluator(layout);
+        var value = metric.evaluator(layout);
+        result.metrics[metric.name] = value;
+        result.overall_result += value; 
     });       
     this.rules.forEach(rule => {
-        result.rules[rule.name] = rule.evaluator(layout);
+        var value = rule.evaluator(layout);
+        result.rules[rule.name] = value;
+        if (value = false) result.overall_result = 0;
     });    
     return result;    
 }
