@@ -4,7 +4,7 @@ var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, isoFloor, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
+var isoGroup, isoFloor,toolTips, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
 
 var modelToVisualMap = {};
@@ -25,6 +25,7 @@ BasicGame.Boot.prototype =
             //game.world.setBounds(0, 0, 2048, 1024);
         },
         create: function () {
+            toolTips = [];
             // Create a group for our tiles.
             isoFloor = game.add.group();
             isoGroup = game.add.group();
@@ -90,6 +91,10 @@ BasicGame.Boot.prototype =
                 }
             });
             game.iso.topologicalSort(isoGroup);
+            toolTips.forEach(function(tip){
+                tip.x = tip.sprite.x-200;
+                tip.y = tip.sprite.y;
+            })
             //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
         },
         render: function () {
@@ -98,6 +103,7 @@ BasicGame.Boot.prototype =
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
+
         },
         spawnTiles: function () {
             for (var xx = 0; xx < 30*40; xx += 30) {
@@ -169,11 +175,9 @@ BasicGame.Boot.prototype =
 
                 var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
-
                 var localKey = key;
                 var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
                 menuItems.push(sprite);
-
                 var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
                 var scaleFactor = maxDimension/100;
@@ -190,6 +194,17 @@ BasicGame.Boot.prototype =
                     var createdComponent = _this.createNewSprite(sp.key,0,0,30);
                     createdComponent.tint = sp.tint;
                     }, this);
+                var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
+                sprite.tooltip = tooltip;
+                tooltip.sprite = sprite;
+                tooltip.alpha = 0;
+                toolTips.push(tooltip);
+                sprite.events.onInputOver.add(function(sp){
+                    sp.tooltip.alpha = 1.0;
+                });
+                sprite.events.onInputOut.add(function(sp){
+                    sp.tooltip.alpha = 0.0;
+                });
                 //  Create the title after the sprite has been created
                 var text = game.add.text(0,70+100*i,key,style)
                 text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
