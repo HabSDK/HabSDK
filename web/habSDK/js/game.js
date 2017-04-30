@@ -148,9 +148,34 @@ BasicGame.Boot.prototype =
         },
         add_existing_object: function(object) {
             console.log("Adding existing object "+object.object_type_name);
-            var tile = this.createNewSprite(object.object_type_name+"_1",object.x,object.y,object.z);
-            modelToVisualMap[object] = tile;
-            visualToModelMap[tile] = object;
+            var sprite_id = object.object_type_name+"_"+(object.rotation+1);
+            var visual_position = this.transform_model_to_visual(object.position);
+            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);  
+            modelToVisualMap[object] = new_visual;
+            visualToModelMap[new_visual] = object;
+        },
+        update_object: function(object) {
+            console.log("Updating object "+object.object_type_name);
+            var visual = modelToVisualMap[object];
+            delete visualToModelMap[visual];
+            visual.destroy();
+            var sprite_id = object.object_type_name+"_"+(object.rotation+1);
+            var visual_position = this.transform_model_to_visual(object.position);
+            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);  
+            modelToVisualMap[object] = new_visual;
+            visualToModelMap[new_visual] = object;
+        },
+        transform_model_to_visual: function(model_point){
+            var visual_x = model_point.x * 30;
+            var visual_y = model_point.y * 30;
+            var visual_z = model_point.z * 30;
+            return new Point3D(visual_x, visual_y, visual_z);
+        },
+        transform_visual_to_model: function(visual_point){
+            var model_x = visual_point.x / 30;
+            var model_y = visual_point.y / 30;
+            var model_z = visual_point.z / 30;
+            return new Point3D(model_x, model_y, model_z);
         },
         createNewSprite: function(type,x,y,z){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
@@ -188,13 +213,6 @@ BasicGame.Boot.prototype =
             graphics.beginFill(colour,1.0);
             graphics.drawRect(x,y,width,height);
             return graphics;
-        },
-        createSelectedItem: () => {
-            selected_item_infomation = game.add.graphics(20, 20);
-            selected_item_infomation.beginFill(0xffffff,1.0);
-            selected_item_infomation.drawRect(20,20,100,100);
-            selected_item_infomation.drawRect
-            return graphics
         },
         createMenu: function(){
             //  The platforms group contains the ground and the 2 ledges we can jump on
@@ -290,11 +308,10 @@ BasicGame.Boot.prototype =
                 selectedCube.isoZ -=30;
             }
             var rotate = function rot () {
-                var num = selectedCube.key.charAt(selectedCube.key.length-1);
-                var baseString = selectedCube.key.slice(0, selectedCube.key.length-1);
-                var oldCube = selectedCube;
-                this.createNewSprite(baseString+(parseInt(num)%4+1),selectedCube.isoX,selectedCube.isoY,selectedCube.isoZ);
-                oldCube.destroy();
+                var object = visualToModelMap[selectedCube]; 
+                object.rotation += 1;                
+                if (object.rotation > 3) object.rotation = 0;
+                this.update_object(object);
             }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);
