@@ -14,6 +14,7 @@ function HabLayout() {
         for(var prop in clone) {
             me[prop] = clone[prop];
         }
+        me.size = new Point2D(clone.size.x, clone.size.y);
     }
 }
 function HabRoom() {
@@ -27,6 +28,7 @@ function HabRoom() {
         for(var prop in clone) {
             me[prop] = clone[prop];
         }
+        me.position = new Point2D(clone.position.x, clone.position.y);
     }
 }
 function HabRoomType() {
