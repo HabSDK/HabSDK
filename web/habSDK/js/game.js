@@ -26,8 +26,9 @@ BasicGame.Boot.prototype =
         },
         create: function () {
             // Create a group for our tiles.
-            isoGroup = game.add.group();
             isoFloor = game.add.group();
+            isoGroup = game.add.group();
+
             // Let's make a load of tiles on a grid.
 
             this.spawnTiles();
