@@ -222,7 +222,8 @@
 	},
 	"sprite_offset":{ "x": 0,"y": 0 },
 	"properties": {
-		"mass": 20
+		"mass": 20,
+		"comfort": 4
 	}
 },
 {
@@ -316,7 +317,8 @@
 	},
 	"sprite_offset":{ "x": 0,"y": 0 },
 	"properties": {
-		"mass": 6
+		"mass": 6,
+		"science": 3
 	}
 },
 {
