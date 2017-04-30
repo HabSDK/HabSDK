@@ -170,10 +170,6 @@ BasicGame.Boot.prototype =
                 game.debug.text("Position: "+object.position, 2, 60, colour);
                 game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
-            game.debug.cameraInfo(game.camera, 32, 32);
-            menuItems.forEach(function(item){
-                game.debug.body(item,'rgba(255, 255, 0, 0.1)');
-            });
 
         },
         spawnTiles: function () {
