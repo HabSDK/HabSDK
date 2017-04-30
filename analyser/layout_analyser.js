@@ -1,7 +1,7 @@
 function analyse(layout) {
     this.rules = [
         new Rule("Objects cannot overlap", check_overlapping),
-        new Rule("Objects must be fully within a room", check_objects_in_room),
+        //new Rule("Objects must be fully within a room", check_objects_in_room),
         create_have_required_amount_of(["bed"], false, 6),
         create_have_required_amount_of(["treadmill"], false, 1),
         create_have_required_amount_of(["shower"], false, 1),
@@ -32,7 +32,7 @@ function analyse(layout) {
     this.rules.forEach(rule => {
         var value = rule.evaluator(layout);
         result.rules[rule.name] = value;
-        if (value = false) result.overall_result = 0;
+        //if (value = false) result.overall_result = 0;
     });    
     return result;    
 }
