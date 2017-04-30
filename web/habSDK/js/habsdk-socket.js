@@ -45,6 +45,21 @@ class HabSDKSocket {
     this.push('post:user_map',{'user':user, 'map_data':map, 'timestamp':(new Date()).toISOString()});
   }
 
+  // Request user map from previously submitted / high score
+  // user - name of user (string)
+  // timestamp - Date() of user map (Date())
+  // cb(data) - callback for user map data
+  request_user_map(user, timestamp, cb) {
+    if(!this.connected)
+    {
+      setTimeout(this.request_user_map.bind(this,user,timestamp,cb),100);
+      return;
+    }
+    this.rx_callbacks['user_map'] = cb;
+    this.push('get:user_map',{'user':user,'timestamp':timestamp.toISOString()});
+  }
+
+
   // Make connection to websocket
   // cb() - optional callback for successful connection
   connect(cb) {

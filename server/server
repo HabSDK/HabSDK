@@ -6,7 +6,7 @@ const WS_PORT = 3000;
 const fs = require('fs');
 const WebSocket = require('uws');
 const Analyser = require('./analyser.js');
-const AnalyserTests = require('./analyser-tests.js');
+//const AnalyserTests = require('./analyser-tests.js');
 
 var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({ port: WS_PORT });
@@ -34,6 +34,23 @@ var save_map = function(data_obj) {
   return promise;
 }
 
+var load_map = function(description_obj) {
+  var promise = new Promise((pass, fail) => {
+    var user = sanitize(description_obj.user);
+    var timestamp = sanitize(description_obj.timestamp);
+    filename = 'user_maps/'+user+'_'+timestamp+'.json';
+    var data;
+    try {
+      data = JSON.parse(fs.readFileSync(filename));
+    }
+    catch(err) {
+      fail(err);
+    }
+    pass(data);
+  });
+  return promise;
+}
+
 function analyse_map(data_obj) {
   var promise = new Promise((pass, fail) => {
     var analysis = {};
@@ -42,10 +59,9 @@ function analyse_map(data_obj) {
     analysis.map_data = data_obj.map_data;
 
     // DEBUG
-    analysis.map_data = AnalyserTests.create_test_layout();
-    
+    //analysis.map_data = AnalyserTests.create_test_layout();
     try {
-      var result = Analyser.analyse(analysis.map_data)
+      var result = Analyser.analyse_object(analysis.map_data)
     }
     catch(err) {
       fail('Map Analyser failed: '+err);
@@ -63,39 +79,59 @@ function ws_push(ws, uri, data) {
 
 wss.on('connection', (ws) => {
   ws.on('message', (data) => {
-    var message = JSON.parse(data);
+    var message;
+    try {
+      message = JSON.parse(data);
+    }
+    catch(err) {
+      console.log("Error parsing websocket JSON input");
+    }
     switch(message.uri) {
       case 'get:leaderboard':
         ws_push(ws, 'leaderboard', leaderboard);
         break;
+
+      case 'get:user_map':
+        load_map(message.data)
+        .then((map_data) => {
+          ws_push(ws, 'user_map', map_data);
+        })
+        .catch((err) => {
+          console.log("Error loading user map: "+err);
+        });
+        break;
+
       case 'post:user_map':
         save_map(message.data)
         .catch((err) => {
           console.log("Error saving user map: "+err);
-          return -1;
         })
         .then(() => analyse_map(message.data))
         .catch((err) => {
           console.log("Error scoring user map: "+err);
-          return -1;
         })
         .then((analysis) => add_leaderboard(analysis))
         .catch((err) => {
           console.log("Error adding score to leaderboard: "+err);
-          return -1;
         })
         .then((analysis) => {
           ws_push(ws, 'map_result', {'result':analysis.result,'timestamp':analysis.timestamp});
         });
         break;
+
       case 'get:admin':
         var user_count = 0;
         wss.clients.forEach(function each(client) {
-        if (client !== wss && client.readyState === WebSocket.OPEN) {
-          user_count++;
-        }
+          if (client !== wss && client.readyState === WebSocket.OPEN) {
+            user_count++;
+          }
+        });
         ws_push(ws,'admin', {'user_count': user_count});
-    });
+        break;
+
+      default:
+        console.log('Unknown websocket URI requested: '+message.uri);
+        break;
     }
   });
 });
