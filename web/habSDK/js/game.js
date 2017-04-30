@@ -6,6 +6,15 @@ BasicGame.Boot = function (game) { };
 
 var isoGroup, isoFloor, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
+function saveModel() {
+  //var layoutStruct = new HabLayout();
+            
+  isoGroup.children.forEach(function(sprite) {
+    console.log(sprite);
+    console.log(sprite.key);
+    console.log(sprite.position);
+  });
+}
 
 var modelToVisualMap = {};
 var visualToModelMap = {};
