@@ -6,6 +6,19 @@ BasicGame.Boot = function (game) { };
 
 var isoGroup, isoFloor,toolTips, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
+function saveModel() {
+  //var layoutStruct = new HabLayout();
+            
+  isoGroup.children.forEach(function(sprite) {
+    console.log(sprite);
+    var sprite_type = sprite.key.split("_")[0];
+    console.log(sprite_type);
+    console.log(sprite.key);
+    console.log(sprite.position);
+    console.log(sprite.rotation);
+
+  });
+}
 
 var modelToVisualMap = {};
 var visualToModelMap = {};
@@ -31,10 +44,8 @@ BasicGame.Boot.prototype =
             isoGroup = game.add.group();
 
             // Let's make a load of tiles on a grid.
-
-            this.spawnTiles();
-
-            //this.loadModel(create_test_layout());
+            this.loadModel(null);
+            //this.spawnTiles();
             this.createMenu();
             this.handleKeyPress();
             // Provide a 3D position for the cursor
@@ -49,12 +60,13 @@ BasicGame.Boot.prototype =
                 dataType: "json",
                 success: function(response) {
                     $.each(response, function(index, object_type) {
+                        object_types = response; 
                         spriteResources[object_type.name]=[];
+                        console.log("Registering "+object_type.name+" as object type.");
                         for (var i = 1; i <=4; i++) {
                             var name = object_type.name + '_' + i;
                             game.load.image(name, './resources/sprites/' + name + '.png');
-
-                            spriteResources[object_type.name]=spriteResources[object_type.name ].concat([name])
+                            spriteResources[object_type.name]=spriteResources[object_type.name].concat([name])
                         }
                     })}
             });
@@ -99,7 +111,14 @@ BasicGame.Boot.prototype =
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
-            game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
+            var colour = "#a7aebe";
+
+            game.debug.text(game.time.fps || '--', 2, 14, colour);
+
+            var object = modelToVisualMap[selectedCube];
+            if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
+            else game.debug.text(object.object_type_name+" : "+object.position, 2, 40, colour);
+
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
@@ -112,17 +131,27 @@ BasicGame.Boot.prototype =
                 }
             }
         },
-        loadModel: (layout) => {
-            var objects = layout.get_objects();
-            objects.forEach(object => add_new_object(object));
+        loadModel: function(layout) {
+            //var objects = layout.get_objects();
+            var block = new HabObject();
+            block.object_type_name = "block2x1";
+            var objects = [
+                block,    
+            ];
+            objects.forEach(object => this.add_existing_object(object));            
         },
-
-        add_new_object: (object) => {
-            var tile = createNewSprite("tile",object.x,object.y,object.z);
-            this.modelToVisualMap[object] = tile;
-            this.visualToModelMap[tile] = object;
+        add_new_object: function(object_type_name) {
+            console.log("Adding new object "+object.object_type_name);
+            var object = new HabObject()
+            object.object_type_name = object_type_name;
+            this.add_existing_object(object);
         },
-
+        add_existing_object: function(object) {
+            console.log("Adding existing object "+object.object_type_name);
+            var tile = this.createNewSprite(object.object_type_name+"_1",object.x,object.y,object.z);
+            modelToVisualMap[object] = tile;
+            visualToModelMap[tile] = object;
+        },
         createNewSprite: function(type,x,y,z){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
@@ -160,21 +189,30 @@ BasicGame.Boot.prototype =
             graphics.drawRect(x,y,width,height);
             return graphics;
         },
+        createSelectedItem: () => {
+            selected_item_infomation = game.add.graphics(20, 20);
+            selected_item_infomation.beginFill(0xffffff,1.0);
+            selected_item_infomation.drawRect(20,20,100,100);
+            selected_item_infomation.drawRect
+            return graphics
+        },
         createMenu: function(){
             //  The platforms group contains the ground and the 2 ledges we can jump on
             menuItems = []
             var background = this.createBackground(1024-100, 0, 100, 600,'0xffffff');
             background.alpha = 0.3;
 
-            //
             // var cubeSprite = menuItems.create(50-10,70,'tile');
             // cubeSprite.inputEnabled = true;
             // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
+<<<<<<< HEAD
 
                 var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
+=======
+>>>>>>> origin/master
                 var localKey = key;
                 var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
                 menuItems.push(sprite);
@@ -185,15 +223,16 @@ BasicGame.Boot.prototype =
                 sprite.scale.set(1/scaleFactor);
                 //sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
                 sprite.inputEnabled = true;
-//  Check the pixel data of the sprite
+                //  Check the pixel data of the sprite
                 sprite.input.pixelPerfectOver = true;
 
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    var createdComponent = _this.createNewSprite(sp.key,0,0,30);
+                    var createdComponent = _this.add_new_object(sp.key,0,0,30);
                     createdComponent.tint = sp.tint;
                     }, this);
+<<<<<<< HEAD
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
                 sprite.tooltip = tooltip;
                 tooltip.sprite = sprite;
@@ -213,6 +252,8 @@ BasicGame.Boot.prototype =
                 text.setTextBounds(0, 0, 100, 100);
                 menuItems.push(text);
 
+=======
+>>>>>>> origin/master
                 i++;
             }
 
