@@ -91,10 +91,14 @@ BasicGame.Boot.prototype =
                     tile.alpha = 1;
                 }
             });
+            game.iso.simpleSort(isoGroup);
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
+            menuItems.forEach(function(item){
+                game.debug.body(item,'rgba(255, 255, 0, 0.1)');
+            });
 
         },
         spawnTiles: function () {
@@ -161,7 +165,7 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    _this.createNewSprite(sp.key,0,0,5);
+                    _this.createNewSprite(sp.key,0,0,30);
                     createdComponent.tint = sprite.tint;
                     }, this);
                 i++;
@@ -182,18 +186,16 @@ BasicGame.Boot.prototype =
 
         handleKeyPress: function (){
             var back = function moveBack () {
-                selectedCube.isoY -=30;
                 selectedCube.isoX -=30;
             }
             var left = function moveLeft () {
-                selectedCube.isoX -= 30;
+                selectedCube.isoY += 30;
             }
             var right = function moveRight () {
                 selectedCube.isoY -= 30;
             }
             var forward = function moveForward () {
                 selectedCube.isoX +=30;
-                selectedCube.isoY +=30;
             }
             var up = function moveUp () {
                 selectedCube.isoZ +=30;
