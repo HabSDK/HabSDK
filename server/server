@@ -60,9 +60,8 @@ function analyse_map(data_obj) {
 
     // DEBUG
     //analysis.map_data = AnalyserTests.create_test_layout();
-    
     try {
-      var result = Analyser.analyse(analysis.map_data)
+      var result = Analyser.analyse_object(analysis.map_data)
     }
     catch(err) {
       fail('Map Analyser failed: '+err);
