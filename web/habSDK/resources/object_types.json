@@ -6,7 +6,8 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"comfort": 15
 	}
 },
 {
@@ -83,7 +84,9 @@
 		"z": 6
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"flammability": 60
+		"science": 10
 	}
 },
 {
@@ -94,7 +97,8 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"flammability": 30
 	}
 },
 {
@@ -105,7 +109,8 @@
 		"z": 1
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"comfort": 5
 	}
 },
 {
@@ -116,7 +121,8 @@
 		"z": 8
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"hygine": 10
 	}
 },
 {
@@ -127,7 +133,9 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"comfort": 50,
+		"flammability": 30
 	}
 },
 {
@@ -138,7 +146,8 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"science": 40
 	}
 },
 {
@@ -160,7 +169,8 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"science": 30
 	}
 },
 {
@@ -182,7 +192,8 @@
 		"z": 6
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"hygine": -5
 	}
 },
 {
@@ -205,6 +216,7 @@
 	},
 	"properties": {
 		"mass": 10
+		"science": 5
 	}
 },
 {
@@ -226,7 +238,9 @@
 		"z": 6
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"hygine": 60,
+		"happiness": -2
 	}
 },
 {
@@ -237,7 +251,8 @@
 		"z": 1
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"science": 20
 	}
 },
 {
@@ -248,7 +263,8 @@
 		"z": 1
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"hygine": 20
 	}
 },
 {
@@ -259,7 +275,9 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
+		"happiness": 20
+		"science": -40
 	}
 },
 {
@@ -282,6 +300,7 @@
 	},
 	"properties": {
 		"sanity": 5,
-		"happiness": 10
+		"happiness": 10,
+		"hygine": -10
 	}
 }]
