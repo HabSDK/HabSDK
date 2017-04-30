@@ -39,8 +39,8 @@ BasicGame.Boot.prototype =
             isoGroup = game.add.group();
 
             // Let's make a load of tiles on a grid.
-
-            this.spawnTiles();
+            this.loadModel(null);
+            //this.spawnTiles();
             this.createMenu();
             this.handleKeyPress();
             // Provide a 3D position for the cursor
@@ -107,7 +107,7 @@ BasicGame.Boot.prototype =
 
             var object = modelToVisualMap[selectedCube];
             if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
-            game.debug.text(object.object_type_name+" : "+object.position, 2, 40, colour);
+            else game.debug.text(object.object_type_name+" : "+object.position, 2, 40, colour);
 
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
@@ -127,11 +127,16 @@ BasicGame.Boot.prototype =
             var objects = [
                 block,    
             ];
-            objects.forEach(object => add_new_object(object));            
+            objects.forEach(object => add_existing_object(object));            
         },
 
-        add_new_object: (object) => {
-            var tile = createNewSprite("tile",object.x,object.y,object.z);
+        add_new_object: (object_type_name) => {
+            var object = new HabObject()
+            object.object_type_name = object_type_name;
+            this.add_existing_object(object);
+        },
+        add_existing_object: (object) => {
+            var tile = createNewSprite(object.object_type_name,object.x,object.y,object.z);
             this.modelToVisualMap[object] = tile;
             this.visualToModelMap[tile] = object;
         },
@@ -206,7 +211,7 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    var createdComponent = _this.createNewSprite(sp.key,0,0,30);
+                    var createdComponent = _this.add_new_object(sp.key,0,0,30);
                     createdComponent.tint = sp.tint;
                     }, this);
                 i++;
