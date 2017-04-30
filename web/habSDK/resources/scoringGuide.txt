@@ -4,5 +4,7 @@ Try to create the most suitable space for the habitat on Mars. Points will be al
 
 Essential items will score more points (for example, adding toilets).
 
-Placement of the items matters. Points will be given to items that are placed on obvious locations (eg, walls on corners). Points are also given based on proximity (eg, placing fire-extinguishers near incinerators)
+Placement of the items matters. Points will be given to items that are placed on obvious locations (eg, walls on corners). Points are also given based on proximity (eg, placing fire-extinguishers near incinerators).
+
+Points are available for using common sense (eg, adding enough hygiene facilities and medical equipment, or avoiding blocking any entrances).
 
