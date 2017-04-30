@@ -60,7 +60,7 @@ function analyse_map(data_obj) {
     
     var result;
     try {
-     var layout = Analyser.struct_to_object(analysis.map_data); 
+     var layout = Analyser.struct_to_layout(analysis.map_data); 
      result = Analyser.analyse(layout)
     }
     catch(err) {

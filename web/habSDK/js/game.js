@@ -125,7 +125,9 @@ BasicGame.Boot.prototype =
                     }
                 }
             });
-            //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
+            if (selectedCube!=null) {
+                game.camera.follow(selectedCube, new Phaser.Rectangle(100, 100, 824, 568));
+            }
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
@@ -309,42 +311,48 @@ BasicGame.Boot.prototype =
             menuItems.forEach(function(item){item.x = 1024-85});
             this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(sprite){
                 //menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20);
-                menuItems.forEach(function(item){item.y-=20});
+                menuItems.forEach(function(item){item.y-=50});
             });
             this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
                 //menuItems.y=Math.min(0,menuItems.y+20);
-                menuItems.forEach(function(item){item.y+=20});
+                menuItems.forEach(function(item){item.y+=50});
             });
         },
 
 
         handleKeyPress: function (){
             var back = function moveBack () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.x += 1;
                 this.update_object(object);
             }
             var left = function moveLeft () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.y -= 1;
                 this.update_object(object);
             }
             var right = function moveRight () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.y += 1;
                 this.update_object(object);
             }
             var forward = function moveForward () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.x -= 1;
                 this.update_object(object);
             }
             var up = function moveUp () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.z += 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.z -= 1;
                 this.update_object(object);
