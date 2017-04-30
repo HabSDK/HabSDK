@@ -269,6 +269,7 @@ Points will be given to items that are placed on obvious locations (eg, walls on
               $("#metrics-overlay").show();
               $("#metrics-detailed-results").empty();
               $("#metrics-detailed-results").append($("<h4></h4>").text("Rules"));
+              var i=0;
               for (var property in results.result.rules) {
                 if (results.result.rules.hasOwnProperty(property)) {
                   if(results.result.rules[property] == false)
