@@ -3,10 +3,12 @@ function analyse(layout) {
         new Rule("Objects cannot overlap", check_overlapping),
         new Rule("Objects must be fully within a room", check_objects_in_room),
         create_have_required_amount_of(["bed"], false, 6),
-        create_have_required_amount_of(["treadmill"], true, 2),
+        create_have_required_amount_of(["treadmill"], false, 1),
+        create_have_required_amount_of(["shower"], false, 1),
     ];
     this.metrics = [
         create_proximity_rule(["bluemixserver", "fire-extinguisher"], false),
+        create_floor_plan_metric(),
         create_proximity_rule(["medical", "treadmill"], true),
         create_proximity_rule(["fridge", "toilet"], true),
         create_proximity_rule(["cooker", "fridge"], false),
