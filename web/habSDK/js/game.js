@@ -23,6 +23,9 @@ BasicGame.Boot.prototype =
             // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
             game.iso.anchor.setTo(0.5, 0.2);
 
+            // In order to have the camera move, we need to increase the size of our world bounds.
+            //game.world.setBounds(0, 0, 2048, 1024);
+
 
 
         },
@@ -91,7 +94,8 @@ BasicGame.Boot.prototype =
                     tile.alpha = 1;
                 }
             });
-            game.iso.simpleSort(isoGroup);
+            game.iso.topologicalSort(isoGroup);
+            //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
