@@ -116,10 +116,10 @@ BasicGame.Boot.prototype =
                     var lim = cube.get_limits();
                     //lim.min_point.x;
                     //console.log(_this.transform_model_to_visual(obj.x) , tile.isoX)
-                    if (_this.transform_model_to_visual(lim.min_point).x <= tile.isoX &&
-                        _this.transform_model_to_visual(lim.max_point).x > tile.isoX &&
-                        _this.transform_model_to_visual(lim.min_point).y <= tile.isoY &&
-                        _this.transform_model_to_visual(lim.max_point).y > tile.isoY) {
+                    if (_this.transform_model_to_visual(lim.min_point).x > tile.isoX &&
+                        _this.transform_model_to_visual(lim.max_point).x <= tile.isoX &&
+                        _this.transform_model_to_visual(lim.min_point).y > tile.isoY &&
+                        _this.transform_model_to_visual(lim.max_point).y <= tile.isoY) {
                         tile.selected = true;
                         tile.tint = 0x86bfda;
                     }
@@ -312,31 +312,31 @@ BasicGame.Boot.prototype =
         handleKeyPress: function (){
             var back = function moveBack () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.x += 1;
                 this.update_object(object);
             }
             var left = function moveLeft () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.y -= 1;
                 this.update_object(object);
             }
             var right = function moveRight () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.y += 1;
                 this.update_object(object);
             }
             var forward = function moveForward () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.x -= 1;
                 this.update_object(object);
             }
             var up = function moveUp () {
                 if (selectedCube == null) return;
-                var object = visualToModelMap[selectedCube]; 
+                var object = visualToModelMap[selectedCube];
                 object.position.z += 1;
                 this.update_object(object);
             }
