@@ -25,8 +25,16 @@ class HabSDKSocket {
     this.rx_callbacks['command_reload'] = cb;
   }
 
+  // Set callback for new leaderboard broadcast
+  // cd(data) - callback for leaderboard data
+  // WARNING: Clears request_leaderboard callback
+  on_leaderboard(cb) {
+    this.rx_callbacks['leaderboard'] = cb;
+  }
+
   // Submit request for leaderboard
   // cb(data) - callback for leaderboard response data
+  // WARNING: Clears on_leaderboard callback
   request_leaderboard(cb) {
     if(!this.connected)
     {
@@ -37,7 +45,7 @@ class HabSDKSocket {
     this.push('get:leaderboard',null);
   }
  
-  // Submit user map for analysis and scoring
+  // Submit user map for analysis
   // user - name of user (string)
   // map - user map data (object)
   // cb(data) - callback for scoring response data
@@ -49,6 +57,20 @@ class HabSDKSocket {
     }
     this.rx_callbacks['map_result'] = cb;
     this.push('post:user_map',{'user':user, 'map_data':map, 'timestamp':(new Date()).toISOString()});
+  }
+
+  // Submit user map for leaderboard
+  // user - name of user (string)
+  // map - user map data (object)
+  // cb(data) - callback for scoring response data
+  submit_score(user, map, cb) {
+    if(!this.connected)
+    {
+      setTimeout(this.submit_map.bind(this,user,map,cb),100);
+      return;
+    }
+    this.rx_callbacks['map_result'] = cb;
+    this.push('post:user_score',{'user':user, 'map_data':map, 'timestamp':(new Date()).toISOString()});
   }
 
   // Request user map from previously submitted / high score
