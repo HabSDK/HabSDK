@@ -85,7 +85,7 @@
 	},
 	"properties": {
 		"mass": 10,
-		"flammability": 60
+		"flammability": 60,
 		"science": 10
 	}
 },
@@ -215,7 +215,7 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10
+		"mass": 10,
 		"science": 5
 	}
 },
@@ -276,7 +276,7 @@
 	},
 	"properties": {
 		"mass": 10,
-		"happiness": 20
+		"happiness": 20,
 		"science": -40
 	}
 },
