@@ -3,17 +3,57 @@
 
 <head>
 <title> HabSDK Leaderboard </title>
+<link href='http://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
+<style>
+#audible-alarm-container {
+  display: none;
+}
+body {
+  background: black;
+  color: white;
+  font-family: "Press Start 2P";
+ }
+#mainHeading {
+  border: 1px solid gold;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 3em;
+  font-weight: bold;
+}
+table {
+  margin: auto;
+  width: 75%
+}
+th {
+  text-align: center;
+  text-transform: uppercase;
+}
+td {
+  border-bottom: 1px solid white;
+  text-align: center;
+}
+</style>
 </head>
 
 <body>
-	<h1> LEADERBOARD </h1>
-	<hr>
+  <span id="audible-alarm-container"></span>
+	<h1 id="mainHeading"> leaderboard </h1>
 	<table id="mainTable">
 		<tr>
 			<th>User</th>
 			<th>Score</th>
 			<th>Timestamp</th>
 		</tr>
+    <tr id="0">
+      <td>PARZIVAL</td>
+      <td>110000</td>
+      <td>23:59</td>
+    </tr>
+    <tr id="1">
+      <td>ART3MIS</td>
+      <td>109000</td>
+      <td>00:02</td>
+    </tr>
 	</table>
 </body>
 
@@ -25,35 +65,34 @@
 
   function refresh_leaderboard() {
     habsdk_socket.request_leaderboard(function(data_rows) {
-    
       try {
         data_rows.sort(function(a,b) {
-          return b.score - a.score;
+          return (b.score - a.score);
         });
-      }
-      catch(err) {
-        console.log(err);
-      }
-      
-      try {
+        var oldHighScore = mainTable.rows[1].cells[1].innerHTML;
         var previousTotalRows = mainTable.rows.length;
         for (var i = 1; i < previousTotalRows; i++) {
             mainTable.deleteRow(-1);
         }
-        data_rows.forEach(function(row) {
-          appendRow(row);
+        data_rows.forEach(function(row, index) {
+          appendRow(row, index);
         });
+        if (oldHighScore < data_rows[0].score) {
+          $("#audible-alarm-container").html("");
+          $("#audible-alarm-container").html('<audio autoplay><source src="Electrical_Sweep-Sweeper-1760111493.mp3" type="audio/mpeg"></audio>');
+          $("#0").css("color", "gold");
+        }
       }
       catch(err) {
         console.log(err);
       }
-      
       setTimeout(refresh_leaderboard, 30*1000);
     });
   }
 
-  function appendRow(row) {
+  function appendRow(row, index) {
       var newRow = mainTable.insertRow(-1);
+      newRow.id = index;
       newRow.insertCell(0).innerHTML = row.user;
       newRow.insertCell(1).innerHTML = row.score;
       newRow.insertCell(2).innerHTML = (new Date(row.timestamp)).toLocaleTimeString();
