@@ -220,7 +220,6 @@ BasicGame.Boot.prototype =
             menuItems = []
             var background = this.createBackground(1024-100, 0, 100, 600,'0xffffff');
             background.alpha = 0.3;
-
             // var cubeSprite = menuItems.create(50-10,70,'tile');
             // cubeSprite.inputEnabled = true;
             // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
@@ -247,7 +246,6 @@ BasicGame.Boot.prototype =
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
                     var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), new Point3D(0,0,0));
-                    createdComponent.tint = sp.tint;
                     }, this);
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
                 sprite.tooltip = tooltip;
@@ -285,22 +283,34 @@ BasicGame.Boot.prototype =
 
         handleKeyPress: function (){
             var back = function moveBack () {
-                selectedCube.isoX -=30;
+                var object = visualToModelMap[selectedCube]; 
+                object.x -= 1;
+                update_object(object);
             }
             var left = function moveLeft () {
-                selectedCube.isoY += 30;
+                var object = visualToModelMap[selectedCube]; 
+                object.y += 1;
+                update_object(object);
             }
             var right = function moveRight () {
-                selectedCube.isoY -= 30;
+                var object = visualToModelMap[selectedCube]; 
+                object.y -= 1;
+                update_object(object);
             }
             var forward = function moveForward () {
-                selectedCube.isoX +=30;
+                var object = visualToModelMap[selectedCube]; 
+                object.x += 1;
+                update_object(object);
             }
             var up = function moveUp () {
-                selectedCube.isoZ +=30;
+                var object = visualToModelMap[selectedCube]; 
+                object.z += 1;
+                update_object(object);
             }
             var down = function moveDown () {
-                selectedCube.isoZ -=30;
+                var object = visualToModelMap[selectedCube]; 
+                object.z -= 1;
+                update_object(object);
             }
             var rotate = function rot () {
                 var object = visualToModelMap[selectedCube];
