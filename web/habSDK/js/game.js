@@ -389,7 +389,7 @@ BasicGame.Boot.prototype =
             var map_data = new HabLayout();
             var room_type = new HabRoomType();
             room_type.name = "root";
-            room_type.floor_plan = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40);]
+            room_type.floor_plan = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
             Object.keys(modelToVisualMap).forEach(object => room_type.objects.push(object));
             map_data.room_types.push(room_type);
             var room = new HabRoom();
