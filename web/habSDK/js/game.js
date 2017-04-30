@@ -6,40 +6,33 @@ BasicGame.Boot = function (game) { };
 
 var isoGroup, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
+
+var modelToVisualMap = {};
+var visualToModelMap = {};
+
 BasicGame.Boot.prototype =
     {
         preload: function () {
-
             this.getResources();
-
             game.load.image('tile', './resources/sprites/cube.png');
-
             game.time.advancedTiming = true;
-
             // Add and enable the plug-in.
             game.plugins.add(new Phaser.Plugin.Isometric(game));
-
             // This is used to set a game canvas-based offset for the 0, 0, 0 isometric coordinate - by default
             // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
             game.iso.anchor.setTo(0.5, 0.2);
-
-
-
         },
         create: function () {
-
             // Create a group for our tiles.
             isoGroup = game.add.group();
-
             // Let's make a load of tiles on a grid.
 
-            this.spawnTiles();
+            //this.spawnTiles();
+            this.loadModel(create_test_layout());
             this.createMenu();
             this.handleKeyPress();
-
             // Provide a 3D position for the cursor
             cursorPos = new Phaser.Plugin.Isometric.Point3();
-
             game.stage.backgroundColor = "#4488AA";
         },
 
@@ -108,6 +101,17 @@ BasicGame.Boot.prototype =
                 }
             }
         },
+        loadModel: (layout) => {
+            var objects = layout.get_objects();
+            objects.forEach(object => add_new_object(object));            
+        },
+
+        add_new_object: (object) => {
+            var tile = createNewSprite("tile",object.x,object.y,object.z);
+            this.modelToVisualMap[object] = tile;
+            this.visualToModelMap[tile] = object;
+        },
+
         createNewSprite: function(type,x,y,z){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
@@ -126,6 +130,7 @@ BasicGame.Boot.prototype =
             graphics.beginFill(colour,1.0);
             graphics.drawRect(x,y,width,height);
             graphics.inputEnabled = true;
+            graphics.text = "BUTTON";
             graphics.input.useHandCursor = true;
             graphics.events.onInputUp.add(event, this);
             return graphics;
@@ -222,7 +227,6 @@ BasicGame.Boot.prototype =
             eKey.onDown.add(down, this);
             var rKey = game.input.keyboard.addKey(Phaser.Keyboard.R);
             rKey.onDown.add(rotate, this);
-
         }
     };
 
