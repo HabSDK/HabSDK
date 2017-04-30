@@ -95,7 +95,7 @@ BasicGame.Boot.prototype =
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
-
+            game.debug.spriteInfo(selectedCube, 32, 32);
         },
         spawnTiles: function () {
 
@@ -157,9 +157,14 @@ BasicGame.Boot.prototype =
             // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
+
+                var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+
                 var localKey = key;
                 var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
                 menuItems.push(sprite);
+
                 var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
                 var scaleFactor = maxDimension/100;
@@ -176,6 +181,14 @@ BasicGame.Boot.prototype =
                     _this.createNewSprite(sp.key,0,0,30);
                     createdComponent.tint = sprite.tint;
                     }, this);
+                //  Create the title after the sprite has been created
+                var text = game.add.text(0,70+100*i,key,style)
+                text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+
+                //  We'll set the bounds to be from x0, y100 and be 800px wide by 100px high
+                text.setTextBounds(0, 0, 100, 100);
+                menuItems.push(text);
+
                 i++;
             }
 
