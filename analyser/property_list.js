@@ -17,3 +17,4 @@
 // cost
 // sanitation
 // solid / nonsolid (defaults to solid for objects)
+// room
