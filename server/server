@@ -5,8 +5,7 @@ const WS_PORT = 3000;
 
 const fs = require('fs');
 const WebSocket = require('uws');
-const Analyser = require('./analyser.js');
-//const AnalyserTests = require('./analyser-tests.js');
+const Analyser = require('../analyser/analyser.js');
 
 var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({ port: WS_PORT });
@@ -20,6 +19,7 @@ var add_leaderboard = function(analysis) {
   var promise = new Promise((pass, fail) => {
     leaderboard.push({"user":analysis.user, "score":analysis.result.overall_result, "timestamp":analysis.timestamp});
     fs.writeFile('leaders.json', JSON.stringify(leaderboard), 'utf8', pass.bind(null,analysis));
+    wss_broadcast('leaderboard',leaderboard);
   });
   return promise;
 }
@@ -57,11 +57,11 @@ function analyse_map(data_obj) {
     analysis.user = data_obj.user;
     analysis.timestamp = data_obj.timestamp;
     analysis.map_data = data_obj.map_data;
-
-    // DEBUG
-    //analysis.map_data = AnalyserTests.create_test_layout();
+    
+    var result;
     try {
-      var result = Analyser.analyse_object(analysis.map_data)
+     var layout = Analyser.struct_to_object(analysis.map_data); 
+     result = Analyser.analyse(layout)
     }
     catch(err) {
       fail('Map Analyser failed: '+err);
@@ -75,6 +75,14 @@ function analyse_map(data_obj) {
 
 function ws_push(ws, uri, data) {
   ws.send(JSON.stringify({'uri':uri,'data':data}));
+}
+
+function wss_broadcast(uri,data) {
+  wss.clients.forEach(function each(client) {
+    if (client !== wss && client.readyState === WebSocket.OPEN) {
+      ws_push(client, uri, data);
+    }
+  });
 }
 
 wss.on('connection', (ws) => {
@@ -136,12 +144,19 @@ wss.on('connection', (ws) => {
   });
 });
 
-
 process.on('SIGHUP', () => {
-  console.log('Received SIGHUP.');
+  console.log('Received SIGHUP, reloading data..');
 
   console.log('Reloading leaderboard..');
   leaderboard = load_leaderboard();
+
+  console.log('Reloading Analyser Object Types..');
+  Analyser.reload_objecttypes();
+
+  console.log('Commanding client reload..');
+  wss_broadcast('command_reload',null);
+
+  console.log('Completed Reload. Happy Habbing!');
 });
 
 var illegalRe = /[\/\?<>\\:\*\|":]/g;
