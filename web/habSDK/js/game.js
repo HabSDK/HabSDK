@@ -5,7 +5,7 @@ var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, isoFloor,toolTips, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
+var isoGroup, isoFloor,toolTips, cursorPos, arrowKeys,cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
 function saveModel() {
   //var layoutStruct = new HabLayout();
@@ -27,8 +27,9 @@ var visualToModelMap = {};
 BasicGame.Boot.prototype =
     {
         preload: function () {
+
             this.getResources();
-            game.load.image('tile', './resources/sprites/cube.png');
+
             game.time.advancedTiming = true;
             // Add and enable the plug-in.
             game.plugins.add(new Phaser.Plugin.Isometric(game));
@@ -36,7 +37,7 @@ BasicGame.Boot.prototype =
             // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
             game.iso.anchor.setTo(0.5, 0.2);
             // In order to have the camera move, we need to increase the size of our world bounds.
-            //game.world.setBounds(0, 0, 2048, 1024);
+            game.world.setBounds(0, 0, 2048, 2048);
         },
         create: function () {
             toolTips = [];
@@ -51,10 +52,12 @@ BasicGame.Boot.prototype =
             this.handleKeyPress();
             // Provide a 3D position for the cursor
             cursorPos = new Phaser.Plugin.Isometric.Point3();
+            arrowKeys = game.input.keyboard.createCursorKeys();
             game.stage.backgroundColor = "#4488AA";
         },
 
         getResources: function(){
+            game.load.image('tile', './resources/sprites/cube.png');
             spriteResources = new Object();
             $.ajax({
                 url: "resources/object_types.json",
@@ -127,7 +130,27 @@ BasicGame.Boot.prototype =
             });
             if (selectedCube!=null) {
                 game.camera.follow(selectedCube, new Phaser.Rectangle(100, 100, 824, 568));
+            } else {
+                game.camera.follow(null);
+                if (arrowKeys.up.isDown)
+                {
+                    game.camera.y -= 10;
+                }
+                else if (arrowKeys.down.isDown)
+                {
+                    game.camera.y += 10;
+                }
+
+                if (arrowKeys.left.isDown)
+                {
+                    game.camera.x -= 10;
+                }
+                else if (arrowKeys.right.isDown)
+                {
+                    game.camera.x += 10;
+                }
             }
+
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
@@ -142,6 +165,7 @@ BasicGame.Boot.prototype =
                 game.debug.text("Position: "+object.position, 2, 60, colour);
                 game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
+            game.debug.cameraInfo(game.camera, 32, 32);
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
@@ -367,6 +391,9 @@ BasicGame.Boot.prototype =
                 if (object.rotation > 3) object.rotation = 0;
                 this.update_object(object);
             }
+            var deselectIt = function deselect () {
+                selectedCube = null;
+            }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);
             var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -393,8 +420,10 @@ BasicGame.Boot.prototype =
             delKey.onDown.add(deleteIt, this);
             var fKey = game.input.keyboard.addKey(Phaser.Keyboard.F);
             fKey.onDown.add(copyIt, this);
-            var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACE);
-            spaceKey.onDown.add(submit, this);
+            var escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+            escKey.onDown.add(deselectIt, this);
+            // var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACE);
+            // spaceKey.onDown.add(submit, this);
         },
         submit: function(){
             var map_data = new HabLayout();
