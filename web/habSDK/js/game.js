@@ -91,6 +91,29 @@ BasicGame.Boot.prototype =
             });
             game.iso.topologicalSort(isoGroup);
             //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
+            if (selectedCube != undefined) {
+                isoFloor.forEach(function (tile) {
+                    var min_x = selectedCube.isoX;
+                    var min_y = selectedCube.isoY;
+                    var max_x = selectedCube.isoBounds.x + selectedCube.isoBounds.widthX;
+                    var max_y = selectedCube.isoBounds.y + selectedCube.isoBounds.widthY;
+                    console.log(min_x,min_y);
+                    var inBounds = tile.isoBounds.containsXY(min_x, min_y);
+                    //see if this is a floor tile
+                    if (!tile.selected && inBounds) {
+                        tile.selected = true;
+                        tile.tint = 0x86bfda;
+                        //game.add.tween(tile).to({ isoZ: 4 }, 200, Phaser.Easing.Quadratic.InOut, true);
+                    }
+                    //else if (tile.selected && !inBounds) {
+                    //    tile.selected = false;
+                    //    tile.tint = 0xffffff;
+                    //    game.add.tween(tile).to({ isoZ: 0 }, 200, Phaser.Easing.Quadratic.InOut, true);
+                    //}
+
+                });
+            }
+
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
