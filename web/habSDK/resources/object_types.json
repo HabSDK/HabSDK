@@ -168,7 +168,7 @@
 	"limits": {
 		"x": 2,
 		"y": 3,
-		"z": 4
+		"z": 2
 	},
 	"sprite_offset":{ "x": -0.05,"y": -0.05 },
 	"properties": {
@@ -306,6 +306,41 @@
 		"mass": 6,
 		"happiness": 20,
 		"science": -40
+	}
+},
+
+
+{
+	"name": "wall-1",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+	}
+},
+{
+	"name": "wall-2",
+	"limits": {
+		"x": 2,
+		"y": 1,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+	}
+},
+{
+	"name": "wall-4",
+	"limits": {
+		"x": 4,
+		"y": 1,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
 	}
 },
 {
