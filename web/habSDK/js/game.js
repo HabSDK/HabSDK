@@ -466,23 +466,6 @@ BasicGame.Boot.prototype =
             var deselectIt = function deselect () {
                 selectedCube = null;
             }
-            var submitIt = function submit (){
-            var map_data = new HabLayout();
-            var room_type = new HabRoomType();
-            room_type.name = "root";
-            var poly = new Polygon();
-            poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
-            room_type.floor_plan = poly;
-            models.forEach(visual => room_type.objects.push(models[visual]));
-            map_data.room_types[room_type.name] = (room_type);
-            var room = new HabRoom();
-            room.position = new Point2D(0,0,0);
-            room.room_type_name = room_type.name;
-            map_data.rooms.push(room);
-            console.log("submitting");
-            console.log(map_data);
-            habsdk_socket.submit_map("test-user", map_data, function(data) { console.log(data); });
-        }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);
             var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -515,6 +498,24 @@ BasicGame.Boot.prototype =
             spaceKey.onDown.add(submitIt, this);
         },
     };
+
+var submitIt = function submit (){
+    var map_data = new HabLayout();
+    var room_type = new HabRoomType();
+    room_type.name = "root";
+    var poly = new Polygon();
+    poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
+    room_type.floor_plan = poly;
+    models.forEach(visual => room_type.objects.push(models[visual]));
+    map_data.room_types[room_type.name] = (room_type);
+    var room = new HabRoom();
+    room.position = new Point2D(0,0,0);
+    room.room_type_name = room_type.name;
+    map_data.rooms.push(room);
+    console.log("submitting");
+    habsdk_socket.submit_map("test-user", map_data, function(data) { displayMetrics(data); } );
+}
+
 
 game.state.add('Boot', BasicGame.Boot);
 game.state.start('Boot');
