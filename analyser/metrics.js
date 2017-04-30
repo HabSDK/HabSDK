@@ -49,6 +49,21 @@ function create_sum_property(property, maximise) {
     return new Metric(item_string, eval);
 }
 
+function create_floor_plan_metric() {
+    var eval = (layout) => {
+        var objects = layout.get_objects().filter(o => o.position.z == 0);
+        var area = 0;
+        objects.forEach(o =>{
+            var limits = o.get_object_type().get_limits();
+            var local_area = limits.x * limits.y;
+            area += local_area;
+        });    
+        if (area > (40 * 40 * 0.7)) return -area;
+        else return 0;   
+    };
+    return new Metric("Make room for activities", eval);
+}
+
 function get_group_text(group) {
     var item_string = "";
     for (var i=0;i<group.length;i++) {
