@@ -81,5 +81,6 @@ function HabObject() {
 function HabObjectType(name, limits, properties) {
     this.name = name;
     this.limits = limits;
+    this.sprite_offset = new Point2D(0, 0);
     this.properties = properties;
 }

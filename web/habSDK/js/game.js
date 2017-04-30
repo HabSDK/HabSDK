@@ -150,7 +150,7 @@ BasicGame.Boot.prototype =
         spawnTiles: function () {
             for (var xx = 0; xx < 30*40; xx += 30) {
                 for (var yy = 0; yy < 30*40; yy += 30) {
-                    this.createFloor('tile',xx,yy,0);
+                    this.createFloor('tile',xx,yy,-1);
                 }
             }
         },
@@ -197,12 +197,9 @@ BasicGame.Boot.prototype =
             visualToModelMap[new_visual] = object;
         },
         get_object_offset: function(object){
-            var limits = object.get_object_type().limits;
-            var x_offset = Math.max(limits.x, limits.y) * 0.1;
-            if (object.rotation == 0 || object.rotation == 2) x_offset *= -1;
-            var offset = new Point2D(x_offset, 0);
-            console.log("offset:"+offset);
-            return offset;
+            var offset = object.get_object_type().sprite_offset
+            if (object.rotation == 0 || object.rotation == 2) offset.x *= -1;
+            return ;
         },
         transform_model_to_visual: function(model_point){
             var visual_x = (40 - model_point.x) * 30;
@@ -220,8 +217,7 @@ BasicGame.Boot.prototype =
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
             var tile = game.add.isoSprite(point.x, point.y, point.z, type, 0, isoGroup);
-            console.log("tile is of size: "+new Point2D(tile.x, tile.y))
-            tile.anchor.set(sprite_offset.x, sprite_offset.y);
+            tile.anchor.set(0.5+sprite_offset.x, 1.0+sprite_offset.y);
             tile.inputEnabled = true;
             tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
@@ -234,7 +230,7 @@ BasicGame.Boot.prototype =
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
             var tile = game.add.isoSprite(x, y, z, type, 0, isoFloor);
-            tile.anchor.set(0.5, 0);
+            tile.anchor.set(0.5, -0.5);
             tile.alpha = 1.0;
             return tile;
         },
@@ -284,7 +280,7 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), new Point3D(30,30,0));
+                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), new Point3D(40,40,0));
                     }, this);
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
                 sprite.tooltip = tooltip;
