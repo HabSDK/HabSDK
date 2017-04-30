@@ -192,11 +192,12 @@ BasicGame.Boot.prototype =
             ];
             objects.forEach(object => this.add_existing_object(object));
         },
-        add_new_object: function(object_type_name, position) {
+        add_new_object: function(object_type_name, position, rotation) {
             console.log("Adding new object "+object_type_name);
             var object = new HabObject()
             object.object_type_name = object_type_name;
             object.position = position;
+            object.rotation = rotation;
             this.add_existing_object(object);
         },
         add_existing_object: function(object) {
@@ -310,10 +311,12 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                     var pnt = new Point3D(20,20,3);
-                    if (selectedCube != null)
-                        pnt = visualToModelMap[selectedCube].position;
-                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), pnt);
+                     var pnt = new Point3D(20,20,0);
+                    if (selectedCube != null){
+                        var object = visualToModelMap[selectedCube]; 
+                        pnt = object.position;
+                    }
+                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), pnt, 0);
                     }, this);
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
                 sprite.tooltip = tooltip;
@@ -389,7 +392,7 @@ BasicGame.Boot.prototype =
             var copyIt = function copyObj () {
                 if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
-                this.add_new_object(object, object.position);
+                this.add_new_object(object.object_type_name, object.position, object.rotation);
             }
             var deleteIt = function deleteObj () {
                 if (selectedCube == null) return;

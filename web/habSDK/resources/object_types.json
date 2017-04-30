@@ -126,8 +126,8 @@
 {
 	"name": "shower",
 	"limits": {
-		"x": 5,
-		"y": 5,
+		"x": 4,
+		"y": 4,
 		"z": 8
 	},
 	"sprite_offset":{ "x": 0,"y": 0 },
@@ -166,11 +166,11 @@
 {
 	"name": "table-low",
 	"limits": {
-		"x": 3,
-		"y": 2,
+		"x": 2,
+		"y": 3,
 		"z": 4
 	},
-	"sprite_offset":{ "x": 0,"y": 0 },
+	"sprite_offset":{ "x": -0.05,"y": -0.05 },
 	"properties": {
 		"mass": 8
 	}
@@ -241,11 +241,11 @@
 {
 	"name": "incinerator",
 	"limits": {
-		"x": 3,
-		"y": 1,
+		"x": 1,
+		"y": 3,
 		"z": 3
 	},
-	"sprite_offset":{ "x": 0,"y": 0 },
+	"sprite_offset":{ "x": -0.12,"y": -0.07 },
 	"properties": {
 		"mass": 28,
 		"hygine": -5,
@@ -296,8 +296,8 @@
 {
 	"name": "tv",
 	"limits": {
-		"x": 2,
-		"y": 1,
+		"x": 1,
+		"y": 2,
 		"z": 2
 	},
 	"sprite_offset":{ "x": 0,"y": 0 },

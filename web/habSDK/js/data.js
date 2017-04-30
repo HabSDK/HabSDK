@@ -58,8 +58,8 @@ function HabObject() {
     this.get_limits = () => {
         var size = null
         var object_type = this.get_object_type();
-        if (this.rotation == 0 || this.rotation == 2) size = new Point2D(object_type.limits.x, object_type.limits.y)
-        else size = new Point2D(object_type.limits.x, object_type.limits.y)
+        if (this.rotation == 1 || this.rotation == 3) size = new Point2D(object_type.limits.x, object_type.limits.y)
+        else size = new Point2D(object_type.limits.y, object_type.limits.x)
         var limits = new Limits3D(this.position, this.position.add(new Point3D(size.x, size.y, object_type.limits.z)))
         return limits;
     }
