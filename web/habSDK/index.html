@@ -59,6 +59,24 @@
           padding-left: 5%;
           padding-right: 5%;
         }
+        #instructions-overlay {
+          display: none;
+          color: white;
+          background: rgba(0, 0, 0, .8);
+          border-radius: 25px;
+          text-align: center;
+          height: 90%;
+          width: 35%;
+          position: absolute;
+          left: 25%;
+          padding-left: 5%;
+          padding-right: 5%;
+        }
+        #instructions-select {
+          position: absolute;
+          left: 7.5px;
+          bottom: 55px;
+        }
         #leaderboard-select {
           position: absolute;
           left: 7.5px;
@@ -113,17 +131,25 @@
           <span id="metrics-score-submit-message" class="metrics-panel-results"></span>
           </div>
         
+        <button id="instructions-select">Instructions</button>
         <button id="leaderboard-select">Leaderboard</button>
 
         <div id="greetings-overlay">
             <h1>HabSDK</h1>
             <p>This is a game about designing a habitation unit on Mars. You have to place the components in an isometric view, and then you will receive a score based on the ergonomics of your design. Components are picked from a sidebar on the right and placed onto the isometric grid.</p>
 
-            <p>Controls are blah blah</p>
-
-            <p>Written by javascript's biggest fans</p>
+            <p><button id="greetings-overlay-instructions">Instructions</button></p>
 
             <p><button id="greetings-overlay-play">Let me play!</button></p>
+            
+            <p>Written by the Habitat Software Development Kompetition (HabSDK) Team</p>
+        </div>
+
+        <div id="instructions-overlay">
+            <h2>Instructions</h2>
+
+            <p></p>
+
         </div>
         
         <div id="leaderboard-overlay">
@@ -172,9 +198,20 @@
                 $("#leaderboard-select").click(openLeaderboardOverlay);
                 $("#leaderboard-overlay").click(closeLeaderboardOverlay);
                 
+                $("#greetings-overlay-instructions").click(openInstructionsOverlay);
+                $("#instructions-select").click(openInstructionsOverlay);
+                $("#instructions-overlay").click(closeInstructionsOverlay);
+                
                 $("#metrics-overlay").click(closeMetricsDetails);
             });
 
+            function openInstructionsOverlay() {
+                $("#instructions-overlay").show();
+            }
+            function closeInstructionsOverlay() {
+                $("#instructions-overlay").hide();
+            }
+            
             function openLeaderboardOverlay() {
                 $("#leaderboard-overlay").show();
                 refresh_leaderboard();
@@ -208,7 +245,7 @@
               }
               // WARNING: map_data needs to be globally accessible
               try {
-                habsdk_socket.submit_score(username, map_data, function(data)
+                submitScore(username, function(data)
                 {
                   $("#metrics-score-submit-message").text("Submitted!");
                 });
@@ -222,7 +259,22 @@
             function openMetricsDetails(results) {
               $("#metrics-overlay").show();
               $("#metrics-detailed-results").empty();
-              var i=0;
+              $("#metrics-detailed-results").append($("<h4></h4>").text("Rules"));
+              for (var property in results.result.rules) {
+                if (results.result.rules.hasOwnProperty(property)) {
+                  if(results.result.rules[property] == false)
+                  {
+                    $("#metrics-detailed-results").append($("<p></p>").html(property+": <b>FAIL</b>"));
+                    i++;
+                  }
+                }
+              }
+              if(i==0)
+              {
+                $("#metrics-detailed-results").append($("<p></p>").text("No rules broken."));
+              }
+              $("#metrics-detailed-results").append($("<h4></h4>").text("Metrics"));
+              i=0;
               for (var property in results.result.metrics) {
                 if (results.result.metrics.hasOwnProperty(property)) {
                   if(results.result.metrics[property] > 0)
@@ -237,6 +289,7 @@
                 $("#metrics-detailed-results").append($("<p></p>").text("No metrics met.. try adding more items."));
               }
             }
+
             function closeMetricsDetails() {
               $("#metrics-overlay").hide();
             }
@@ -282,9 +335,14 @@
                   newRow.insertCell(1).innerHTML = row.score;
                   newRow.insertCell(2).innerHTML = formatTimestamp((new Date(row.timestamp)));
               }
+
+              function zeroPad(num, places) {
+                  var zero = places - num.toString().length + 1;
+                  return Array(+(zero > 0 && zero)).join("0") + num;
+              }
               
               function formatTimestamp(myDate) {
-                return myDate.getDate() + "/" + (myDate.getMonth() + 1) + "/" + myDate.getFullYear() + " " + myDate.getHours() + ":" + myDate.getMinutes();
+                return myDate.getDate() + "/" + (myDate.getMonth() + 1) + "/" + myDate.getFullYear() + " " + myDate.getHours() + ":" + zeroPad(myDate.getMinutes(),2);
               }
         </script>
 </html>
