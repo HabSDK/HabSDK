@@ -61,10 +61,11 @@ BasicGame.Boot.prototype =
                     $.each(response, function(index, object_type) {
                         object_types = response; 
                         spriteResources[object_type.name]=[];
+                        console.log("Registering "+object_type.name+" as object type.");
                         for (var i = 1; i <=4; i++) {
                             var name = object_type.name + '_' + i;
                             game.load.image(name, './resources/sprites/' + name + '.png');
-                            spriteResources[object_type.name]=spriteResources[object_type.name ].concat([name])
+                            spriteResources[object_type.name]=spriteResources[object_type.name].concat([name])
                         }
                     })}
             });
@@ -141,7 +142,7 @@ BasicGame.Boot.prototype =
         },
         add_existing_object: function(object) {
             console.log("Adding existing object "+object.object_type_name);
-            var tile = this.createNewSprite(object.object_type_name,object.x,object.y,object.z);
+            var tile = this.createNewSprite(object.object_type_name+"_1",object.x,object.y,object.z);
             modelToVisualMap[object] = tile;
             visualToModelMap[tile] = object;
         },
