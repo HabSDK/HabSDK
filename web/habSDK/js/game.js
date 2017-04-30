@@ -480,7 +480,8 @@ BasicGame.Boot.prototype =
             var copyIt = function copyObj () {
                 if (selectedCube == null) return;
                 var object = models[visuals.indexOf(selectedCube)];
-                this.add_new_object(object.object_type_name, object.position, object.rotation);
+                var new_position = new Point3D(object.position.x, object.position.y, object.position.z)
+                this.add_new_object(object.object_type_name, new_position, object.rotation);
             }
             var deleteIt = function deleteObj () {
                 if (selectedCube == null) return;

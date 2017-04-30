@@ -17,10 +17,14 @@ function analyse(layout) {
     ];
     var result = new LayoutResult();
     this.metrics.forEach(metric => {
-        result.metrics[metric.name] = metric.evaluator(layout);
+        var value = metric.evaluator(layout);
+        result.metrics[metric.name] = value;
+        result.overall_result += value; 
     });       
     this.rules.forEach(rule => {
-        result.rules[rule.name] = rule.evaluator(layout);
+        var value = rule.evaluator(layout);
+        result.rules[rule.name] = value;
+        if (value = false) result.overall_result = 0;
     });    
     return result;    
 }
