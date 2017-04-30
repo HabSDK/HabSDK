@@ -6,7 +6,7 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 65,
 		"comfort": 15
 	}
 },
@@ -84,7 +84,7 @@
 		"z": 6
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 80,
 		"flammability": 60,
 		"science": 10
 	}
@@ -97,7 +97,7 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 8,
 		"flammability": 30
 	}
 },
@@ -109,7 +109,7 @@
 		"z": 1
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 1,
 		"comfort": 5
 	}
 },
@@ -121,7 +121,7 @@
 		"z": 8
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 40,
 		"hygine": 10
 	}
 },
@@ -133,7 +133,7 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 35,
 		"comfort": 50,
 		"flammability": 30
 	}
@@ -146,7 +146,7 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 15,
 		"science": 40
 	}
 },
@@ -158,7 +158,7 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10
+		"mass": 8
 	}
 },
 {
@@ -169,7 +169,7 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 18,
 		"science": 30
 	}
 },
@@ -192,7 +192,7 @@
 		"z": 6
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 140,
 		"hygine": -5
 	}
 },
@@ -204,7 +204,7 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10
+		"mass": 20
 	}
 },
 {
@@ -215,7 +215,7 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 20,
 		"science": 5
 	}
 },
@@ -227,7 +227,9 @@
 		"z": 3
 	},
 	"properties": {
-		"mass": 10
+		"mass": 28,
+		"hygine": -5,
+		"flammability": 20
 	}
 },
 {
@@ -238,7 +240,7 @@
 		"z": 6
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 15,
 		"hygine": 60,
 		"happiness": -2
 	}
@@ -251,7 +253,7 @@
 		"z": 1
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 2,
 		"science": 20
 	}
 },
@@ -263,8 +265,9 @@
 		"z": 1
 	},
 	"properties": {
-		"mass": 10,
-		"hygine": 20
+		"mass": 5,
+		"hygine": 20,
+		"flammability": -20
 	}
 },
 {
@@ -275,7 +278,7 @@
 		"z": 2
 	},
 	"properties": {
-		"mass": 10,
+		"mass": 6,
 		"happiness": 20,
 		"science": -40
 	}
@@ -288,7 +291,7 @@
 		"z": 4
 	},
 	"properties": {
-		"mass": 10
+		"mass": 6
 	}
 },
 {
@@ -299,6 +302,7 @@
 		"z": 4
 	},
 	"properties": {
+		"mass": 10,
 		"sanity": 5,
 		"happiness": 10,
 		"hygine": -10
