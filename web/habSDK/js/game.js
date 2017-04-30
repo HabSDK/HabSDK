@@ -30,7 +30,7 @@ BasicGame.Boot.prototype =
             // Let's make a load of tiles on a grid.
 
             this.spawnTiles();
-            //this.loadModel(create_test_layout());
+            //this.loadModel(null);
             this.createMenu();
             this.handleKeyPress();
             // Provide a 3D position for the cursor
@@ -91,14 +91,20 @@ BasicGame.Boot.prototype =
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
-            game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
+            var colour = "#a7aebe";
+
+            game.debug.text(game.time.fps || '--', 2, 14, colour);
+
+            var object = modelToVisualMap[selectedCube];
+            if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
+            game.debug.text(object.object_type_name+" : "+object.position, 2, 40, colour);
+
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
-            game.debug.spriteInfo(selectedCube, 32, 32);
+            //game.debug.spriteInfo(selectedCube, 32, 32);
         },
         spawnTiles: function () {
-
             for (var xx = 0; xx < 30*40; xx += 30) {
                 for (var yy = 0; yy < 30*40; yy += 30) {
                     this.createNewSprite('tile',xx,yy,0);
@@ -106,7 +112,12 @@ BasicGame.Boot.prototype =
             }
         },
         loadModel: (layout) => {
-            var objects = layout.get_objects();
+            //var objects = layout.get_objects();
+            var block = new HabObject();
+            block.object_type_name = "block2x1";
+            var objects = [
+                block,    
+            ];
             objects.forEach(object => add_new_object(object));            
         },
 
@@ -115,7 +126,6 @@ BasicGame.Boot.prototype =
             this.modelToVisualMap[object] = tile;
             this.visualToModelMap[tile] = object;
         },
-
         createNewSprite: function(type,x,y,z){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
@@ -149,6 +159,7 @@ BasicGame.Boot.prototype =
             selected_item_infomation = game.add.graphics(20, 20);
             selected_item_infomation.beginFill(0xffffff,1.0);
             selected_item_infomation.drawRect(20,20,100,100);
+            selected_item_infomation.drawRect
             return graphics
         },
         createMenu: function(){
@@ -157,20 +168,14 @@ BasicGame.Boot.prototype =
             var background = this.createBackground(1024-100, 0, 100, 600,'0xffffff');
             background.alpha = 0.3;
 
-            //
             // var cubeSprite = menuItems.create(50-10,70,'tile');
             // cubeSprite.inputEnabled = true;
             // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
-
-                var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-
-
                 var localKey = key;
                 var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
                 menuItems.push(sprite);
-
                 var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
                 var scaleFactor = maxDimension/100;
@@ -178,7 +183,7 @@ BasicGame.Boot.prototype =
                 sprite.scale.set(1/scaleFactor);
                 //sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
                 sprite.inputEnabled = true;
-//  Check the pixel data of the sprite
+                //  Check the pixel data of the sprite
                 sprite.input.pixelPerfectOver = true;
 
                 //  Enable the hand cursor
@@ -187,14 +192,6 @@ BasicGame.Boot.prototype =
                     _this.createNewSprite(sp.key,0,0,30);
                     createdComponent.tint = sprite.tint;
                     }, this);
-                //  Create the title after the sprite has been created
-                var text = game.add.text(0,70+100*i,key,style)
-                text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
-
-                //  We'll set the bounds to be from x0, y100 and be 800px wide by 100px high
-                text.setTextBounds(0, 0, 100, 100);
-                menuItems.push(text);
-
                 i++;
             }
 

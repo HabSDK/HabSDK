@@ -49,7 +49,7 @@ function HabRoomType() {
     }
 }
 function HabObject() {
-    this.object_type_name = ""
+    this.object_type_name = "";
     this.position = new Point3D(0,0,0);
     this.rotation = 0;
 
@@ -78,7 +78,6 @@ function HabObjectType(name, limits, properties) {
     this.limits = limits;
     this.properties = properties;
 }
-<<<<<<< HEAD
 
 var max_number_of_objects_per_room = 20;
 var max_number_of_room_types = 20;
@@ -128,8 +127,4 @@ function create_test_object() {
     return object;
 }
 
-
 var object_types = HabObjectTypes()
-=======
-var object_types = HabObjectTypes()
->>>>>>> 6c7cf479a32e0063bde25d3bfe79e7593a53cb35
