@@ -13,7 +13,31 @@ var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
 habsdk_socket.request_leaderboard(function(data) { console.log(data); });
 
-habsdk_socket.submit_map("test-user", {}, function(data) { console.log(data); });
+function random_int_inclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function xhr_json(url, cb) {
+  var request = new XMLHttpRequest();
+  request.open('GET', 'resources/tests/example_room1.json', true);
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      var data = JSON.parse(this.response);
+      cb(data);
+    } else {
+      console.log("Error loading JSON");
+    }
+  };
+  request.onerror = function() {
+    console.log("Error loading json");
+  };
+  request.send();
+}
+var examples = ["resources/tests/example_room1.json","resources/tests/example_room2.json","resources/tests/example_room3.json","resources/tests/example_room4.json"];
+xhr_json(examples[random_int_inclusive(0,3)], function(map_data) {
+  habsdk_socket.submit_map("test-user", map_data, function(data) { console.log(data); });
+});
 
 var oldDate = new Date("2017-04-29T23:14:52.817Z");
 habsdk_socket.request_user_map("test-user", oldDate, function(data) { console.log(data); });

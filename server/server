@@ -6,7 +6,7 @@ const WS_PORT = 3000;
 const fs = require('fs');
 const WebSocket = require('uws');
 const Analyser = require('./analyser.js');
-const AnalyserTests = require('./analyser-tests.js');
+//const AnalyserTests = require('./analyser-tests.js');
 
 var WebSocketServer = WebSocket.Server;
 var wss = new WebSocketServer({ port: WS_PORT });
@@ -59,7 +59,7 @@ function analyse_map(data_obj) {
     analysis.map_data = data_obj.map_data;
 
     // DEBUG
-    analysis.map_data = AnalyserTests.create_test_layout();
+    //analysis.map_data = AnalyserTests.create_test_layout();
     
     try {
       var result = Analyser.analyse(analysis.map_data)
