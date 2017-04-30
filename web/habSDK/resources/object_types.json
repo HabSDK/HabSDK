@@ -168,7 +168,7 @@
 	"limits": {
 		"x": 2,
 		"y": 3,
-		"z": 4
+		"z": 2
 	},
 	"sprite_offset":{ "x": -0.05,"y": -0.05 },
 	"properties": {

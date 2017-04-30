@@ -199,7 +199,7 @@ BasicGame.Boot.prototype =
             var colour = "#a7aebe";
             game.debug.text(game.time.fps || '--', 2, 14, colour);
             var object = models[visuals.indexOf(selectedCube)];
-            if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
+            if (object == null) game.debug.text("No object selected :/", 2, 40, colour);
             else
             {
                 game.debug.text(object.object_type_name, 2, 40, colour)
@@ -257,6 +257,8 @@ BasicGame.Boot.prototype =
             visual.destroy();
         },
         update_object: function(object) {
+            var z_height = this.getBaseLevel();
+            object.position.z = z_height;
             console.log("Updating object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
             var visual = visuals[models.indexOf(object)];
             console.log(visual)
@@ -272,6 +274,7 @@ BasicGame.Boot.prototype =
             visuals.push(new_visual);
             models.push(object);
             this.destroyMenu();
+
         },
         get_object_offset: function(object){
             var offset = object.get_object_type().sprite_offset;
@@ -360,10 +363,10 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                     var pnt = new Point3D(20,20,0);
+                    var pnt = new Point3D(20,20,0);
                     if (selectedCube != null){
                         var object = models[visuals.indexOf(selectedCube)];
-                        pnt = object.position;
+                        pnt = new Point3D(object.position.x,object.position.y,object.position.z);
                     }
                     var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), pnt, 0);
                     }, this);
@@ -406,6 +409,34 @@ BasicGame.Boot.prototype =
                 menuItems.forEach(function(item){item.y+=50});
             });
             menu.push(btnUp);
+        },
+
+        getBaseLevel: function(){
+            var base = 0;
+
+            var selectedObject = models[visuals.indexOf(selectedCube)];
+            var place_max = selectedObject.get_limits().max_point;
+            var place_min = selectedObject.get_limits().min_point;
+            var keys = Object.keys(models);
+            models.forEach(object => {
+                if (selectedObject != object)
+                {
+                    // console.log("COMPARING WITH MYSELF!")
+
+                    var limits = object.get_limits();
+                    //console.log(limits.min_point.x, limits.min_point.y, limits.min_point.z);
+                    if (place_max.x-1 >= limits.min_point.x && place_min.x <= limits.max_point.x-1 &&
+                        place_max.y-1 >= limits.min_point.y && place_min.y <= limits.max_point.y-1)
+                    {
+                        base = Math.max(limits.max_point.z, base);
+                    }
+                }
+            });
+            return base;
+            //for (var key in modelToVisualMap) {
+            //    console.log(modelToVisualMap[key]);
+            //}
+
         },
 
 
@@ -480,23 +511,6 @@ BasicGame.Boot.prototype =
             var deselectIt = function deselect () {
                 selectedCube = null;
             }
-            var submitIt = function submit (){
-            var map_data = new HabLayout();
-            var room_type = new HabRoomType();
-            room_type.name = "root";
-            var poly = new Polygon();
-            poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
-            room_type.floor_plan = poly;
-            models.forEach(model => room_type.objects.push(model));
-            map_data.room_types[room_type.name] = (room_type);
-            var room = new HabRoom();
-            room.position = new Point2D(0,0,0);
-            room.room_type_name = room_type.name;
-            map_data.rooms.push(room);
-            console.log("submitting");
-            console.log(map_data);
-            habsdk_socket.submit_map("test-user", map_data, function(data) { console.log(data); });
-        }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);
             var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -529,6 +543,24 @@ BasicGame.Boot.prototype =
             spaceKey.onDown.add(submitIt, this);
         },
     };
+
+var submitIt = function submit (){
+    var map_data = new HabLayout();
+    var room_type = new HabRoomType();
+    room_type.name = "root";
+    var poly = new Polygon();
+    poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
+    room_type.floor_plan = poly;
+    models.forEach(model => room_type.objects.push(model));
+    map_data.room_types[room_type.name] = (room_type);
+    var room = new HabRoom();
+    room.position = new Point2D(0,0,0);
+    room.room_type_name = room_type.name;
+    map_data.rooms.push(room);
+    console.log("submitting");
+    habsdk_socket.submit_map("test-user", map_data, function(data) { displayMetrics(data); } );
+}
+
 
 game.state.add('Boot', BasicGame.Boot);
 game.state.start('Boot');

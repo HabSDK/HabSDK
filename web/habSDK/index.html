@@ -41,7 +41,7 @@
         }
         #metrics-username {
           color: black;
-          width: 90%;
+          width: 100px;
         }
         .metrics-panel-results {
           display: none;
@@ -104,8 +104,10 @@
         <p align="center" class="title" >Habitat <b>S</b>pace <b>D</b>evelopment <b>K</b>it</p>
         <div id="metrics-panel">
           Metrics Results:
-          <span id="metrics-results">Loading..</span><br>
+          <span id="metrics-age">(press g)</span><br>
+          <span id="metrics-results"></span><br>
           <button id="metrics-details-show" class="metrics-panel-results">Show Details</button>
+          <hr />
           <input type='text' id='metrics-username' placeholder='User Name' class="metrics-panel-results"></input>
           <button id="metrics-score-submit" class="metrics-panel-results">Submit Score</button>
           <span id="metrics-score-submit-message" class="metrics-panel-results"></span>
@@ -139,6 +141,7 @@
 
         <div id="metrics-overlay">
           <h2>Detailed Result Metrics</h2>
+          <hr />
           <div id="metrics-detailed-results"></div>
         </div>
     
@@ -180,12 +183,8 @@
                 $("#leaderboard-overlay").hide();
             }
 
-            _testMetrics();
-            function _testMetrics() {
-              var fakeresult = {"uri":"map_result","data":{"result":{"overall_result":0,"metrics":{"Maximise seperation between fridges and toilets":209,"Maximise seperation between microscopes and fridges":209,"Minimise seperation between beds":-149,"Have more microscopes":0,"Have more cookers":0,"Maximise sanity":0,"Minimise hipster-ness":0,"Minimise moisture":0},"rules":{"Objects cannot overlap":true,"Objects must be fully within a room":false,"Have at least 6 beds":false,"Have no more than 2 treadmills":true}},"timestamp":"2017-04-30T12:46:08.089Z"}};
-              displayMetrics(fakeresult.data);
-            }
             function displayMetrics(results) {
+              console.log(results);
               var target_span = $("#metrics-results");
               target_span.empty();
               target_span
@@ -193,6 +192,10 @@
                 $("#metrics-details-show").click(openMetricsDetails.bind(null,results));
               $("#metrics-score-submit").click(submitMetricsScore.bind(null,results));
               $(".metrics-panel-results").show();
+              $("#metrics-age").text("Updated!");
+              setTimeout(function() {
+                $("#metrics-age").text("(press g)");
+              },3*1000);
             }
 
             function submitMetricsScore(results) {
