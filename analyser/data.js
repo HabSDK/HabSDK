@@ -6,10 +6,28 @@ function HabLayout() {
 
     this.get_objects = () => [].concat.apply([], this.rooms.map(o => this.room_types[o.room_type_name].objects));
     this.get_objects_of_type = (object_type_list) => this.get_objects().filter(o => object_type_list.some(ot => ot == o.object_type_name)); 
+
+    var me = this;
+    var clone = arguments[0];
+    clone && hablayout();
+    function hablayout() {
+        for(var prop in clone) {
+            me[prop] = clone[prop];
+        }
+    }
 }
 function HabRoom() {
     this.room_type_name = "";
     this.position = new Point2D(0,0);
+
+    var me = this;
+    var clone = arguments[0];
+    clone && habroom();
+    function habroom() {
+        for(var prop in clone) {
+            me[prop] = clone[prop];
+        }
+    }
 }
 function HabRoomType() {
     this.name = "";
@@ -19,6 +37,15 @@ function HabRoomType() {
         var polygon = new Polygon();
         polygon.points = this.floor_plan;
         return polygon;
+    }
+
+    var me = this;
+    var clone = arguments[0];
+    clone && habroomtype();
+    function habroomtype() {
+        for(var prop in clone) {
+            me[prop] = clone[prop];
+        }
     }
 }
 function HabObject() {
@@ -35,6 +62,16 @@ function HabObject() {
         return limits;
     } 
     this.get_object_type = () => object_types.find(o => o.name == this.object_type_name);
+
+    var me = this;
+    var clone = arguments[0];
+    clone && habobject();
+    function habobject() {
+        for(var prop in clone) {
+            me[prop] = clone[prop];
+        }
+        me.position = new Point3D(clone.position.x, clone.position.y, clone.position.z);
+    }
 }
 function HabObjectType(name, limits, properties) {
     this.name = name;
