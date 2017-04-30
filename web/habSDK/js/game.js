@@ -241,8 +241,8 @@ BasicGame.Boot.prototype =
         delete_existing_object: function(object) {
             console.log("Deleting existing object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
             var visual = visuals[models.indexOf(object)];
-            var model_index = models.indexOf(visual) 
-            var visual_index = visuals.indexOf(object) 
+            var model_index = models.indexOf(object) 
+            var visual_index = visuals.indexOf(visual) 
             models.splice(model_index, 1);
             visuals.splice(visual_index, 1);
             visual.destroy();
@@ -256,8 +256,8 @@ BasicGame.Boot.prototype =
             var visual_position = this.transform_model_to_visual(object.position);
             var new_visual = this.createNewSprite(sprite_id, visual_position, this.get_object_offset(object));
 
-            var model_index = models.indexOf(visual) 
-            var visual_index = visuals.indexOf(object) 
+            var model_index = models.indexOf(object) 
+            var visual_index = visuals.indexOf(visual) 
             models.splice(model_index, 1);
             visuals.splice(visual_index, 1);
             visuals.push(new_visual);
