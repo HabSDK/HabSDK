@@ -90,6 +90,7 @@ function Point2D(x, y) {
            dtheta += 2 * Math.pi;
         return dtheta;
     }
+        this.toString = () => "("+this.x+","+this.y+")";
 }
 
 function Point3D(x, y, z) {

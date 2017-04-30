@@ -172,7 +172,7 @@ BasicGame.Boot.prototype =
             console.log("Adding existing object "+object.object_type_name);
             var sprite_id = object.object_type_name+"_"+(object.rotation+1);
             var visual_position = this.transform_model_to_visual(object.position);
-            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);
+            var new_visual = this.createNewSprite(sprite_id,visual_position, this.get_object_offset(object));
             modelToVisualMap[object] = new_visual;
             visualToModelMap[new_visual] = object;
         },
@@ -190,9 +190,17 @@ BasicGame.Boot.prototype =
             visual.destroy();
             var sprite_id = object.object_type_name+"_"+(object.rotation+1);
             var visual_position = this.transform_model_to_visual(object.position);
-            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);
+            var new_visual = this.createNewSprite(sprite_id, visual_position, this.get_object_offset(object));
             modelToVisualMap[object] = new_visual;
             visualToModelMap[new_visual] = object;
+        },
+        get_object_offset: function(object){
+            var limits = object.get_object_type().limits;
+            var x_offset = Math.max(limits.x, limits.y) * 0.1;
+            if (object.rotation == 0 || object.rotation == 2) x_offset *= -1;
+            var offset = new Point2D(x_offset, 0);
+            console.log("offset:"+offset);
+            return offset;
         },
         transform_model_to_visual: function(model_point){
             var visual_x = (40 - model_point.x) * 30;
@@ -206,11 +214,12 @@ BasicGame.Boot.prototype =
             var model_z = visual_point.z / 30;
             return new Point3D(model_x, model_y, model_z);
         },
-        createNewSprite: function(type,x,y,z){
+        createNewSprite: function(type,point, sprite_offset){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
-            var tile = game.add.isoSprite(x, y, z, type, 0, isoGroup);
-            tile.anchor.set(0.5, 0);
+            var tile = game.add.isoSprite(point.x, point.y, point.z, type, 0, isoGroup);
+            console.log("tile is of size: "+new Point2D(tile.x, tile.y))
+            tile.anchor.set(sprite_offset.x, sprite_offset.y);
             tile.inputEnabled = true;
             tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
@@ -273,7 +282,7 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), new Point3D(0,0,0));
+                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), new Point3D(30,30,0));
                     }, this);
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
                 sprite.tooltip = tooltip;
@@ -312,22 +321,22 @@ BasicGame.Boot.prototype =
         handleKeyPress: function (){
             var back = function moveBack () {
                 var object = visualToModelMap[selectedCube];
-                object.position.x -= 1;
+                object.position.x += 1;
                 this.update_object(object);
             }
             var left = function moveLeft () {
                 var object = visualToModelMap[selectedCube];
-                object.position.y += 1;
+                object.position.y -= 1;
                 this.update_object(object);
             }
             var right = function moveRight () {
                 var object = visualToModelMap[selectedCube];
-                object.position.y -= 1;
+                object.position.y += 1;
                 this.update_object(object);
             }
             var forward = function moveForward () {
                 var object = visualToModelMap[selectedCube];
-                object.position.x += 1;
+                object.position.x -= 1;
                 this.update_object(object);
             }
             var up = function moveUp () {
@@ -356,6 +365,23 @@ BasicGame.Boot.prototype =
                 if (object.rotation > 3) object.rotation = 0;
                 this.update_object(object);
             }
+            var submitIt = function submit (){
+            var map_data = new HabLayout();
+            var room_type = new HabRoomType();
+            room_type.name = "root";
+            var poly = new Polygon();
+            poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
+            room_type.floor_plan = poly;
+            Object.keys(visualToModelMap).forEach(visual => room_type.objects.push(visualToModelMap[visual]));
+            map_data.room_types[room_type.name] = (room_type);
+            var room = new HabRoom();
+            room.position = new Point2D(0,0,0);
+            room.room_type_name = room_type.name;
+            map_data.rooms.push(room);
+            console.log("submitting");
+            console.log(map_data);
+            habsdk_socket.submit_map("test-user", map_data, function(data) { console.log(data); });
+        }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);
             var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -382,22 +408,9 @@ BasicGame.Boot.prototype =
             delKey.onDown.add(deleteIt, this);
             var fKey = game.input.keyboard.addKey(Phaser.Keyboard.F);
             fKey.onDown.add(copyIt, this);
-            var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACE);
-            spaceKey.onDown.add(submit, this);
+            var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.G);
+            spaceKey.onDown.add(submitIt, this);
         },
-        submit: function(){
-            var map_data = new HabLayout();
-            var room_type = new HabRoomType();
-            room_type.name = "root";
-            room_type.floor_plan = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
-            Object.keys(modelToVisualMap).forEach(object => room_type.objects.push(object));
-            map_data.room_types.push(room_type);
-            var room = new HabRoom();
-            room.position = new Point2D(0,0,0);
-            room.room_type_name = room_type.name;
-            map_data.rooms.push(room);
-            habsdk_socket.submit_map("test-user", map_data, function(data) { console.log(data); });
-        }
     };
 
 game.state.add('Boot', BasicGame.Boot);
