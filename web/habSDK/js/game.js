@@ -106,7 +106,7 @@ BasicGame.Boot.prototype =
                     tile.alpha = 1;
                 }
             });
-            game.iso.topologicalSort(isoGroup);
+            game.iso.simpleSort(isoGroup);
             toolTips.forEach(function (tip) {
                 tip.x = tip.sprite.x - 200;
                 tip.y = tip.sprite.y;
