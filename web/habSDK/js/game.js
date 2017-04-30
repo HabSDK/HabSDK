@@ -206,6 +206,14 @@ BasicGame.Boot.prototype =
                 game.debug.text("Position: "+object.position, 2, 60, colour);
                 game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
+            game.debug.text("Up/Down/Left/Right: w/s/a/d;",2,100,colour);
+            game.debug.text("Increse/Decrease: Z",2,120,colour);
+            game.debug.text("height: q/e",2,140,colour);
+            game.debug.text("Deselect Item: Esc",2,160,colour);
+            game.debug.text("Rotate: r",2,180,colour);
+            game.debug.text("Delete: del",2,200,colour);
+            game.debug.text("Submit Design: g",2,220,colour);
+
         },
         spawnTiles: function () {
             for (var xx = 0; xx < 30*40; xx += 30) {
