@@ -401,7 +401,7 @@
 	"sprite_offset":{ "x": 0,"y": 0 },
 	"properties": {
 		"mass": 10,
-		"sanity": 5,
+		"sanity": -5,
 		"happiness": 10,
 		"hygine": -10
 	}
