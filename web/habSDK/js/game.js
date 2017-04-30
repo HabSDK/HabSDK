@@ -4,7 +4,7 @@ var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, isoFloor, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
+var isoGroup, isoFloor,toolTips, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
 function saveModel() {
   //var layoutStruct = new HabLayout();
@@ -38,6 +38,7 @@ BasicGame.Boot.prototype =
             //game.world.setBounds(0, 0, 2048, 1024);
         },
         create: function () {
+            toolTips = [];
             // Create a group for our tiles.
             isoFloor = game.add.group();
             isoGroup = game.add.group();
@@ -59,12 +60,13 @@ BasicGame.Boot.prototype =
                 dataType: "json",
                 success: function(response) {
                     $.each(response, function(index, object_type) {
+                        object_types = response; 
                         spriteResources[object_type.name]=[];
+                        console.log("Registering "+object_type.name+" as object type.");
                         for (var i = 1; i <=4; i++) {
                             var name = object_type.name + '_' + i;
                             game.load.image(name, './resources/sprites/' + name + '.png');
-
-                            spriteResources[object_type.name]=spriteResources[object_type.name ].concat([name])
+                            spriteResources[object_type.name]=spriteResources[object_type.name].concat([name])
                         }
                     })}
             });
@@ -101,6 +103,10 @@ BasicGame.Boot.prototype =
                 }
             });
             game.iso.topologicalSort(isoGroup);
+            toolTips.forEach(function(tip){
+                tip.x = tip.sprite.x-200;
+                tip.y = tip.sprite.y;
+            })
             //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
         },
         render: function () {
@@ -116,6 +122,7 @@ BasicGame.Boot.prototype =
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
+
         },
         spawnTiles: function () {
             for (var xx = 0; xx < 30*40; xx += 30) {
@@ -124,25 +131,51 @@ BasicGame.Boot.prototype =
                 }
             }
         },
-        loadModel: (layout) => {
+        loadModel: function(layout) {
             //var objects = layout.get_objects();
             var block = new HabObject();
             block.object_type_name = "block2x1";
             var objects = [
                 block,    
             ];
-            objects.forEach(object => add_existing_object(object));            
+            objects.forEach(object => this.add_existing_object(object));            
         },
-
-        add_new_object: (object_type_name) => {
+        add_new_object: function(object_type_name) {
+            console.log("Adding new object "+object.object_type_name);
             var object = new HabObject()
             object.object_type_name = object_type_name;
             this.add_existing_object(object);
         },
-        add_existing_object: (object) => {
-            var tile = createNewSprite(object.object_type_name,object.x,object.y,object.z);
-            this.modelToVisualMap[object] = tile;
-            this.visualToModelMap[tile] = object;
+        add_existing_object: function(object) {
+            console.log("Adding existing object "+object.object_type_name);
+            var sprite_id = object.object_type_name+"_"+(object.rotation+1);
+            var visual_position = this.transform_model_to_visual(object.position);
+            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);  
+            modelToVisualMap[object] = new_visual;
+            visualToModelMap[new_visual] = object;
+        },
+        update_object: function(object) {
+            console.log("Updating object "+object.object_type_name);
+            var visual = modelToVisualMap[object];
+            delete visualToModelMap[visual];
+            visual.destroy();
+            var sprite_id = object.object_type_name+"_"+(object.rotation+1);
+            var visual_position = this.transform_model_to_visual(object.position);
+            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);  
+            modelToVisualMap[object] = new_visual;
+            visualToModelMap[new_visual] = object;
+        },
+        transform_model_to_visual: function(model_point){
+            var visual_x = model_point.x * 30;
+            var visual_y = model_point.y * 30;
+            var visual_z = model_point.z * 30;
+            return new Point3D(visual_x, visual_y, visual_z);
+        },
+        transform_visual_to_model: function(visual_point){
+            var model_x = visual_point.x / 30;
+            var model_y = visual_point.y / 30;
+            var model_z = visual_point.z / 30;
+            return new Point3D(model_x, model_y, model_z);
         },
         createNewSprite: function(type,x,y,z){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
@@ -181,13 +214,6 @@ BasicGame.Boot.prototype =
             graphics.drawRect(x,y,width,height);
             return graphics;
         },
-        createSelectedItem: () => {
-            selected_item_infomation = game.add.graphics(20, 20);
-            selected_item_infomation.beginFill(0xffffff,1.0);
-            selected_item_infomation.drawRect(20,20,100,100);
-            selected_item_infomation.drawRect
-            return graphics
-        },
         createMenu: function(){
             //  The platforms group contains the ground and the 2 ledges we can jump on
             menuItems = []
@@ -199,6 +225,12 @@ BasicGame.Boot.prototype =
             // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
+<<<<<<< HEAD
+
+                var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+=======
+>>>>>>> origin/master
                 var localKey = key;
                 var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
                 menuItems.push(sprite);
@@ -218,6 +250,28 @@ BasicGame.Boot.prototype =
                     var createdComponent = _this.add_new_object(sp.key,0,0,30);
                     createdComponent.tint = sp.tint;
                     }, this);
+<<<<<<< HEAD
+                var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
+                sprite.tooltip = tooltip;
+                tooltip.sprite = sprite;
+                tooltip.alpha = 0;
+                toolTips.push(tooltip);
+                sprite.events.onInputOver.add(function(sp){
+                    sp.tooltip.alpha = 1.0;
+                });
+                sprite.events.onInputOut.add(function(sp){
+                    sp.tooltip.alpha = 0.0;
+                });
+                //  Create the title after the sprite has been created
+                var text = game.add.text(0,70+100*i,key,style)
+                text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+
+                //  We'll set the bounds to be from x0, y100 and be 800px wide by 100px high
+                text.setTextBounds(0, 0, 100, 100);
+                menuItems.push(text);
+
+=======
+>>>>>>> origin/master
                 i++;
             }
 
@@ -254,11 +308,10 @@ BasicGame.Boot.prototype =
                 selectedCube.isoZ -=30;
             }
             var rotate = function rot () {
-                var num = selectedCube.key.charAt(selectedCube.key.length-1);
-                var baseString = selectedCube.key.slice(0, selectedCube.key.length-1);
-                var oldCube = selectedCube;
-                this.createNewSprite(baseString+(parseInt(num)%4+1),selectedCube.isoX,selectedCube.isoY,selectedCube.isoZ);
-                oldCube.destroy();
+                var object = visualToModelMap[selectedCube]; 
+                object.rotation += 1;                
+                if (object.rotation > 3) object.rotation = 0;
+                this.update_object(object);
             }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);

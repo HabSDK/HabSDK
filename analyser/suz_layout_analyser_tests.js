@@ -7,14 +7,14 @@ eval(fs.readFileSync('data_tests.js')+'');
 
 var layout = create_test_layout();
 
-console.log("room types:")
-Object.keys(layout.room_types).forEach(room_type => console.log(room_type+" : "+layout.room_types[room_type]))
+//console.log("room types:")
+//Object.keys(layout.room_types).forEach(room_type => console.log(room_type+" : "+layout.room_types[room_type]))
 
-console.log("room types:")
-Object.keys(layout.room_types).forEach(room_type => console.log(room_type+" : "+layout.room_types[room_type]))
-var result = analyse(layout);
+//console.log("room types:")
+//Object.keys(layout.room_types).forEach(room_type => console.log(room_type+" : "+layout.room_types[room_type]))
+//var result = analyse(layout);
 
-result.log()
+//result.log()
 
 console.log("suz tests")
 
