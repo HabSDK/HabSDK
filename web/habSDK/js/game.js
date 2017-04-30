@@ -46,11 +46,11 @@ BasicGame.Boot.prototype =
                 dataType: "json",
                 success: function(response) {
                     $.each(response, function(index, object_type) {
+                        object_types = response; 
                         spriteResources[object_type.name]=[];
                         for (var i = 1; i <=4; i++) {
                             var name = object_type.name + '_' + i;
                             game.load.image(name, './resources/sprites/' + name + '.png');
-
                             spriteResources[object_type.name]=spriteResources[object_type.name ].concat([name])
                         }
                     })}
@@ -111,25 +111,26 @@ BasicGame.Boot.prototype =
                 }
             }
         },
-        loadModel: (layout) => {
+        loadModel: function(layout) {
             //var objects = layout.get_objects();
             var block = new HabObject();
             block.object_type_name = "block2x1";
             var objects = [
                 block,    
             ];
-            objects.forEach(object => add_existing_object(object));            
+            objects.forEach(object => this.add_existing_object(object));            
         },
-
-        add_new_object: (object_type_name) => {
+        add_new_object: function(object_type_name) {
+            console.log("Adding new object "+object.object_type_name);
             var object = new HabObject()
             object.object_type_name = object_type_name;
             this.add_existing_object(object);
         },
-        add_existing_object: (object) => {
-            var tile = createNewSprite(object.object_type_name,object.x,object.y,object.z);
-            this.modelToVisualMap[object] = tile;
-            this.visualToModelMap[tile] = object;
+        add_existing_object: function(object) {
+            console.log("Adding existing object "+object.object_type_name);
+            var tile = this.createNewSprite(object.object_type_name,object.x,object.y,object.z);
+            modelToVisualMap[object] = tile;
+            visualToModelMap[tile] = object;
         },
         createNewSprite: function(type,x,y,z){
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
