@@ -145,6 +145,7 @@ BasicGame.Boot.prototype =
             if (selectedCube!=null) {
                 game.camera.follow(selectedCube, new Phaser.Rectangle(100, 100, 824, 568));
             } else {
+                if (arrowKeys != null){
                 game.camera.follow(null);
                 if (arrowKeys.up.isDown)
                 {
@@ -167,6 +168,7 @@ BasicGame.Boot.prototype =
                     game.camera.x += 10;
                     this.destroyMenu();
                 }
+                } 
             }
             if (menuButton==null){
                 menuButton = this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
@@ -195,9 +197,8 @@ BasicGame.Boot.prototype =
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             var colour = "#a7aebe";
-
             game.debug.text(game.time.fps || '--', 2, 14, colour);
-            var object = models[selectedCube];
+            var object = models[visuals.indexOf(selectedCube)];
             if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
             else
             {
@@ -205,6 +206,14 @@ BasicGame.Boot.prototype =
                 game.debug.text("Position: "+object.position, 2, 60, colour);
                 game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
+            game.debug.text("Up/Down/Left/Right: w/s/a/d;",2,100,colour);
+            game.debug.text("Increse/Decrease: Z",2,120,colour);
+            game.debug.text("height: q/e",2,140,colour);
+            game.debug.text("Deselect Item: Esc",2,160,colour);
+            game.debug.text("Rotate: r",2,180,colour);
+            game.debug.text("Delete: del",2,200,colour);
+            game.debug.text("Submit Design: g",2,220,colour);
+
         },
         spawnTiles: function () {
             for (var xx = 0; xx < 30*40; xx += 30) {
@@ -241,20 +250,25 @@ BasicGame.Boot.prototype =
         delete_existing_object: function(object) {
             console.log("Deleting existing object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
             var visual = visuals[models.indexOf(object)];
-            models.splice(models.indexOf(visual), 1);
-            visuals.splice(visuals.indexOf(object), 1);
+            var model_index = models.indexOf(object) 
+            var visual_index = visuals.indexOf(visual) 
+            models.splice(model_index, 1);
+            visuals.splice(visual_index, 1);
             visual.destroy();
         },
         update_object: function(object) {
             console.log("Updating object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
             var visual = visuals[models.indexOf(object)];
+            console.log(visual)
             visual.destroy();
             var sprite_id = object.object_type_name+"_"+(object.rotation+1);
             var visual_position = this.transform_model_to_visual(object.position);
             var new_visual = this.createNewSprite(sprite_id, visual_position, this.get_object_offset(object));
 
-            models.splice(models.indexOf(visual), 1);
-            visuals.splice(visuals.indexOf(object), 1);
+            var model_index = models.indexOf(object) 
+            var visual_index = visuals.indexOf(visual) 
+            models.splice(model_index, 1);
+            visuals.splice(visual_index, 1);
             visuals.push(new_visual);
             models.push(object);
             this.destroyMenu();
@@ -285,7 +299,7 @@ BasicGame.Boot.prototype =
             tile.inputEnabled = true;
             tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
-                selectedCube = tile;
+                selectedCube = s;
             });
             selectedCube = tile;
             return tile;
@@ -423,13 +437,13 @@ BasicGame.Boot.prototype =
             var up = function moveUp () {
                 if (selectedCube == null) return;
                 var object = models[visuals.indexOf(selectedCube)];
-                object.position.z += 1;
+                object.position.z -= 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
                 if (selectedCube == null) return;
                 var object = models[visuals.indexOf(selectedCube)];
-                object.position.z -= 1;
+                object.position.z += 1;
                 this.update_object(object);
             }
             var copyIt = function copyObj () {
@@ -466,6 +480,23 @@ BasicGame.Boot.prototype =
             var deselectIt = function deselect () {
                 selectedCube = null;
             }
+            var submitIt = function submit (){
+            var map_data = new HabLayout();
+            var room_type = new HabRoomType();
+            room_type.name = "root";
+            var poly = new Polygon();
+            poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
+            room_type.floor_plan = poly;
+            models.forEach(model => room_type.objects.push(model));
+            map_data.room_types[room_type.name] = (room_type);
+            var room = new HabRoom();
+            room.position = new Point2D(0,0,0);
+            room.room_type_name = room_type.name;
+            map_data.rooms.push(room);
+            console.log("submitting");
+            console.log(map_data);
+            habsdk_socket.submit_map("test-user", map_data, function(data) { console.log(data); });
+        }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             upKey.onDown.add(back, this);
             var downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -506,7 +537,7 @@ var submitIt = function submit (){
     var poly = new Polygon();
     poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
     room_type.floor_plan = poly;
-    models.forEach(visual => room_type.objects.push(models[visual]));
+    models.forEach(model => room_type.objects.push(model));
     map_data.room_types[room_type.name] = (room_type);
     var room = new HabRoom();
     room.position = new Point2D(0,0,0);
