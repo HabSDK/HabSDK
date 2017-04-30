@@ -199,7 +199,7 @@ BasicGame.Boot.prototype =
             var colour = "#a7aebe";
             game.debug.text(game.time.fps || '--', 2, 14, colour);
             var object = models[visuals.indexOf(selectedCube)];
-            if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
+            if (object == null) game.debug.text("No object selected :/", 2, 40, colour);
             else
             {
                 game.debug.text(object.object_type_name, 2, 40, colour)
