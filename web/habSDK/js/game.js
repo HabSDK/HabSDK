@@ -140,10 +140,11 @@ BasicGame.Boot.prototype =
             ];
             objects.forEach(object => this.add_existing_object(object));
         },
-        add_new_object: function(object_type_name) {
-            console.log("Adding new object "+object.object_type_name);
+        add_new_object: function(object_type_name, position) {
+            console.log("Adding new object "+object_type_name);
             var object = new HabObject()
             object.object_type_name = object_type_name;
+            object.position = position;
             this.add_existing_object(object);
         },
         add_existing_object: function(object) {
@@ -230,7 +231,7 @@ BasicGame.Boot.prototype =
                 var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
                 var localKey = key;
-                var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
+                var sprite = game.add.sprite(0,70+100*i,localKey+"_1");
                 menuItems.push(sprite);
                 var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
@@ -245,7 +246,7 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    var createdComponent = _this.add_new_object(sp.key,0,0,30);
+                    var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), new Point3D(0,0,0));
                     createdComponent.tint = sp.tint;
                     }, this);
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
