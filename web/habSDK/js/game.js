@@ -202,9 +202,9 @@ BasicGame.Boot.prototype =
             visualToModelMap[new_visual] = object;
         },
         get_object_offset: function(object){
-            var offset = object.get_object_type().sprite_offset
-            if (object.rotation == 0 || object.rotation == 2) offset.x *= -1;
-            return ;
+            var offset = object.get_object_type().sprite_offset;
+            if (object.rotation == 0 || object.rotation == 2) return new Point2D(offset.x * -1, offset.y);
+            return offset;
         },
         transform_model_to_visual: function(model_point){
             var visual_x = (40 - model_point.x) * 30;
@@ -223,6 +223,7 @@ BasicGame.Boot.prototype =
             // The last parameter is the group you want to add it to (just like game.add.sprite)
             var tile = game.add.isoSprite(point.x, point.y, point.z, type, 0, isoGroup);
             tile.anchor.set(0.5+sprite_offset.x, 1.0+sprite_offset.y);
+            console.log("point:"+tile.anchor);
             tile.inputEnabled = true;
             tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
@@ -235,7 +236,7 @@ BasicGame.Boot.prototype =
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
             var tile = game.add.isoSprite(x, y, z, type, 0, isoFloor);
-            tile.anchor.set(0.5, -0.5);
+            tile.anchor.set(0.5, 0.0);
             tile.alpha = 1.0;
             return tile;
         },
