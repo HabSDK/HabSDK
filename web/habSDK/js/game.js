@@ -5,7 +5,7 @@ var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, isoFloor,toolTips, cursorPos, arrowKeys,cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
+var isoGroup, isoFloor,toolTips, cursorPos, arrowKeys,cursor, menuButton,menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
 function saveModel() {
   //var layoutStruct = new HabLayout();
@@ -41,6 +41,8 @@ BasicGame.Boot.prototype =
         },
         create: function () {
             toolTips = [];
+            menuItems = [];
+            menu = [];
             // Create a group for our tiles.
             isoFloor = game.add.group();
             isoGroup = game.add.group();
@@ -50,12 +52,12 @@ BasicGame.Boot.prototype =
             //var args = location.search.split('&');
             //args.map(a => {
             //    var aa = a.split('=');
-            //    return  
-                
+            //    return
+
 
             this.loadModel(null);
             this.spawnTiles();
-            this.createMenu();
+            //this.createMenu();
             this.handleKeyPress();
             // Provide a 3D position for the cursor
             cursorPos = new Phaser.Plugin.Isometric.Point3();
@@ -147,22 +149,48 @@ BasicGame.Boot.prototype =
                 if (arrowKeys.up.isDown)
                 {
                     game.camera.y -= 10;
+                    this.destroyMenu();
                 }
                 else if (arrowKeys.down.isDown)
                 {
                     game.camera.y += 10;
+                    this.destroyMenu();
                 }
 
                 if (arrowKeys.left.isDown)
                 {
                     game.camera.x -= 10;
+                    this.destroyMenu();
                 }
                 else if (arrowKeys.right.isDown)
                 {
                     game.camera.x += 10;
+                    this.destroyMenu();
                 }
             }
+            if (menuButton==null){
+                menuButton = this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
+                    this.destroyMenu();
+                    this.createMenu();
+                    menuButton.destroy();
+                    menuButton = null;
+                });
+            }
+            menuButton.x = game.camera.view.x;
+            menuButton.y = game.camera.view.y;
 
+
+        },
+        destroyMenu: function(){
+          menuItems.forEach(function(item){
+              item.destroy();
+          });
+            menu.forEach(function(item){
+                item.destroy();
+            });
+            toolTips.forEach(function(item){
+                item.destroy();
+            });
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
@@ -177,7 +205,6 @@ BasicGame.Boot.prototype =
                 game.debug.text("Position: "+object.position, 2, 60, colour);
                 game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
-
         },
         spawnTiles: function () {
             for (var xx = 0; xx < 30*40; xx += 30) {
@@ -235,6 +262,7 @@ BasicGame.Boot.prototype =
             visuals.splice(visual_index, 1);
             visuals.push(new_visual);
             models.push(object);
+            this.destroyMenu();
         },
         get_object_offset: function(object){
             var offset = object.get_object_type().sprite_offset;
@@ -293,8 +321,10 @@ BasicGame.Boot.prototype =
         },
         createMenu: function(){
             //  The platforms group contains the ground and the 2 ledges we can jump on
-            menuItems = []
-            var background = this.createBackground(1024-100, 0, 100, 600,'0xffffff');
+            menuItems = [];
+            menu = [];
+            var background = this.createBackground(game.camera.view.x+1024-100, game.camera.view.y, 100, 600,'0xffffff');
+            menu.push(background);
             background.alpha = 0.3;
             // var cubeSprite = menuItems.create(50-10,70,'tile');
             // cubeSprite.inputEnabled = true;
@@ -306,7 +336,7 @@ BasicGame.Boot.prototype =
                 var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
                 var localKey = key;
-                var sprite = game.add.sprite(0,70+100*i,localKey+"_1");
+                var sprite = game.add.sprite(0,game.camera.view.y+70+100*i,localKey+"_1");
                 menuItems.push(sprite);
                 var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
@@ -323,12 +353,20 @@ BasicGame.Boot.prototype =
                 sprite.events.onInputDown.add(function(sp){
                      var pnt = new Point3D(20,20,0);
                     if (selectedCube != null){
-                        var object = models[visuals.indexOf(selectedCube)]; 
+                        var object = models[visuals.indexOf(selectedCube)];
                         pnt = object.position;
                     }
                     var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), pnt, 0);
                     }, this);
-                var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
+                var findObj = object_types.find(o=>o.name==key);
+                var tooltip;
+                if (findObj != null) {
+                    var props = findObj.properties;
+                    var objectData = Object.keys(props).map(o => "\n"+o + " : " + props[o] );
+                    tooltip = game.add.text(sprite.x - 200, sprite.y, objectData, style);
+                } else {
+                    tooltip = game.add.text(sprite.x - 200, sprite.y, key, style);
+                }
                 sprite.tooltip = tooltip;
                 tooltip.sprite = sprite;
                 tooltip.alpha = 0;
@@ -340,7 +378,7 @@ BasicGame.Boot.prototype =
                     sp.tooltip.alpha = 0.0;
                 });
                 //  Create the title after the sprite has been created
-                var text = game.add.text(0,70+100*i,key,style)
+                var text = game.add.text(0,game.camera.view.y+70+100*i,key,style)
                 text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
 
                 //  We'll set the bounds to be from x0, y100 and be 800px wide by 100px high
@@ -350,15 +388,15 @@ BasicGame.Boot.prototype =
             }
 
             //  Allow dragging - the 'true' parameter will make the sprite snap to the center
-            menuItems.forEach(function(item){item.x = 1024-85});
-            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(sprite){
-                //menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20);
+            menuItems.forEach(function(item){item.x = game.camera.view.x+1024-85});
+            var btnDown = this.createButton(game.camera.view.x+1024-100, game.camera.view.y+600-50, 100, 50,'0xffffff',function(sprite){
                 menuItems.forEach(function(item){item.y-=50});
             });
-            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
-                //menuItems.y=Math.min(0,menuItems.y+20);
+            menu.push(btnDown);
+            var btnUp = this.createButton(game.camera.view.x+1024-100, game.camera.view.y+0, 100, 50,'0xffffff',function(sprite){
                 menuItems.forEach(function(item){item.y+=50});
             });
+            menu.push(btnUp);
         },
 
 
@@ -427,7 +465,7 @@ BasicGame.Boot.prototype =
                 var room = new HabRoom();
                 room.position = new Point2D(0,0,0);
                 room.room_type_name = room_type.name;
-                map_data.rooms.push(room); 
+                map_data.rooms.push(room);
 
             }
             var deselectIt = function deselect () {
