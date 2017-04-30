@@ -114,11 +114,14 @@ BasicGame.Boot.prototype =
             var colour = "#a7aebe";
 
             game.debug.text(game.time.fps || '--', 2, 14, colour);
-
-            var object = modelToVisualMap[selectedCube];
+            var object = visualToModelMap[selectedCube];
             if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
-            else game.debug.text(object.object_type_name+" : "+object.position, 2, 40, colour);
-
+            else 
+            {
+                game.debug.text(object.object_type_name, 2, 40, colour)
+                game.debug.text("Position: "+object.position, 2, 60, colour);
+                game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 70, colour);
+            }
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
@@ -156,7 +159,7 @@ BasicGame.Boot.prototype =
             visualToModelMap[new_visual] = object;
         },
         update_object: function(object) {
-            console.log("Updating object "+object.object_type_name);
+            console.log("Updating object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
             var visual = modelToVisualMap[object];
             delete visualToModelMap[visual];
             visual.destroy();
@@ -284,33 +287,33 @@ BasicGame.Boot.prototype =
         handleKeyPress: function (){
             var back = function moveBack () {
                 var object = visualToModelMap[selectedCube]; 
-                object.x -= 1;
-                update_object(object);
+                object.position.x -= 1;
+                this.update_object(object);
             }
             var left = function moveLeft () {
                 var object = visualToModelMap[selectedCube]; 
-                object.y += 1;
-                update_object(object);
+                object.position.y += 1;
+                this.update_object(object);
             }
             var right = function moveRight () {
                 var object = visualToModelMap[selectedCube]; 
-                object.y -= 1;
-                update_object(object);
+                object.position.y -= 1;
+                this.update_object(object);
             }
             var forward = function moveForward () {
                 var object = visualToModelMap[selectedCube]; 
-                object.x += 1;
-                update_object(object);
+                object.position.x += 1;
+                this.update_object(object);
             }
             var up = function moveUp () {
                 var object = visualToModelMap[selectedCube]; 
-                object.z += 1;
-                update_object(object);
+                object.position.z += 1;
+                this.update_object(object);
             }
             var down = function moveDown () {
                 var object = visualToModelMap[selectedCube]; 
-                object.z -= 1;
-                update_object(object);
+                object.position.z -= 1;
+                this.update_object(object);
             }
             var rotate = function rot () {
                 var object = visualToModelMap[selectedCube];
