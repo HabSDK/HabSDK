@@ -114,11 +114,14 @@ BasicGame.Boot.prototype =
             var colour = "#a7aebe";
 
             game.debug.text(game.time.fps || '--', 2, 14, colour);
-
-            var object = modelToVisualMap[selectedCube];
+            var object = visualToModelMap[selectedCube];
             if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
-            else game.debug.text(object.object_type_name+" : "+object.position, 2, 40, colour);
-
+            else 
+            {
+                game.debug.text(object.object_type_name, 2, 40, colour)
+                game.debug.text("Position: "+object.position, 2, 60, colour);
+                game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 70, colour);
+            }
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
