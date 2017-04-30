@@ -145,6 +145,7 @@ BasicGame.Boot.prototype =
             if (selectedCube!=null) {
                 game.camera.follow(selectedCube, new Phaser.Rectangle(100, 100, 824, 568));
             } else {
+                if (arrowKeys != null){
                 game.camera.follow(null);
                 if (arrowKeys.up.isDown)
                 {
@@ -167,6 +168,7 @@ BasicGame.Boot.prototype =
                     game.camera.x += 10;
                     this.destroyMenu();
                 }
+                } 
             }
             if (menuButton==null){
                 menuButton = this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
@@ -195,9 +197,8 @@ BasicGame.Boot.prototype =
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             var colour = "#a7aebe";
-
             game.debug.text(game.time.fps || '--', 2, 14, colour);
-            var object = models[selectedCube];
+            var object = models[visuals.indexOf(selectedCube)];
             if (object == null) game.debug.text("No cube selected :/", 2, 40, colour);
             else
             {
@@ -428,13 +429,13 @@ BasicGame.Boot.prototype =
             var up = function moveUp () {
                 if (selectedCube == null) return;
                 var object = models[visuals.indexOf(selectedCube)];
-                object.position.z += 1;
+                object.position.z -= 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
                 if (selectedCube == null) return;
                 var object = models[visuals.indexOf(selectedCube)];
-                object.position.z -= 1;
+                object.position.z += 1;
                 this.update_object(object);
             }
             var copyIt = function copyObj () {
@@ -478,7 +479,7 @@ BasicGame.Boot.prototype =
             var poly = new Polygon();
             poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
             room_type.floor_plan = poly;
-            models.forEach(visual => room_type.objects.push(models[visual]));
+            models.forEach(model => room_type.objects.push(model));
             map_data.room_types[room_type.name] = (room_type);
             var room = new HabRoom();
             room.position = new Point2D(0,0,0);
