@@ -63,7 +63,7 @@ function HabObject() {
     } 
     this.get_object_type = () => {
         if (object_types == null) console.log("Object types not popultated yet..");
-        object_types.find(o => o.name == this.object_type_name);
+        return object_types.find(o => o.name == this.object_type_name);
     }
 
     var me = this;
