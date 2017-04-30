@@ -21,6 +21,8 @@ BasicGame.Boot.prototype =
             // This is used to set a game canvas-based offset for the 0, 0, 0 isometric coordinate - by default
             // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
             game.iso.anchor.setTo(0.5, 0.2);
+            // In order to have the camera move, we need to increase the size of our world bounds.
+            //game.world.setBounds(0, 0, 2048, 1024);
         },
         create: function () {
             // Create a group for our tiles.
@@ -84,19 +86,21 @@ BasicGame.Boot.prototype =
                     tile.alpha = 1;
                 }
             });
+            game.iso.topologicalSort(isoGroup);
+            //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
             game.debug.text(game.time.fps || '--', 2, 14, "#a7aebe");
-            menuItems.children.forEach(function(item){
-                game.debug.body(item);
+            menuItems.forEach(function(item){
+                game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
 
         },
         spawnTiles: function () {
 
-            for (var xx = 0; xx < 512; xx += 20) {
-                for (var yy = 0; yy < 512; yy += 20) {
+            for (var xx = 0; xx < 30*40; xx += 30) {
+                for (var yy = 0; yy < 30*40; yy += 30) {
                     this.createNewSprite('tile',xx,yy,0);
                 }
             }
@@ -118,7 +122,7 @@ BasicGame.Boot.prototype =
             var tile = game.add.isoSprite(x, y, z, type, 0, isoGroup);
             tile.anchor.set(0.5, 0);
             tile.inputEnabled = true;
-            tile.alpha = 0.4;
+            tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
                 selectedCube = tile;
             });
@@ -143,22 +147,22 @@ BasicGame.Boot.prototype =
         },
         createMenu: function(){
             //  The platforms group contains the ground and the 2 ledges we can jump on
-            menuItems = game.add.group();
+            menuItems = []
             var background = this.createBackground(1024-100, 0, 100, 600,'0xffffff');
             background.alpha = 0.3;
-            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(){});//menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20)});
-            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(){});//menuItems.y=Math.min(0,menuItems.y+20)});
+
             //
-            var cubeSprite = menuItems.create(50-10,70,'tile');
-            cubeSprite.inputEnabled = true;
-            cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
+            // var cubeSprite = menuItems.create(50-10,70,'tile');
+            // cubeSprite.inputEnabled = true;
+            // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
                 var localKey = key;
-                var sprite = menuItems.create(50-10,120+50*i,localKey+'_1');
+                var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
+                menuItems.push(sprite);
                 var _this = this;
                 var maxDimension = Math.max(sprite.height,sprite.width);
-                var scaleFactor = maxDimension/50;
+                var scaleFactor = maxDimension/100;
 
                 sprite.scale.set(1/scaleFactor);
                 //sprite.tint = Math.random() * 0xffffff;'//rgb('+(i*64)%256+','+(i*64+85)%256+','+(i*64+170)%256+')';
@@ -169,40 +173,49 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    _this.createNewSprite(sp.key,0,0,5);
+                    _this.createNewSprite(sp.key,0,0,30);
                     createdComponent.tint = sprite.tint;
                     }, this);
                 i++;
             }
 
             //  Allow dragging - the 'true' parameter will make the sprite snap to the center
-            menuItems.x = 1024-100;
+            menuItems.forEach(function(item){item.x = 1024-85});
+            this.createButton(1024-100, 600-50, 100, 50,'0xffffff',function(sprite){
+                //menuItems.y=Math.max(-spriteResources.length*50,menuItems.y-20);
+                menuItems.forEach(function(item){item.y-=20});
+            });
+            this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
+                //menuItems.y=Math.min(0,menuItems.y+20);
+                menuItems.forEach(function(item){item.y+=20});
+            });
         },
 
 
         handleKeyPress: function (){
             var back = function moveBack () {
-                selectedCube.isoY -=20;
+                selectedCube.isoX -=30;
             }
             var left = function moveLeft () {
-                selectedCube.isoX -= 20;
+                selectedCube.isoY += 30;
             }
             var right = function moveRight () {
-                selectedCube.isoX += 20;
+                selectedCube.isoY -= 30;
             }
             var forward = function moveForward () {
-                selectedCube.isoY +=20;
+                selectedCube.isoX +=30;
             }
             var up = function moveUp () {
-                selectedCube.isoZ +=20;
+                selectedCube.isoZ +=30;
             }
             var down = function moveDown () {
-                selectedCube.isoZ -=20;
+                selectedCube.isoZ -=30;
             }
             var rotate = function rot () {
                 var num = selectedCube.key.charAt(selectedCube.key.length-1);
+                var baseString = selectedCube.key.slice(0, selectedCube.key.length-1);
                 var oldCube = selectedCube;
-                this.createNewSprite(selectedCube.key.replace(num,parseInt(num)%4+1),selectedCube.isoX,selectedCube.isoY,selectedCube.isoZ);
+                this.createNewSprite(baseString+(parseInt(num)%4+1),selectedCube.isoX,selectedCube.isoY,selectedCube.isoZ);
                 oldCube.destroy();
             }
             var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
