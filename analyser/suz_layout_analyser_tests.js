@@ -1,6 +1,6 @@
 var fs = require('fs');
-eval(fs.readFileSync('spatial.js')+'');
-eval(fs.readFileSync('metrics.js')+'');
+eval(fs.readFileSync('../web/habSDK/js/spatial.js')+'');
+eval(fs.readFileSync('../web/habSDK/js/metrics.js')+'');
 eval(fs.readFileSync('layout_analyser.js')+'');
 eval(fs.readFileSync('object_library.js')+'');
 eval(fs.readFileSync('data_tests.js')+'');
