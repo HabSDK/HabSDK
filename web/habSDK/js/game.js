@@ -210,7 +210,10 @@ BasicGame.Boot.prototype =
             // Create a tile using the new game.add.isoSprite factory method at the specified position.
             // The last parameter is the group you want to add it to (just like game.add.sprite)
             var tile = game.add.isoSprite(x, y, z, type, 0, isoGroup);
-            tile.anchor.set(0.5, 0);
+            tile.anchor.set(0.5,0);
+            // tile.anchor.x -= 0.5*0.048*tile.width;
+            // tile.anchor.y -= (2/175)*tile.height;
+
             tile.inputEnabled = true;
             tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
