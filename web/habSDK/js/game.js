@@ -120,7 +120,7 @@ BasicGame.Boot.prototype =
             {
                 game.debug.text(object.object_type_name, 2, 40, colour)
                 game.debug.text("Position: "+object.position, 2, 60, colour);
-                game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 70, colour);
+                game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
@@ -157,6 +157,13 @@ BasicGame.Boot.prototype =
             var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);
             modelToVisualMap[object] = new_visual;
             visualToModelMap[new_visual] = object;
+        },
+        delete_existing_object: function(object) {
+            console.log("Deleting existing object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
+            var visual = modelToVisualMap[object];
+            delete visualToModelMap[visual];
+            delete modelToVisualMap[object];
+            visual.destroy();
         },
         update_object: function(object) {
             console.log("Updating object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
@@ -286,34 +293,50 @@ BasicGame.Boot.prototype =
 
         handleKeyPress: function (){
             var back = function moveBack () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube]; 
                 object.position.x -= 1;
                 this.update_object(object);
             }
             var left = function moveLeft () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube]; 
                 object.position.y += 1;
                 this.update_object(object);
             }
             var right = function moveRight () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube]; 
                 object.position.y -= 1;
                 this.update_object(object);
             }
             var forward = function moveForward () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube]; 
                 object.position.x += 1;
                 this.update_object(object);
             }
             var up = function moveUp () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube]; 
                 object.position.z += 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube]; 
                 object.position.z -= 1;
                 this.update_object(object);
+            }
+            var copyIt = function copyObj () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube];
+                this.add_new_object(object, object.position);
+            }
+            var deleteIt = function deleteObj () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube];
+                this.delete_existing_object(object);
             }
             var rotate = function rot () {
                 var object = visualToModelMap[selectedCube];
@@ -343,6 +366,10 @@ BasicGame.Boot.prototype =
             eKey.onDown.add(down, this);
             var rKey = game.input.keyboard.addKey(Phaser.Keyboard.R);
             rKey.onDown.add(rotate, this);
+            var delKey = game.input.keyboard.addKey(Phaser.Keyboard.DELETE);
+            delKey.onDown.add(deleteIt, this);
+            var fKey = game.input.keyboard.addKey(Phaser.Keyboard.F);
+            fKey.onDown.add(copyIt, this);
         }
     };
 
