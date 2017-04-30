@@ -64,7 +64,6 @@ function HabObject() {
         return limits;
     }
     this.get_object_type = () => {
-        if (object_types == null) console.log("Object types not popultated yet..");
         return object_types.find(o => o.name == this.object_type_name);
     }
 
