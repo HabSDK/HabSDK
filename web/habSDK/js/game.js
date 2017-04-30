@@ -123,6 +123,11 @@ BasicGame.Boot.prototype =
                         tile.selected = true;
                         tile.tint = 0x86bfda;
                     }
+                    else{
+                        tile.selected = false;
+                        tile.tint = 0xffffff;
+                    }
+
                 }
             });
             //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
