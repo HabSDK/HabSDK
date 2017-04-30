@@ -8,7 +8,7 @@ var isoGroup, isoFloor,toolTips, cursorPos, cursor, menu,upButton,downButton,sel
 
 function saveModel() {
   //var layoutStruct = new HabLayout();
-            
+
   isoGroup.children.forEach(function(sprite) {
     console.log(sprite);
     var sprite_type = sprite.key.split("_")[0];
@@ -45,7 +45,7 @@ BasicGame.Boot.prototype =
 
             // Let's make a load of tiles on a grid.
             this.loadModel(null);
-            //this.spawnTiles();
+            this.spawnTiles();
             this.createMenu();
             this.handleKeyPress();
             // Provide a 3D position for the cursor
@@ -60,7 +60,7 @@ BasicGame.Boot.prototype =
                 dataType: "json",
                 success: function(response) {
                     $.each(response, function(index, object_type) {
-                        object_types = response; 
+                        object_types = response;
                         spriteResources[object_type.name]=[];
                         console.log("Registering "+object_type.name+" as object type.");
                         for (var i = 1; i <=4; i++) {
@@ -136,9 +136,9 @@ BasicGame.Boot.prototype =
             var block = new HabObject();
             block.object_type_name = "block2x1";
             var objects = [
-                block,    
+                block,
             ];
-            objects.forEach(object => this.add_existing_object(object));            
+            objects.forEach(object => this.add_existing_object(object));
         },
         add_new_object: function(object_type_name) {
             console.log("Adding new object "+object.object_type_name);
@@ -150,7 +150,7 @@ BasicGame.Boot.prototype =
             console.log("Adding existing object "+object.object_type_name);
             var sprite_id = object.object_type_name+"_"+(object.rotation+1);
             var visual_position = this.transform_model_to_visual(object.position);
-            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);  
+            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);
             modelToVisualMap[object] = new_visual;
             visualToModelMap[new_visual] = object;
         },
@@ -161,7 +161,7 @@ BasicGame.Boot.prototype =
             visual.destroy();
             var sprite_id = object.object_type_name+"_"+(object.rotation+1);
             var visual_position = this.transform_model_to_visual(object.position);
-            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);  
+            var new_visual = this.createNewSprite(sprite_id,visual_position.x, visual_position.y, visual_position.z);
             modelToVisualMap[object] = new_visual;
             visualToModelMap[new_visual] = object;
         },
@@ -225,12 +225,10 @@ BasicGame.Boot.prototype =
             // cubeSprite.events.onInputDown.add(function(){this.createNewSprite('tile',0,0,5);}, this);
             var i = 0;
             for (var key in spriteResources){
-<<<<<<< HEAD
+
 
                 var style = { font: "bold 16px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
 
-=======
->>>>>>> origin/master
                 var localKey = key;
                 var sprite = game.add.sprite(0,70+100*i,localKey+'_1');
                 menuItems.push(sprite);
@@ -250,7 +248,6 @@ BasicGame.Boot.prototype =
                     var createdComponent = _this.add_new_object(sp.key,0,0,30);
                     createdComponent.tint = sp.tint;
                     }, this);
-<<<<<<< HEAD
                 var tooltip = game.add.text(sprite.x-200,sprite.y,key,style);
                 sprite.tooltip = tooltip;
                 tooltip.sprite = sprite;
@@ -269,9 +266,6 @@ BasicGame.Boot.prototype =
                 //  We'll set the bounds to be from x0, y100 and be 800px wide by 100px high
                 text.setTextBounds(0, 0, 100, 100);
                 menuItems.push(text);
-
-=======
->>>>>>> origin/master
                 i++;
             }
 
@@ -308,8 +302,8 @@ BasicGame.Boot.prototype =
                 selectedCube.isoZ -=30;
             }
             var rotate = function rot () {
-                var object = visualToModelMap[selectedCube]; 
-                object.rotation += 1;                
+                var object = visualToModelMap[selectedCube];
+                object.rotation += 1;
                 if (object.rotation > 3) object.rotation = 0;
                 this.update_object(object);
             }
