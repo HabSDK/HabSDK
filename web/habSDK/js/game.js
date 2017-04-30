@@ -4,7 +4,7 @@ var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
+var isoGroup, isoFloor, cursorPos, cursor, menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
 
 var modelToVisualMap = {};
@@ -27,10 +27,12 @@ BasicGame.Boot.prototype =
         create: function () {
             // Create a group for our tiles.
             isoGroup = game.add.group();
+            isoFloor = game.add.group();
             // Let's make a load of tiles on a grid.
 
-            //this.spawnTiles();
-            this.loadModel(create_test_layout());
+            this.spawnTiles();
+
+            //this.loadModel(create_test_layout());
             this.createMenu();
             this.handleKeyPress();
             // Provide a 3D position for the cursor
@@ -95,19 +97,17 @@ BasicGame.Boot.prototype =
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
             });
-            game.debug.spriteInfo(selectedCube, 32, 32);
         },
         spawnTiles: function () {
-
             for (var xx = 0; xx < 30*40; xx += 30) {
                 for (var yy = 0; yy < 30*40; yy += 30) {
-                    this.createNewSprite('tile',xx,yy,0);
+                    this.createFloor('tile',xx,yy,0);
                 }
             }
         },
         loadModel: (layout) => {
             var objects = layout.get_objects();
-            objects.forEach(object => add_new_object(object));            
+            objects.forEach(object => add_new_object(object));
         },
 
         add_new_object: (object) => {
@@ -127,6 +127,14 @@ BasicGame.Boot.prototype =
                 selectedCube = tile;
             });
             selectedCube = tile;
+            return tile;
+        },
+        createFloor: function(type,x,y,z){
+            // Create a tile using the new game.add.isoSprite factory method at the specified position.
+            // The last parameter is the group you want to add it to (just like game.add.sprite)
+            var tile = game.add.isoSprite(x, y, z, type, 0, isoFloor);
+            tile.anchor.set(0.5, 0);
+            tile.alpha = 1.0;
             return tile;
         },
         createButton: function(x,y,width,height,colour,event){
@@ -178,8 +186,8 @@ BasicGame.Boot.prototype =
                 //  Enable the hand cursor
                 sprite.input.useHandCursor = true;
                 sprite.events.onInputDown.add(function(sp){
-                    _this.createNewSprite(sp.key,0,0,30);
-                    createdComponent.tint = sprite.tint;
+                    var createdComponent = _this.createNewSprite(sp.key,0,0,30);
+                    createdComponent.tint = sp.tint;
                     }, this);
                 //  Create the title after the sprite has been created
                 var text = game.add.text(0,70+100*i,key,style)
