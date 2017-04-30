@@ -1,6 +1,7 @@
 var game = new Phaser.Game(1024, 600, Phaser.CANVAS, 'test', null, true, false);
 
 var BasicGame = function (game) { };
+var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
 BasicGame.Boot = function (game) { };
 
@@ -94,7 +95,7 @@ BasicGame.Boot.prototype =
                     //var targetHeight = tile.isoZ-2;
                     //game.add.tween(tile).to({ isoZ: targetHeight }, 600, Phaser.Easing.Quadratic.InOut, true);
                 }
-                if (tile == selectedCube){
+                if (tile == selectedCube) {
                     //tile.tint = 0x86bfda;
                     tile.alpha = 0.4;
                 } else {
@@ -103,10 +104,27 @@ BasicGame.Boot.prototype =
                 }
             });
             game.iso.topologicalSort(isoGroup);
-            toolTips.forEach(function(tip){
-                tip.x = tip.sprite.x-200;
+            toolTips.forEach(function (tip) {
+                tip.x = tip.sprite.x - 200;
                 tip.y = tip.sprite.y;
-            })
+            });
+            _this = this;
+
+            isoFloor.forEach(function (tile) {
+                var cube = visualToModelMap[selectedCube];
+                if (cube != undefined) {
+                    var lim = cube.get_limits();
+                    //lim.min_point.x;
+                    //console.log(_this.transform_model_to_visual(obj.x) , tile.isoX)
+                    if (_this.transform_model_to_visual(lim.min_point).x <= tile.isoX &&
+                        _this.transform_model_to_visual(lim.max_point).x > tile.isoX &&
+                        _this.transform_model_to_visual(lim.min_point).y <= tile.isoY &&
+                        _this.transform_model_to_visual(lim.max_point).y > tile.isoY) {
+                        tile.selected = true;
+                        tile.tint = 0x86bfda;
+                    }
+                }
+            });
             //game.camera.follow(selectedCube,new Phaser.Rectangle(100,100,824,568));
         },
         render: function () {
@@ -120,7 +138,7 @@ BasicGame.Boot.prototype =
             {
                 game.debug.text(object.object_type_name, 2, 40, colour)
                 game.debug.text("Position: "+object.position, 2, 60, colour);
-                game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 70, colour);
+                game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
             menuItems.forEach(function(item){
                 game.debug.body(item,'rgba(255, 255, 0, 0.1)');
@@ -158,6 +176,13 @@ BasicGame.Boot.prototype =
             modelToVisualMap[object] = new_visual;
             visualToModelMap[new_visual] = object;
         },
+        delete_existing_object: function(object) {
+            console.log("Deleting existing object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
+            var visual = modelToVisualMap[object];
+            delete visualToModelMap[visual];
+            delete modelToVisualMap[object];
+            visual.destroy();
+        },
         update_object: function(object) {
             console.log("Updating object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
             var visual = modelToVisualMap[object];
@@ -170,14 +195,14 @@ BasicGame.Boot.prototype =
             visualToModelMap[new_visual] = object;
         },
         transform_model_to_visual: function(model_point){
-            var visual_x = model_point.x * 30;
-            var visual_y = model_point.y * 30;
+            var visual_x = (40 - model_point.x) * 30;
+            var visual_y = (40 - model_point.y) * 30;
             var visual_z = model_point.z * 30;
             return new Point3D(visual_x, visual_y, visual_z);
         },
         transform_visual_to_model: function(visual_point){
-            var model_x = visual_point.x / 30;
-            var model_y = visual_point.y / 30;
+            var model_x = 40 + (visual_point.x / 30);
+            var model_y = 40 + (visual_point.y / 30);
             var model_z = visual_point.z / 30;
             return new Point3D(model_x, model_y, model_z);
         },
@@ -289,34 +314,50 @@ BasicGame.Boot.prototype =
 
         handleKeyPress: function (){
             var back = function moveBack () {
-                var object = visualToModelMap[selectedCube];
-                object.position.x -= 1;
-                this.update_object(object);
-            }
-            var left = function moveLeft () {
-                var object = visualToModelMap[selectedCube];
-                object.position.y += 1;
-                this.update_object(object);
-            }
-            var right = function moveRight () {
-                var object = visualToModelMap[selectedCube];
-                object.position.y -= 1;
-                this.update_object(object);
-            }
-            var forward = function moveForward () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.x += 1;
                 this.update_object(object);
             }
+            var left = function moveLeft () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube];
+                object.position.y -= 1;
+                this.update_object(object);
+            }
+            var right = function moveRight () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube];
+                object.position.y += 1;
+                this.update_object(object);
+            }
+            var forward = function moveForward () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube];
+                object.position.x -= 1;
+                this.update_object(object);
+            }
             var up = function moveUp () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.z += 1;
                 this.update_object(object);
             }
             var down = function moveDown () {
+                if (selectedCube == null) return;
                 var object = visualToModelMap[selectedCube];
                 object.position.z -= 1;
                 this.update_object(object);
+            }
+            var copyIt = function copyObj () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube];
+                this.add_new_object(object, object.position);
+            }
+            var deleteIt = function deleteObj () {
+                if (selectedCube == null) return;
+                var object = visualToModelMap[selectedCube];
+                this.delete_existing_object(object);
             }
             var rotate = function rot () {
                 var object = visualToModelMap[selectedCube];
@@ -346,6 +387,25 @@ BasicGame.Boot.prototype =
             eKey.onDown.add(down, this);
             var rKey = game.input.keyboard.addKey(Phaser.Keyboard.R);
             rKey.onDown.add(rotate, this);
+            var delKey = game.input.keyboard.addKey(Phaser.Keyboard.DELETE);
+            delKey.onDown.add(deleteIt, this);
+            var fKey = game.input.keyboard.addKey(Phaser.Keyboard.F);
+            fKey.onDown.add(copyIt, this);
+            var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACE);
+            spaceKey.onDown.add(submit, this);
+        },
+        submit: function(){
+            var map_data = new HabLayout();
+            var room_type = new HabRoomType();
+            room_type.name = "root";
+            room_type.floor_plan = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
+            Object.keys(modelToVisualMap).forEach(object => room_type.objects.push(object));
+            map_data.room_types.push(room_type);
+            var room = new HabRoom();
+            room.position = new Point2D(0,0,0);
+            room.room_type_name = room_type.name;
+            map_data.rooms.push(room);
+            habsdk_socket.submit_map("test-user", map_data, function(data) { console.log(data); });
         }
     };
 
