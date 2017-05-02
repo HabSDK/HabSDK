@@ -1,0 +1,11 @@
+0
+HabSDK is a game we created to crowdsource the design and evaluation of 
+long-duration space habitats. The user can design and evaluate their concept
+against a set of metrics including power consumption, weight and other human 
+factors.
+15 Seconds
+All designs are submitted to a server and ranked to find the best solution.
+We're currently improving our metrics and our component library to create a
+great design, evaluation and education game.
+Design your space station at habsdk.co
+30 seconds
