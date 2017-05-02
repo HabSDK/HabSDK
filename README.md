@@ -3,7 +3,7 @@ Designing the optimal Mars habitat is a huge task, beyond the ability of any sin
 
 ![Actual in-game footage](https://api-2017.spaceappschallenge.org/team-photos/_-VmLMKmLJk-HHemCBSukWwaMGk=/3548/width-800/ "Actual in-game footage")
 
-##About the project
+## About the project
 When setting up a habitat on Mars, there are a huge number of variables which need to be balanced to produce the optimal environment. These include both human parameters, such as comfort or ease-of access, and logistical parameters, such as ease-of-assembly or total weight to be transported.
 
 Designing the best possible Mars habitat is a huge task, beyond the ability of any one team. Hab SDK is a crowdsourcing design tool, allowing millions of global users to compete and collaborate to come up with the best possible design.
