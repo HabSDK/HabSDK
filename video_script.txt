@@ -9,3 +9,17 @@ We're currently improving our metrics and our component library to create a
 great design, evaluation and education game.
 Design your space station at habsdk.co
 30 seconds
+
+------Script Version 2----
+
+HabSKD is a design tool and crowdsourcing game for designing habitation
+environments for extended durations in space. We wanted to make it easy to 
+design layouts and evaluate them against a set of metrics such as 
+accessability, power consumption and other human factors. 
+
+Once a player has designed their ideal layout with guidance from the game,
+they can submit it to the server which ranks the best designs.
+We're adding many more component types and useful metrics to use it
+both for design and also as a fun outreach and education tool.
+
+Design your space station at habsdk.co
