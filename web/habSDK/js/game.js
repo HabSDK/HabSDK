@@ -5,7 +5,7 @@ var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, isoFloor,toolTips, cursorPos, arrowKeys,cursor, menuButton,menu,upButton,downButton,selectedCube,spriteResources,menuItems;
+var isoGroup, isoFloor,toolTips, cursorPos, arrowKeys,cursor, menuButton,menuShowing,menu,upButton,downButton,selectedCube,spriteResources,menuItems;
 
 function saveModel() {
   //var layoutStruct = new HabLayout();
@@ -43,6 +43,7 @@ BasicGame.Boot.prototype =
             toolTips = [];
             menuItems = [];
             menu = [];
+            menuShowing = false;
             // Create a group for our tiles.
             isoFloor = game.add.group();
             isoGroup = game.add.group();
@@ -67,6 +68,9 @@ BasicGame.Boot.prototype =
 
         getResources: function(){
             game.load.image('tile', './resources/sprites/cube.png');
+            game.load.image('up', './resources/sprites/up.png');
+            game.load.image('down', './resources/sprites/down.png');
+            game.load.image('menu', './resources/sprites/menu.png');
             spriteResources = new Object();
             $.ajax({
                 url: "resources/object_types.json",
@@ -168,17 +172,26 @@ BasicGame.Boot.prototype =
                     game.camera.x += 10;
                     this.destroyMenu();
                 }
-                } 
+                }
             }
             if (menuButton==null){
-                menuButton = this.createButton(1024-100, 0, 100, 50,'0xffffff',function(sprite){
-                    this.destroyMenu();
+                menuButton = this.createButton(1024-100, 0, 100, 100,'0xffffff',function(sprite){
+                    menuItems.forEach(function(item){
+                        item.destroy();
+                    });
+                    menu.forEach(function(item){
+                        item.destroy();
+                    });
+                    toolTips.forEach(function(item){
+                        item.destroy();
+                    });
+                    menuShowing = true;
                     this.createMenu();
                     menuButton.destroy();
-                    menuButton = null;
-                });
+
+                },'menu');
             }
-            menuButton.x = game.camera.view.x;
+            menuButton.x = game.camera.view.x+1024-100;
             menuButton.y = game.camera.view.y;
 
 
@@ -193,6 +206,10 @@ BasicGame.Boot.prototype =
             toolTips.forEach(function(item){
                 item.destroy();
             });
+            if (menuShowing) {
+                menuShowing = false;
+                menuButton = null;
+            }
         },
         render: function () {
             //game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
@@ -250,8 +267,8 @@ BasicGame.Boot.prototype =
         delete_existing_object: function(object) {
             console.log("Deleting existing object "+object.object_type_name+" to p:"+object.position+" r:"+object.rotation);
             var visual = visuals[models.indexOf(object)];
-            var model_index = models.indexOf(object) 
-            var visual_index = visuals.indexOf(visual) 
+            var model_index = models.indexOf(object)
+            var visual_index = visuals.indexOf(visual)
             models.splice(model_index, 1);
             visuals.splice(visual_index, 1);
             visual.destroy();
@@ -267,8 +284,8 @@ BasicGame.Boot.prototype =
             var visual_position = this.transform_model_to_visual(object.position);
             var new_visual = this.createNewSprite(sprite_id, visual_position, this.get_object_offset(object));
 
-            var model_index = models.indexOf(object) 
-            var visual_index = visuals.indexOf(visual) 
+            var model_index = models.indexOf(object)
+            var visual_index = visuals.indexOf(visual)
             models.splice(model_index, 1);
             visuals.splice(visual_index, 1);
             visuals.push(new_visual);
@@ -315,12 +332,12 @@ BasicGame.Boot.prototype =
             tile.alpha = 1.0;
             return tile;
         },
-        createButton: function(x,y,width,height,colour,event){
-            var graphics = game.add.graphics(0, 0);
-            graphics.beginFill(colour,1.0);
-            graphics.drawRect(x,y,width,height);
+        createButton: function(x,y,width,height,colour,event,text){
+            var graphics = game.add.sprite(x, y,text);
+            // graphics.beginFill(colour,1.0);
+            // graphics.drawRect(x,y,width,height);
             graphics.inputEnabled = true;
-            graphics.text = "BUTTON";
+            //graphics.text = "BUTTON";
             graphics.input.useHandCursor = true;
             graphics.events.onInputUp.add(event, this);
             return graphics;
@@ -403,11 +420,11 @@ BasicGame.Boot.prototype =
             menuItems.forEach(function(item){item.x = game.camera.view.x+1024-85});
             var btnDown = this.createButton(game.camera.view.x+1024-100, game.camera.view.y+600-50, 100, 50,'0xffffff',function(sprite){
                 menuItems.forEach(function(item){item.y-=150});
-            });
+            },'down');
             menu.push(btnDown);
             var btnUp = this.createButton(game.camera.view.x+1024-100, game.camera.view.y+0, 100, 50,'0xffffff',function(sprite){
                 menuItems.forEach(function(item){item.y+=150});
-            });
+            },'up');
             menu.push(btnUp);
         },
 
@@ -421,10 +438,7 @@ BasicGame.Boot.prototype =
             models.forEach(object => {
                 if (selectedObject != object)
                 {
-                    // console.log("COMPARING WITH MYSELF!")
-
                     var limits = object.get_limits();
-                    //console.log(limits.min_point.x, limits.min_point.y, limits.min_point.z);
                     if (place_max.x-1 >= limits.min_point.x && place_min.x <= limits.max_point.x-1 &&
                         place_max.y-1 >= limits.min_point.y && place_min.y <= limits.max_point.y-1)
                     {
@@ -433,10 +447,6 @@ BasicGame.Boot.prototype =
                 }
             });
             return base;
-            //for (var key in modelToVisualMap) {
-            //    console.log(modelToVisualMap[key]);
-            //}
-
         },
 
 
