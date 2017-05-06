@@ -112,6 +112,7 @@ wss.on('connection', (ws) => {
         break;
 
       case 'post:user_map':
+        console.log("Score request received");
         analyse_map(message.data)
         .catch((err) => {
           console.log("Error scoring user map: "+err);
@@ -121,6 +122,7 @@ wss.on('connection', (ws) => {
         });
         break;
       case 'post:user_score':
+        console.log("Score Post received");
         save_map(message.data)
         .catch((err) => {
           console.log("Error saving user map: "+err);
@@ -183,3 +185,13 @@ function sanitize(input) {
 }
 
 console.log("HabSDK Server running"); 
+
+setInterval(function() {
+var user_count = 0;
+        wss.clients.forEach(function each(client) {
+          if (client !== wss && client.readyState === WebSocket.OPEN) {
+            user_count++;
+          }
+        });
+ console.log("Connected Users: "+user_count);
+},60*1000);
