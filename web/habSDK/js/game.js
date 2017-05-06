@@ -1,7 +1,6 @@
 var game = new Phaser.Game(1024, 600, Phaser.CANVAS, 'test', null, true, false);
 
 var BasicGame = function (game) { };
-var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
 BasicGame.Boot = function (game) { };
 
