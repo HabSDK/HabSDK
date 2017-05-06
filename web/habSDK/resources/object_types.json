@@ -5,82 +5,10 @@
 		"y": 3,
 		"z": 4
 	},
-	"sprite_offset":{ "x": 0.15,"y": -0.07 },
+	"sprite_offset":{ "x": 0.14,"y": -0.06 },
 	"properties": {
 		"mass": 65,
 		"comfort": 15
-	}
-},
-{
-	"name": "block1x1",
-	"limits": {
-		"x": 1,
-		"y": 1,
-		"z": 1
-	},
-	"sprite_offset":{ "x": 0,"y": 0 },
-	"properties": {
-		
-	}
-},
-{
-	"name": "block2x1",
-	"limits": {
-		"x": 2,
-		"y": 1,
-		"z": 1
-	},
-	"sprite_offset":{ "x": 0.1,"y": -0.05 },
-	"properties": {
-		
-	}
-},
-{
-	"name": "block2x2",
-	"limits": {
-		"x": 2,
-		"y": 2,
-		"z": 1
-	},
-	"sprite_offset":{ "x": 0,"y": 0 },
-	"properties": {
-		
-	}
-},
-{
-	"name": "block4x2",
-	"limits": {
-		"x": 4,
-		"y": 2,
-		"z": 2
-	},
-	"sprite_offset":{ "x": 0.1,"y": -0.05 },
-	"properties": {
-		
-	}
-},
-{
-	"name": "block4x4",
-	"limits": {
-		"x": 4,
-		"y": 4,
-		"z": 4
-	},
-	"sprite_offset":{ "x": 0,"y": 0 },
-	"properties": {
-		
-	}
-},
-{
-	"name": "block8x4",
-	"limits": {
-		"x": 8,
-		"y": 4,
-		"z": 4
-	},
-	"sprite_offset":{ "x": 0.1,"y": -0.05 },
-	"properties": {
-		
 	}
 },
 {
@@ -143,7 +71,7 @@
 		"y": 4,
 		"z": 8
 	},
-	"sprite_offset":{ "x": 0,"y": 0 },
+	"sprite_offset":{ "x": 0,"y": -0.05 },
 	"properties": {
 		"mass": 40,
 		"hygine": 10
@@ -310,11 +238,11 @@
 {
 	"name": "treadmill",
 	"limits": {
-		"x": 5,
-		"y": 3,
+		"x": 3,
+		"y": 5,
 		"z": 3
 	},
-	"sprite_offset":{ "x": 0,"y": 0 },
+	"sprite_offset":{ "x": -0.09,"y": -0.05 },
 	"properties": {
 		"mass": 8,
 		"happiness": -4
@@ -337,11 +265,11 @@
 {
 	"name": "door",
 	"limits": {
-		"x": 3,
-		"y": 1,
+		"x": 1,
+		"y": 3,
 		"z": 4
 	},
-	"sprite_offset":{ "x": 0,"y": 0 },
+	"sprite_offset":{ "x": -0.22,"y": -0.08 },
 	"properties": {
 	}
 },
@@ -363,7 +291,7 @@
 		"y": 2,
 		"z": 4
 	},
-	"sprite_offset":{ "x": 0.1,"y": 0 },
+	"sprite_offset":{ "x": -0.18,"y": -0.09 },
 	"properties": {
 	}
 },
@@ -374,7 +302,7 @@
 		"y": 4,
 		"z": 4
 	},
-	"sprite_offset":{ "x": -0.2,"y": -0.08 },
+	"sprite_offset":{ "x": -0.22,"y": -0.08 },
 	"properties": {
 	}
 },
@@ -416,4 +344,77 @@
 		"happiness": 10,
 		"hygine": -10
 	}
-}]
+},
+{
+    "name": "block1x1",
+    "limits": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+    },
+    "sprite_offset":{ "x": 0,"y": 0 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block2x1",
+    "limits": {
+        "x": 2,
+        "y": 1,
+        "z": 1
+    },
+    "sprite_offset":{ "x": 0.1,"y": -0.05 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block2x2",
+    "limits": {
+        "x": 2,
+        "y": 2,
+        "z": 1
+    },
+    "sprite_offset":{ "x": 0,"y": 0 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block4x2",
+    "limits": {
+        "x": 4,
+        "y": 2,
+        "z": 2
+    },
+    "sprite_offset":{ "x": 0.1,"y": -0.05 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block4x4",
+    "limits": {
+        "x": 4,
+        "y": 4,
+        "z": 4
+    },
+    "sprite_offset":{ "x": 0,"y": 0 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block8x4",
+    "limits": {
+        "x": 8,
+        "y": 4,
+        "z": 4
+    },
+    "sprite_offset":{ "x": 0.1,"y": -0.05 },
+    "properties": {
+
+    }
+}
+]

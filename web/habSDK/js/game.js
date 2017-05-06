@@ -242,7 +242,7 @@ BasicGame.Boot.prototype =
         loadModel: function(layout) {
             //var objects = layout.get_objects();
             var block = new HabObject();
-            block.object_type_name = "block2x1";
+            block.object_type_name = "bed";
             var objects = [
                 block,
             ];
