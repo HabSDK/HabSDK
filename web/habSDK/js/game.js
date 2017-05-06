@@ -225,10 +225,10 @@ BasicGame.Boot.prototype =
             }
             game.debug.text("Up/Down/Left/Right: w/s/a/d;",2,100,colour);
             game.debug.text("Increse/Decrease: Z",2,120,colour);
-            game.debug.text("height: q/e",2,140,colour);
+            //game.debug.text("height: q/e",2,140,colour);
             game.debug.text("Deselect Item: Esc",2,160,colour);
             game.debug.text("Rotate: r",2,180,colour);
-            game.debug.text("Delete: del",2,200,colour);
+            //game.debug.text("Delete: del",2,200,colour);
             game.debug.text("Submit Design: g",2,220,colour);
 
         },
@@ -544,8 +544,8 @@ BasicGame.Boot.prototype =
             eKey.onDown.add(down, this);
             var rKey = game.input.keyboard.addKey(Phaser.Keyboard.R);
             rKey.onDown.add(rotate, this);
-            var delKey = game.input.keyboard.addKey(Phaser.Keyboard.DELETE);
-            delKey.onDown.add(deleteIt, this);
+            //var delKey = game.input.keyboard.addKey(Phaser.Keyboard.DELETE);
+           // delKey.onDown.add(deleteIt, this);
             var fKey = game.input.keyboard.addKey(Phaser.Keyboard.F);
             fKey.onDown.add(copyIt, this);
             var escKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
