@@ -53,7 +53,7 @@ function create_floor_plan_metric() {
     var eval = (layout) => {
         var objects = layout.get_objects().filter(o => o.position.z == 0);
         var area = 0;
-        objects.forEach(o =>{
+        objects.forEach((o) =>{
             var limits = o.get_object_type().get_limits();
             var local_area = limits.x * limits.y;
             area += local_area;

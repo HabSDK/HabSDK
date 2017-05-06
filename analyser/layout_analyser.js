@@ -8,7 +8,7 @@ function analyse(layout) {
     ];
     this.metrics = [
         create_proximity_rule(["bluemixserver", "fire-extinguisher"], false),
-        create_floor_plan_metric(),
+        //create_floor_plan_metric(),
         create_proximity_rule(["medical", "treadmill"], true),
         create_proximity_rule(["fridge", "toilet"], true),
         create_proximity_rule(["cooker", "fridge"], false),
