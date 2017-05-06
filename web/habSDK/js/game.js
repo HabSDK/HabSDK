@@ -74,6 +74,7 @@ BasicGame.Boot.prototype =
             $.ajax({
                 url: "resources/object_types.json",
                 dataType: "json",
+                cache: false,
                 success: function(response) {
                     $.each(response, function(index, object_type) {
                         object_types = response;
