@@ -252,7 +252,6 @@ Points will be given to items that are placed on obvious locations (eg, walls on
                 $("#metrics-score-submit-message").text("Enter User Name");
                 return;
               }
-              // WARNING: map_data needs to be globally accessible
               try {
                 submitScore(username, function(data)
                 {
@@ -287,7 +286,7 @@ Points will be given to items that are placed on obvious locations (eg, walls on
               i=0;
               for (var property in results.result.metrics) {
                 if (results.result.metrics.hasOwnProperty(property)) {
-                  if(results.result.metrics[property] > 0)
+                  if(results.result.metrics[property] != 0)
                   {
                     $("#metrics-detailed-results").append($("<p></p>").html(property+": <b>"+results.result.metrics[property]+"</b>"));
                     i++;
