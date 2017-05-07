@@ -27,7 +27,7 @@ BasicGame.Boot.prototype =
     {
         preload: function () {
             
-            updateLoadstate("Loading resources..", 0);
+            updateLoadstate("Loading media resources..", 0);
             this.getResources();
 
             game.time.advancedTiming = true;
@@ -586,6 +586,18 @@ var submitScore = function submit (username, cb){
     habsdk_socket.submit_score(username, map_data, cb);
 }
 
-
+var object_types;
 game.state.add('Boot', BasicGame.Boot);
-game.state.start('Boot');
+
+$(function() {
+    $.ajax({
+        url: "resources/object_types.json",
+        dataType: "json",
+        cache: false,
+        success: function(response) {
+            object_types = response;
+            game.state.start('Boot');
+        }
+    });
+    updateLoadstate("Loading object types..", 0);
+});
