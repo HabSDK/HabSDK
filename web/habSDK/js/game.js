@@ -418,7 +418,7 @@ BasicGame.Boot.prototype =
 
             //  Allow dragging - the 'true' parameter will make the sprite snap to the center
             menuItems.forEach(function(item){item.x = game.camera.view.x+1024-85});
-            var btnDown = this.createButton(game.camera.view.x+1024-100, game.camera.view.y+600-50, 100, 50,'0xffffff',function(sprite){
+            var btnDown = this.createButton(game.camera.view.x+1024-100, game.camera.view.y+600-100, 100, 50,'0xffffff',function(sprite){
                 menuItems.forEach(function(item){item.y-=150});
             },'down');
             menu.push(btnDown);
