@@ -71,22 +71,15 @@ BasicGame.Boot.prototype =
             game.load.image('down', './resources/sprites/down.png');
             game.load.image('menu', './resources/sprites/menu.png');
             spriteResources = new Object();
-            $.ajax({
-                url: "resources/object_types.json",
-                dataType: "json",
-                cache: false,
-                success: function(response) {
-                    $.each(response, function(index, object_type) {
-                        object_types = response;
-                        spriteResources[object_type.name]=[];
-                        console.log("Registering "+object_type.name+" as object type.");
-                        for (var i = 1; i <=4; i++) {
-                            var name = object_type.name + '_' + i;
-                            game.load.image(name, './resources/sprites/' + name + '.png');
-                            spriteResources[object_type.name]=spriteResources[object_type.name].concat([name])
-                        }
-                    })}
-            });
+            $.each(object_types, function(index, object_type) {
+                spriteResources[object_type.name]=[];
+                console.log("Registering "+object_type.name+" as object type.");
+                for (var i = 1; i <=4; i++) {
+                    var name = object_type.name + '_' + i;
+                    game.load.image(name, './resources/sprites/' + name + '.png');
+                    spriteResources[object_type.name]=spriteResources[object_type.name].concat([name])
+                }
+           });
         },
         update: function () {
             // Update the cursor position.

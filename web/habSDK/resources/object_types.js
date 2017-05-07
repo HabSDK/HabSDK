@@ -1,0 +1,420 @@
+var object_types = [{
+	"name": "bed",
+	"limits": {
+		"x": 8,
+		"y": 3,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0.14,"y": -0.06 },
+	"properties": {
+		"mass": 65,
+		"comfort": 15
+	}
+},
+{
+	"name": "bluemixserver",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 6
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 80,
+		"flammability": 60,
+		"science": 10
+	}
+},
+{
+	"name": "cooker",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 2
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 8,
+		"flammability": 30
+	}
+},
+{
+	"name": "fire-extinguisher",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 3
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 2,
+		"flammability": -50
+	}
+},
+{
+	"name": "kettle",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 1,
+		"comfort": 5
+	}
+},
+{
+	"name": "shower",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 8
+	},
+	"sprite_offset":{ "x": 0,"y": -0.05 },
+	"properties": {
+		"mass": 40,
+		"hygine": 10
+	}
+},
+{
+	"name": "sofa",
+	"limits": {
+		"x": 8,
+		"y": 3,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0.15,"y": -0.07 },
+	"properties": {
+		"mass": 35,
+		"comfort": 50,
+		"flammability": 30
+	}
+},
+{
+	"name": "spectography",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 2
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 15,
+		"science": 40
+	}
+},
+{
+	"name": "table-low",
+	"limits": {
+		"x": 2,
+		"y": 3,
+		"z": 2
+	},
+	"sprite_offset":{ "x": -0.05,"y": -0.05 },
+	"properties": {
+		"mass": 8
+	}
+},
+{
+	"name": "centrifuge",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 18,
+		"science": 30
+	}
+},
+{
+	"name": "cupboard",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 10
+	}
+},
+{
+	"name": "composter",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 6
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 140,
+		"hygine": -5
+	}
+},
+{
+	"name": "fridge",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 20,
+		"comfort": 4
+	}
+},
+{
+	"name": "growbox",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 2
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 20,
+		"science": 5
+	}
+},
+{
+	"name": "incinerator",
+	"limits": {
+		"x": 1,
+		"y": 3,
+		"z": 3
+	},
+	"sprite_offset":{ "x": -0.12,"y": -0.07 },
+	"properties": {
+		"mass": 28,
+		"hygine": -5,
+		"flammability": 20
+	}
+},
+{
+	"name": "medical",
+	"limits": {
+		"x": 2,
+		"y": 2,
+		"z": 6
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 15,
+		"hygine": 60,
+		"happiness": -2
+	}
+},
+{
+	"name": "microscope",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 2,
+		"science": 20
+	}
+},
+{
+	"name": "sink",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 1
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 5,
+		"hygine": 20,
+		"flammability": -20
+	}
+},
+{
+	"name": "treadmill",
+	"limits": {
+		"x": 3,
+		"y": 5,
+		"z": 3
+	},
+	"sprite_offset":{ "x": -0.09,"y": -0.05 },
+	"properties": {
+		"mass": 8,
+		"happiness": -4
+	}
+},
+{
+	"name": "tv",
+	"limits": {
+		"x": 1,
+		"y": 2,
+		"z": 2
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 6,
+		"happiness": 20,
+		"science": -40
+	}
+},
+{
+	"name": "door",
+	"limits": {
+		"x": 1,
+		"y": 3,
+		"z": 4
+	},
+	"sprite_offset":{ "x": -0.22,"y": -0.08 },
+	"properties": {
+	}
+},
+{
+	"name": "wall-1",
+	"limits": {
+		"x": 1,
+		"y": 1,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+	}
+},
+{
+	"name": "wall-2",
+	"limits": {
+		"x": 1,
+		"y": 2,
+		"z": 4
+	},
+	"sprite_offset":{ "x": -0.18,"y": -0.09 },
+	"properties": {
+	}
+},
+{
+	"name": "wall-4",
+	"limits": {
+		"x": 1,
+		"y": 4,
+		"z": 4
+	},
+	"sprite_offset":{ "x": -0.22,"y": -0.08 },
+	"properties": {
+	}
+},
+{
+	"name": "worktop",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 6,
+		"science": 3
+	}
+},
+{
+	"name": "person",
+	"limits": {
+		"x": 4,
+		"y": 4,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+	}
+},
+{
+	"name": "toilet",
+	"limits": {
+		"x": 3,
+		"y": 3,
+		"z": 4
+	},
+	"sprite_offset":{ "x": 0,"y": 0 },
+	"properties": {
+		"mass": 10,
+		"sanity": -5,
+		"happiness": 10,
+		"hygine": -10
+	}
+},
+{
+    "name": "block1x1",
+    "limits": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+    },
+    "sprite_offset":{ "x": 0,"y": 0 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block2x1",
+    "limits": {
+        "x": 2,
+        "y": 1,
+        "z": 1
+    },
+    "sprite_offset":{ "x": 0.1,"y": -0.05 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block2x2",
+    "limits": {
+        "x": 2,
+        "y": 2,
+        "z": 1
+    },
+    "sprite_offset":{ "x": 0,"y": 0 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block4x2",
+    "limits": {
+        "x": 4,
+        "y": 2,
+        "z": 2
+    },
+    "sprite_offset":{ "x": 0.1,"y": -0.05 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block4x4",
+    "limits": {
+        "x": 4,
+        "y": 4,
+        "z": 4
+    },
+    "sprite_offset":{ "x": 0,"y": 0 },
+    "properties": {
+
+    }
+},
+{
+    "name": "block8x4",
+    "limits": {
+        "x": 8,
+        "y": 4,
+        "z": 4
+    },
+    "sprite_offset":{ "x": 0.1,"y": -0.05 },
+    "properties": {
+
+    }
+}
+];
