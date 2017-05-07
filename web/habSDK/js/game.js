@@ -26,8 +26,6 @@ var models = [];
 BasicGame.Boot.prototype =
     {
         preload: function () {
-            
-            updateLoadstate("Loading media resources..", 0);
             this.getResources();
 
             game.time.advancedTiming = true;
@@ -596,8 +594,9 @@ $(function() {
         cache: false,
         success: function(response) {
             object_types = response;
+            updateLoadstate("Booting game engine..", 0);
             game.state.start('Boot');
         }
     });
-    updateLoadstate("Loading object types..", 0);
+    updateLoadstate("Loading media resources..", 0);
 });

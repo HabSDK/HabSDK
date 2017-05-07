@@ -224,7 +224,7 @@ Points will be given to items that are placed on obvious locations (eg, walls on
                         );
                         $("#greetings-overlay").click(hideGreetingsOverlay);
                         $("#greetings-overlay-play").click(hideGreetingsOverlay);
-                    },300);
+                    },250);
                 }
             }
 
@@ -244,7 +244,6 @@ Points will be given to items that are placed on obvious locations (eg, walls on
             }
 
             function displayMetrics(results) {
-              console.log(results);
               var target_span = $("#metrics-results");
               target_span.empty();
               target_span
@@ -260,7 +259,6 @@ Points will be given to items that are placed on obvious locations (eg, walls on
 
             function submitMetricsScore(results) {
               var username = $("#metrics-username").val();
-              console.log(username);
               if(username == "")
               {
                 $("#metrics-score-submit-message").text("Enter User Name");
