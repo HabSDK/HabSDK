@@ -129,7 +129,6 @@
           <input type='text' id='metrics-username' placeholder='User Name' class="metrics-panel-results"></input>
           <button id="metrics-score-submit" class="metrics-panel-results">Submit Score</button>
           <span id="metrics-score-submit-message" class="metrics-panel-results"></span><br>
-          <u>Save Map</u>
           </div>
         
         <button id="instructions-select">Instructions</button>
@@ -141,7 +140,7 @@
 
             <p><button id="greetings-overlay-instructions">Instructions</button></p>
 
-            <p><button id="greetings-overlay-play">Let me play!</button></p>
+            <p id="greetings-overlay-loading">Loading logic..</button></p>
             
             <p>Written by the Habitat Software Development Kompetition (HabSDK) Team</p>
         </div>
@@ -196,15 +195,13 @@ Points will be given to items that are placed on obvious locations (eg, walls on
         <script src="js/data.js"></script>
         <script src="js/game.js"></script>
         <script>
+            var habsdk_loadstate = 0;
             var habsdk_socket = new HabSDKSocket("wss://habsdk.co/api/");
 
             function hideGreetingsOverlay() {
                 $("#greetings-overlay").hide();
             }
             $(function() {
-                $("#greetings-overlay").click(hideGreetingsOverlay);
-                $("#greetings-overlay-play").click(hideGreetingsOverlay);
-                
                 $("#leaderboard-select").click(openLeaderboardOverlay);
                 $("#leaderboard-overlay").click(closeLeaderboardOverlay);
                 
@@ -214,6 +211,23 @@ Points will be given to items that are placed on obvious locations (eg, walls on
                 
                 $("#metrics-overlay").click(closeMetricsDetails);
             });
+
+            function updateLoadstate(message,status) {
+                $("#greetings-overlay-loading").text(message);
+                if(status==1)
+                {
+                    setTimeout(function() {
+                        $("#greetings-overlay-loading").empty();
+                        $("#greetings-overlay-loading").append(
+                            $("<button></button")
+                            .attr('id', 'greetings-overlay-play')
+                            .text('Play!')
+                        );
+                        $("#greetings-overlay").click(hideGreetingsOverlay);
+                        $("#greetings-overlay-play").click(hideGreetingsOverlay);
+                    },300);
+                }
+            }
 
             function openInstructionsOverlay() {
                 $("#instructions-overlay").show();

@@ -26,7 +26,8 @@ var models = [];
 BasicGame.Boot.prototype =
     {
         preload: function () {
-
+            
+            updateLoadstate("Loading resources..", 0);
             this.getResources();
 
             game.time.advancedTiming = true;
@@ -43,6 +44,8 @@ BasicGame.Boot.prototype =
             menuItems = [];
             menu = [];
             menuShowing = false;
+            
+            updateLoadstate('Loading map..', 0);
             // Create a group for our tiles.
             isoFloor = game.add.group();
             isoGroup = game.add.group();
@@ -63,6 +66,8 @@ BasicGame.Boot.prototype =
             cursorPos = new Phaser.Plugin.Isometric.Point3();
             arrowKeys = game.input.keyboard.createCursorKeys();
             game.stage.backgroundColor = "#4488AA";
+            
+            updateLoadstate('Game loaded.', 1);
         },
 
         getResources: function(){
@@ -73,7 +78,6 @@ BasicGame.Boot.prototype =
             spriteResources = new Object();
             $.each(object_types, function(index, object_type) {
                 spriteResources[object_type.name]=[];
-                console.log("Registering "+object_type.name+" as object type.");
                 for (var i = 1; i <=4; i++) {
                     var name = object_type.name + '_' + i;
                     game.load.image(name, './resources/sprites/' + name + '.png');
@@ -217,12 +221,12 @@ BasicGame.Boot.prototype =
                 game.debug.text("Rotation: "+(object.rotation*90)+"°", 2, 80, colour);
             }
             game.debug.text("Up/Down/Left/Right: w/s/a/d;",2,100,colour);
-            game.debug.text("Increse/Decrease: Z",2,120,colour);
+            game.debug.text("Increase/Decrease: Z",2,120,colour);
             //game.debug.text("height: q/e",2,140,colour);
             game.debug.text("Deselect Item: Esc",2,160,colour);
             game.debug.text("Rotate: r",2,180,colour);
             //game.debug.text("Delete: del",2,200,colour);
-            game.debug.text("Submit Design: g",2,220,colour);
+            game.debug.text("Score Design: g",2,220,colour);
 
         },
         spawnTiles: function () {
@@ -308,7 +312,7 @@ BasicGame.Boot.prototype =
             // The last parameter is the group you want to add it to (just like game.add.sprite)
             var tile = game.add.isoSprite(point.x, point.y, point.z, type, 0, isoGroup);
             tile.anchor.set(0.5+sprite_offset.x, 1.0+sprite_offset.y);
-            console.log("point:"+tile.anchor);
+            //console.log("point:"+tile.anchor);
             tile.inputEnabled = true;
             tile.alpha = 0.8;
             tile.events.onInputDown.add(function(s){
