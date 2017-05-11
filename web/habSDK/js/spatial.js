@@ -2,7 +2,7 @@ function Limits3D(min_point, max_point) {
     this.min_point = min_point;
     this.max_point = max_point;
 
-    this.intersect = (other_limits) => {
+    this.intersect = function(other_limits) {
         if (max_point.x < other_limits.min_point.x) return false;
         if (min_point.x > other_limits.max_point.x) return false;
         if (max_point.y < other_limits.min_point.y) return false;
@@ -12,22 +12,23 @@ function Limits3D(min_point, max_point) {
         return true;
     }
 
-    this.get_centre_point = () => {
+    this.get_centre_point = function() {
         var x = (this.max_point.x + this.min_point.x) / 2.0;
         var y = (this.max_point.y + this.min_point.y) / 2.0;
         var z = (this.max_point.z + this.min_point.z) / 2.0;
-        var p = new Point3D(x, y, z);
-        return p;
+        return new Point3D(x, y, z);
     }
 
-    this.toString = () => this.min_point+" to "+this.max_point;
+    this.toString = function() {
+        return this.min_point+" to "+this.max_point;
+    }
 }
 
 function Limits2D(min_point, max_point) {
     this.min_point = min_point;
     this.max_point = max_point; 
     
-    this.get_corner_points = () => {
+    this.get_corner_points = function() {
         return [
             this.min_point,
             new Point2D(this.min_point.x, this.max_point.y),
@@ -36,7 +37,7 @@ function Limits2D(min_point, max_point) {
         ]
     } 
 
-    this.intersect = (other_limits) => { 
+    this.intersect = function(other_limits) { 
         if (max_point.x < other_limits.min_point.x) return false;
         if (min_point.x > other_limits.max_point.x) return false;
         if (max_point.y < other_limits.min_point.y) return false;
@@ -48,7 +49,7 @@ function Limits2D(min_point, max_point) {
 function Polygon() {
     this.points = []
 
-    this.contains_point = (point) => {
+    this.contains_point = function(point) {
         var angle = 0
         var p1 = null;
         var p2 = null;
@@ -61,7 +62,7 @@ function Polygon() {
         else return true; 
     }
 
-    this.contains_limits = (limits) => {
+    this.contains_limits = function(limits) {
         var points = limits.get_corner_points()
         for (point in points) {
             if (!this.contains_point(point)) return false;
@@ -74,13 +75,13 @@ function Point2D(x, y) {
     this.x = x;
     this.y = y;
 
-    this.add = (other) => {
+    this.add = function(other) {
         return new Point2D(this.x + other.x, this.y + other.y)
     }
-    this.subtract = (other) => {
+    this.subtract = function(other) {
         return new Point2D(this.x - other.x, this.y - other.y)
     }
-    this.get_angle = (other) => {
+    this.get_angle = function(other) {
         var theta1 = Math.atan2(this.y,this.x);
         var theta2 = Math.atan2(other.y,other.x);
         var dtheta = theta2 - theta1;
@@ -90,7 +91,9 @@ function Point2D(x, y) {
            dtheta += 2 * Math.pi;
         return dtheta;
     }
-        this.toString = () => "("+this.x+","+this.y+")";
+    this.toString = function() {
+        return "("+this.x+","+this.y+")";
+    }
 }
 
 function Point3D(x, y, z) {
@@ -98,14 +101,15 @@ function Point3D(x, y, z) {
     this.y = y;
     this.z = z;
 
-    this.add = (other) => {
+    this.add = function(other) {
         return new Point3D(this.x+other.x, this.y+other.y, this.z+other.z)
     }
 
-    this.distance_to = (other) => {
-        var dis = Math.sqrt((this.x + other.x)*(this.x + other.x)+(this.y + other.y)*(this.y + other.y)+(this.z + other.z)*(this.z + other.z))
-        return dis;
+    this.distance_to = function(other) {
+        return Math.sqrt((this.x + other.x)*(this.x + other.x)+(this.y + other.y)*(this.y + other.y)+(this.z + other.z)*(this.z + other.z))
     }
 
-    this.toString = () => "("+this.x+","+this.y+","+this.z+")";
+    this.toString = function() {
+        return "("+this.x+","+this.y+","+this.z+")";
+    }
 }

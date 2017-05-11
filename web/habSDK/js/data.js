@@ -4,8 +4,18 @@ function HabLayout() {
     this.room_types = {};
     this.size = new Point2D(0,0);
 
-    this.get_objects = () => [].concat.apply([], this.rooms.map(o => this.room_types[o.room_type_name].objects));
-    this.get_objects_of_type = (object_type_list) => this.get_objects().filter(o => object_type_list.some(ot => ot == o.object_type_name));
+    this.get_objects = function() {
+        [].concat.apply([], this.rooms.map(function(o) {
+            return this.room_types[o.room_type_name].objects;
+        }.bind(this)))
+    }
+    this.get_objects_of_type = function(object_type_list) {
+        this.get_objects().filter(function(o) {
+            object_type_list.some(function(ot) {
+                return ot == o.object_type_name;
+            })
+        });
+    }
 
     var me = this;
     var clone = arguments[0];
@@ -35,7 +45,8 @@ function HabRoomType() {
     this.name = "";
     this.objects = [];
     this.floor_plan = [];
-    this.get_polygon = () => {
+    this.get_polygon = function()
+    {
         var polygon = new Polygon();
         polygon.points = this.floor_plan;
         return polygon;
@@ -55,7 +66,7 @@ function HabObject() {
     this.position = new Point3D(0,0,0);
     this.rotation = 0;
 
-    this.get_limits = () => {
+    this.get_limits = function() {
         var size = null
         var object_type = this.get_object_type();
         if (this.rotation == 1 || this.rotation == 3) size = new Point2D(object_type.limits.x, object_type.limits.y)
@@ -63,8 +74,10 @@ function HabObject() {
         var limits = new Limits3D(this.position, this.position.add(new Point3D(size.x, size.y, object_type.limits.z)))
         return limits;
     }
-    this.get_object_type = () => {
-        return object_types.find(o => o.name == this.object_type_name);
+    this.get_object_type = function() {
+        return object_types.find(function(o) {
+            return o.name == this.object_type_name;
+        }.bind(this));
     }
 
     var me = this;

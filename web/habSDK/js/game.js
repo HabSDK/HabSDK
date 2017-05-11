@@ -241,7 +241,7 @@ BasicGame.Boot.prototype =
             var objects = [
                 block,
             ];
-            objects.forEach(object => this.add_existing_object(object));
+            objects.forEach(function(object) { this.add_existing_object(object) }.bind(this));
         },
         add_new_object: function(object_type_name, position, rotation) {
             console.log("Adding new object "+object_type_name);
@@ -382,11 +382,11 @@ BasicGame.Boot.prototype =
                     }
                     var createdComponent = _this.add_new_object(sp.key.substring(0, sp.key.length-2), pnt, 0);
                     }, this);
-                var findObj = object_types.find(o=>o.name==key);
+                var findObj = object_types.find(function(o) { o.name==key; });
                 var tooltip;
                 if (findObj != null) {
                     var props = findObj.properties;
-                    var objectData = Object.keys(props).map(o => "\n"+o + " : " + props[o] );
+                    var objectData = Object.keys(props).map(function(o) { return "\n"+o + " : " + props[o]; } );
                     tooltip = game.add.text(sprite.x - 200, sprite.y, objectData, style);
                 } else {
                     tooltip = game.add.text(sprite.x - 200, sprite.y, key, style);
@@ -430,7 +430,7 @@ BasicGame.Boot.prototype =
             var place_max = selectedObject.get_limits().max_point;
             var place_min = selectedObject.get_limits().min_point;
             var keys = Object.keys(models);
-            models.forEach(object => {
+            models.forEach(function(object) {
                 if (selectedObject != object)
                 {
                     var limits = object.get_limits();
@@ -506,7 +506,7 @@ BasicGame.Boot.prototype =
                 var poly = new Polygon();
                 poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
                 room_type.floor_plan = poly;
-                models.forEach(visual => room_type.objects.push(models[visual]));
+                models.forEach(function(visual) { room_type.objects.push(models[visual]) } );
                 map_data.room_types[room_type.name] = (room_type);
                 var room = new HabRoom();
                 room.position = new Point2D(0,0,0);
@@ -557,7 +557,7 @@ var submitIt = function submit (){
     var poly = new Polygon();
     poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
     room_type.floor_plan = poly;
-    models.forEach(model => room_type.objects.push(model));
+    models.forEach(function(model) { room_type.objects.push(model) } );
     map_data.room_types[room_type.name] = (room_type);
     var room = new HabRoom();
     room.position = new Point2D(0,0,0);
@@ -574,7 +574,7 @@ var submitScore = function submit (username, cb){
     var poly = new Polygon();
     poly.points = [new Point2D(0,0), new Point2D(40,0), new Point2D(40,40), new Point2D(0,40)];
     room_type.floor_plan = poly;
-    models.forEach(model => room_type.objects.push(model));
+    models.forEach(function(model) { room_type.objects.push(model) } );
     map_data.room_types[room_type.name] = (room_type);
     var room = new HabRoom();
     room.position = new Point2D(0,0,0);
